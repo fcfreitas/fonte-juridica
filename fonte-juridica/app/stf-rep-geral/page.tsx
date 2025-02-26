@@ -8,6 +8,8 @@ import { useSession } from "next-auth/react";
 import { FiltersDynamic } from "../components/FilterDynamic";
 import { useFilter } from "../components/FilterContext";
 
+export const dynamic = "force-dynamic";
+
 export default function JulgadosPage() {
   const { data: session, status } = useSession();
   const router = useRouter();

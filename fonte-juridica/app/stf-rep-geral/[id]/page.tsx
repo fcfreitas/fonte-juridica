@@ -6,6 +6,8 @@ import NotFoundPage from "@/app/not-found"
 import { Julgado } from "@/app/julgados-data";
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
+
 const formatDate = (date: string | null | undefined): string => {
     if (!date) {
         return "";
