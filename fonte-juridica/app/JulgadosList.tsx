@@ -33,6 +33,7 @@ export default function JulgadosList() {
             if (params.toString()) {
                 url += `?${params.toString()}`;
             }
+            console.log("🚀 Buscando julgados com URL:", url); // 🔥 Veja a URL final gerada!
     
             try {
                 const response = await fetch(url);
@@ -62,8 +63,9 @@ export default function JulgadosList() {
                         key={j._id}
                         href={"/buscar/" + j._id}
                         className="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition duration-300"
+                        target="_blank"
                     >
-                        <h2 className="text-xl font-serif font-semibold text-slate-800">Tema {j.tema.toString()} - {j.titulo}</h2>
+                        <h2 className="text-xl font-semibold text-slate-800">Tema {j.tema.toString()} - {j.titulo}</h2>
                         <p className="text-gray-600">Área: {j.ramoDireito}</p>
                         <p className="text-gray-600">Tese: {j.tese}</p>
                         <p className="text-gray-600">Data de julgamento: {formatDate(j.dataJulgamento)}</p>
