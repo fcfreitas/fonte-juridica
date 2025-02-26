@@ -20,7 +20,7 @@ export default function JulgadosList() {
 
     useEffect(() => {
         async function fetchJulgados() {
-            let url = "/api/julgados"; // Ajuste para o endpoint correto
+            let url = process.env.NEXT_PUBLIC_SITE_URL+"/api/julgados"; // Ajuste para o endpoint correto
             const params = new URLSearchParams();
     
             if (ramoDireito) params.append("ramoDireito", ramoDireito);

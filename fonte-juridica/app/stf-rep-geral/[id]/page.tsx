@@ -24,7 +24,7 @@ export default function JulgadoDetailPage() {
 
         async function fetchJulgado() {
             try {
-                const url = `/api/julgados/${params.id}`;
+                const url = process.env.NEXT_PUBLIC_SITE_URL+`/api/julgados/${params.id}`;
                 const response = await fetch(url);
 
                 if (!response.ok) {

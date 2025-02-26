@@ -15,7 +15,7 @@ export function FiltersDynamic({ onFilterSelect, ramoDireito }: FilterDynamicPro
   useEffect(() => {
     async function fetchValues() {
       try {
-        const url = new URL("/api/filtros", window.location.href);
+        const url = new URL(process.env.NEXT_PUBLIC_SITE_URL+"/api/filtros", window.location.href);
         if (ramoDireito) {
           url.searchParams.set("ramoDireito", ramoDireito);
         }

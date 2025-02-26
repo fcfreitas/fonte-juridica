@@ -2,7 +2,7 @@ import React from "react";
 import type { Metadata } from "next";
 import "./globals.css";
 import NavBar from "./components/NavBar";
-import HeaderBar from "./Header";
+import HeaderBar from "./components/Header";
 import { FilterProvider } from "./components/FilterContext";
 // import { AuthProvider } from "../context/AuthContext";
 import { ReactNode } from "react";

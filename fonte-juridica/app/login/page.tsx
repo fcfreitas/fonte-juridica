@@ -15,7 +15,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (session) {
-      router.push("/buscar");
+      router.push(process.env.NEXT_PUBLIC_SITE_URL+"/");
     }
   }, [session, router]);
 
@@ -33,7 +33,7 @@ export default function LoginPage() {
     if (result?.error) {
       setError("Login falhou. Verifique suas credenciais.");
     } else {
-      router.push("/buscar");
+      router.push(process.env.NEXT_PUBLIC_SITE_URL+"/");
     }
 
     setLoading(false);

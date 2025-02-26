@@ -17,7 +17,7 @@ export default function JulgadosPage() {
   useEffect(() => {
     if (status === "loading") return;
     if (!session) {
-      router.push("/login");
+      router.push(process.env.NEXT_PUBLIC_SITE_URL+"/login");
     }
   }, [session, status, router]);
 

@@ -14,9 +14,8 @@ export default function Home() {
           className="border border-solid border-black rounded"
           onClick={() => {
             signOut({ redirect: false }).then(() => {
-              router.push("/");
+              router.push(process.env.NEXT_PUBLIC_SITE_URL+"/");
             });
-
           }}
         >
           Sign Out

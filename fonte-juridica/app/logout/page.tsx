@@ -10,12 +10,12 @@ export default function LogoutPage() {
 
   useEffect(() => {
     if (status === "unauthenticated") {
-      router.push("/login"); // Se não estiver logado, redireciona para login
+      router.push(process.env.NEXT_PUBLIC_SITE_URL+"/login"); // Se não estiver logado, redireciona para login
     }
   }, [status, router]);
 
   const handleLogout = async () => {
-    await signOut({ callbackUrl: "/login" }); // Faz logout e redireciona
+    await signOut({ callbackUrl: process.env.NEXT_PUBLIC_SITE_URL+"/login" }); // Faz logout e redireciona
   };
 
   return (
