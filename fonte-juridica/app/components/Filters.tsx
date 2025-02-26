@@ -1,20 +1,11 @@
 import { useFilter } from "./FilterContext";
 
 export function Filters() {
-  const { court, setCourt, ramoDireito, setRamoDireito } = useFilter();
+  const { ramoDireito, setRamoDireito } = useFilter();
 
   return (
       <div>
         <div>
-          <select
-            value={court}
-            onChange={(e) => setCourt(e.target.value)}
-            className="w-full mb-2 px-4 py-2 bg-slate-100 border border-slate-300 rounded focus:ring-2 focus:ring-slate-500 focus:border-slate-500"
-          >
-            <option value="">Tribunal</option>
-            <option value="STF">STF</option>
-            <option value="STJ">STJ</option>
-          </select>
         </div>
         <div>
           <select

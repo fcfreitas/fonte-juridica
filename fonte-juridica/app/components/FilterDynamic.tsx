@@ -50,11 +50,11 @@ export function FiltersDynamic({ onFilterSelect, ramoDireito }: FilterDynamicPro
 
   return (
     <div className="mb-4">
-      <label className="block text-lg font-semibold mb-2">Filtrar por Assunto:</label>
+      <label className="block text-lg font-semibold mb-2">Assunto:</label>
       <select
         value={assunto}
         onChange={handleSelectChange}
-        className="border p-2 rounded w-full"
+        className="w-full mb-2 px-4 py-2 bg-slate-100 border border-slate-300 rounded focus:ring-2 focus:ring-slate-500 focus:border-slate-500"
         disabled={loading || values.length === 0}
       >
         {loading ? (

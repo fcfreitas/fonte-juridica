@@ -15,7 +15,7 @@ export default function NavBar() {
                             <Link href="/" className="hover:text-slate-800 font-medium transition-colors">Home</Link>
                         </li>
                         <li>
-                            <Link href="/buscar" className="hover:text-slate-800 font-medium transition-colors">Buscar</Link>
+                            <Link href="/stf-rep-geral" className="hover:text-slate-800 font-medium transition-colors">Buscar</Link>
                         </li>
                     </div>
 

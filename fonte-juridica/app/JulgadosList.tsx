@@ -13,7 +13,7 @@ const formatDate = (date: string | null | undefined): string => {
 }
 
 export default function JulgadosList() {
-    const { court, ramoDireito, assunto } = useFilter();
+    const { ramoDireito, assunto } = useFilter();
     const [julgados, setJulgados] = useState<Julgado[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string>("");
@@ -23,7 +23,6 @@ export default function JulgadosList() {
             let url = "/api/julgados"; // Ajuste para o endpoint correto
             const params = new URLSearchParams();
     
-            if (court) params.append("court", court);
             if (ramoDireito) params.append("ramoDireito", ramoDireito);
             if (assunto) {
                 // Garantir que o valor do filtro assunto não tenha espaços extras
@@ -50,7 +49,7 @@ export default function JulgadosList() {
         }
     
         fetchJulgados();
-    }, [court, ramoDireito, assunto]); // Atualiza sempre que os filtros mudarem
+    }, [ ramoDireito, assunto]); // Atualiza sempre que os filtros mudarem
     
     if (loading) return <div>Carregando...</div>;
     if (error) return <div>{error}</div>;
@@ -61,7 +60,7 @@ export default function JulgadosList() {
                 {julgados.map((j) => (
                     <Link
                         key={j._id}
-                        href={"/buscar/" + j._id}
+                        href={"/stf-rep-geral/" + j._id}
                         className="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition duration-300"
                         target="_blank"
                     >

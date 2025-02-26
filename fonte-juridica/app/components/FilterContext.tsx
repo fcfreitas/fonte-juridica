@@ -3,8 +3,6 @@
 import { createContext, useContext, useState, ReactNode } from "react";
 
 interface FilterContextProps {
-  court: string;
-  setCourt: (court: string) => void;
   ramoDireito: string;
   setRamoDireito: (category: string) => void;
   assunto: string;
@@ -19,7 +17,7 @@ export function FilterProvider({ children }: { children: ReactNode }) {
   const [assunto, setAssunto] = useState("")
 
   return (
-    <FilterContext.Provider value={{ court, setCourt, ramoDireito, setRamoDireito, assunto, setAssunto }}>
+    <FilterContext.Provider value={{ ramoDireito, setRamoDireito, assunto, setAssunto }}>
       {children}
     </FilterContext.Provider>
   );
