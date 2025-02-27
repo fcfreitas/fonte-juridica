@@ -9,16 +9,33 @@ export default function RegisterPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const router = useRouter();
+
+  // Função para verificar a força da senha
+  const passwordValidation = {
+    length: password.length >= 8,
+    uppercase: /[A-Z]/.test(password),
+    lowercase: /[a-z]/.test(password),
+    number: /\d/.test(password),
+    match: password === confirmPassword && password !== "",
+  };
+
+  const isFormValid = Object.values(passwordValidation).every(Boolean);
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setSuccess(false);
 
-    const response = await fetch(process.env.NEXT_PUBLIC_SITE_URL+"/api/auth/register", {
+    if (!isFormValid) {
+      setError("A senha não atende aos requisitos.");
+      return;
+    }
+
+    const response = await fetch(process.env.NEXT_PUBLIC_SITE_URL + "/api/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, email, password }),
@@ -35,7 +52,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
+    <div className="flex flex-col items-center p-16 h-screen">
       <h1 className="text-2xl font-bold mb-4">Criar Conta</h1>
 
       {error && <p className="text-red-500">{error}</p>}
@@ -62,7 +79,40 @@ export default function RegisterPage() {
         onChange={(e) => setPassword(e.target.value)}
         className="border p-2 mb-2 w-80"
       />
-      <button onClick={handleRegister} className="bg-blue-500 text-white p-2 w-80">
+      <input
+        type="password"
+        placeholder="Redigite a senha"
+        value={confirmPassword}
+        onChange={(e) => setConfirmPassword(e.target.value)}
+        className="border p-2 mb-2 w-80"
+      />
+
+      {/* Verificação da senha */}
+      <div className="text-sm text-left w-80 mb-2">
+        <p className={passwordValidation.length ? "text-green-600" : "text-red-600"}>
+          ✅ Pelo menos 8 caracteres
+        </p>
+        <p className={passwordValidation.uppercase ? "text-green-600" : "text-red-600"}>
+          ✅ Pelo menos uma letra maiúscula
+        </p>
+        <p className={passwordValidation.lowercase ? "text-green-600" : "text-red-600"}>
+          ✅ Pelo menos uma letra minúscula
+        </p>
+        <p className={passwordValidation.number ? "text-green-600" : "text-red-600"}>
+          ✅ Pelo menos um número
+        </p>
+        <p className={passwordValidation.match ? "text-green-600" : "text-red-600"}>
+          ✅ Senhas coincidem
+        </p>
+      </div>
+
+      <button
+        onClick={handleRegister}
+        className={`p-2 w-80 rounded ${
+          isFormValid ? "bg-blue-500 text-white" : "bg-gray-400 text-gray-700 cursor-not-allowed"
+        }`}
+        disabled={!isFormValid}
+      >
         Cadastrar
       </button>
     </div>

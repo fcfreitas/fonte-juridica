@@ -9,39 +9,32 @@ export default function Home() {
   const { status } = useSession();
   const router = useRouter();
 
-  const showSession = () => {
-    if (status === "authenticated") {
-      return (
-        <button
-          className="border border-solid border-black rounded"
-          onClick={() => {
-            signOut({ redirect: false }).then(() => {
-              router.push(process.env.NEXT_PUBLIC_SITE_URL+"/");
-            });
-          }}
-        >
-          Sign Out
-        </button>
-      )
-    } else if (status === "loading") {
-      return (
-        <span className="text-[#888] text-sm mt-7">Loading...</span>
-      )
-    } else {
-      return (
-        <Link
-          href="/login"
-          className="border border-solid border-black rounded"
-        >
-          Sign In
-        </Link>
-      )
-    }
-  }
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center">
-      <h1 className="text-xl">Home</h1>
-      {showSession()}
-    </main>
+<>
+  <div className="container mx-auto p-8 flex flex-col h-full">
+    <div className="group flex w-full">
+      <div className="flex-1 flex flex-col min-h-screen">
+        <div className="space-y-4">
+          <div className="grid grid-cols-3 gap-8 place-items-center">
+            <Link
+              href={"/stf-rep-geral/"}
+              className="w-3/4 aspect-square bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition duration-300 flex flex-col items-center justify-center text-center"
+            >
+              <h2 className="text-2xl font-bold text-slate-800">STF</h2>
+              <p className="text-base text-slate-700 mt-1">Temas de Repercussão Geral</p>
+            </Link>
+            <Link
+              href={"/stf-jurisprudencias/"}
+              className="w-3/4 aspect-square bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition duration-300 flex flex-col items-center justify-center text-center"
+            >
+              <h2 className="text-2xl font-bold text-slate-800">STF</h2>
+              <p className="text-base text-slate-700 mt-1">Jurisprudências</p>
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</>
   );
 }
