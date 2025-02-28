@@ -51,8 +51,8 @@ export default function JulgadosPage() {
               onFilterSelect={(field: string, value: string) => setAssunto(value)}
               ramoDireito={ramoDireito}
             />
-            <Button className="mt-4 w-full" onClick={() => (document.activeElement as HTMLElement | null)?.blur()}>
-              Fechar
+            <Button className="mt-4 w-full" onClick={close}>
+              Aplicar Filtros
             </Button>
           </DialogContent>
         </Dialog>
