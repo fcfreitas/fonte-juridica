@@ -72,10 +72,10 @@ export default function JulgadosList() {
                         <p className="text-gray-600">Situação do Tema: {j.situacaoTema}</p>
                         <p className="text-gray-600">Recurso Paradigma: {j.leadingCase}</p>
                         {j.assunto_array && j.assunto_array.length > 0 && (
-                            <div className="flex gap-2 mt-2">
+                            <div className="flex flex-wrap gap-2 mt-2">
                                 <p>Assuntos:</p>
                                 {j.assunto_array.map((assunto_array, index) => (
-                                    <span key={index} className="flex items-center gap-1 text-sm bg-gray-100 p-1 rounded-lg">
+                                    <span key={index} className="text-sm bg-gray-100 p-2 rounded-lg">
                                         {assunto_array}
                                     </span>
                                 ))}

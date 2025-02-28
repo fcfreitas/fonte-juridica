@@ -7,23 +7,22 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { FiltersDynamic } from "../components/FilterDynamic";
 import { useFilter } from "../components/FilterContext";
-import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/components/ui/dialog"; // Shadcn para modal responsivo
+import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/components/ui/dialog"; // ShadCN para modal responsivo
 import { Button } from "@/components/ui/button";
-
 
 export const dynamic = "force-dynamic";
 
 export default function JulgadosPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
-  const [showFilters, setShowFilters] = useState(false);
+  const [isOpen, setIsOpen] = useState(false); // ✅ Estado do modal
 
   const { ramoDireito, setRamoDireito, assunto, setAssunto } = useFilter(); // ✅ Use o contexto global
 
   useEffect(() => {
     if (status === "loading") return;
     if (!session) {
-      router.push(process.env.NEXT_PUBLIC_SITE_URL+"/login");
+      router.push(process.env.NEXT_PUBLIC_SITE_URL + "/login");
     }
   }, [session, status, router]);
 
@@ -35,14 +34,23 @@ export default function JulgadosPage() {
     return null;
   }
 
+  // ✅ Função para aplicar os filtros e fechar o modal
+  const handleApplyFilters = () => {
+    console.log("Filtros aplicados:", { assunto, ramoDireito });
+    setIsOpen(false); // Fecha o modal
+  };
+
   return (
     <div className="container mx-auto p-8 flex flex-col h-full">
       <h1 className="text-4xl font-bold mb-4 ml-8">STF - Temas de Repercussão Geral</h1>
+
       {/* Botão para abrir filtros no mobile */}
       <div className="md:hidden flex justify-start mb-4 ml-8">
-      <Dialog>
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
           <DialogTrigger asChild>
-            <Button variant="outline">Filtrar</Button>
+            <Button variant="outline" onClick={() => setIsOpen(true)}>
+              Filtrar
+            </Button>
           </DialogTrigger>
           <DialogContent className="w-full max-w-md md:max-w-lg h-auto max-h-[90vh] overflow-y-auto rounded-lg">
             <DialogTitle className="text-lg font-semibold">Filtros</DialogTitle>
@@ -51,7 +59,7 @@ export default function JulgadosPage() {
               onFilterSelect={(field: string, value: string) => setAssunto(value)}
               ramoDireito={ramoDireito}
             />
-            <Button className="mt-4 w-full" onClick={close}>
+            <Button className="mt-4 w-full" onClick={handleApplyFilters}>
               Aplicar Filtros
             </Button>
           </DialogContent>
