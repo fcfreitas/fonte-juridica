@@ -58,11 +58,12 @@ export default function JulgadoDetailPage() {
         <>
         <div className="container mx-auto p-8 flex col-1 md:flex-row">
             <div className="w-full">
-                <h1 className="text-3xl font-bold mb-8 h-30"> Tema {julgado.tema.toString()} - {julgado.titulo} </h1>
+                <h1 className="text-3xl font-bold mb-8 h-30 text-justify"> Tema {julgado.tema.toString()} - {julgado.titulo} </h1>
                 <p className="text-lg text-gray-600 mb-2">Área do Direito: { julgado.ramoDireito}</p>
-                <p className="text-lg text-gray-600 mb-2">Descrição: { julgado.descricao}</p>
+                <h3 className="text-xl font-semi-bold mb-2 mt-4">Descrição</h3>
+                <p className="text-lg text-gray-600 mb-2 text-justify">{ julgado.descricao}</p>
                 <h3 className="text-xl font-semi-bold mb-2 mt-4">Tese</h3>
-                <p className="text-gray-700">{julgado.tese}</p>
+                <p className="text-lg text-gray-600 mb-6 text-justify">{julgado.tese}</p>
                 <p className="text-lg text-gray-600 mb-2">Data de julgamento: { formatDate(julgado.dataJulgamento)}</p>
                 <p className="text-lg text-gray-600 mb-2">Situação de Repercussão Geral: { julgado.situacaoRepGeral}</p>
                 <p className="text-lg text-gray-600 mb-2">Situação do Tema: { julgado.situacaoTema}</p>

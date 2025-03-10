@@ -3,41 +3,65 @@ import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
     try {
-        // Captura o parâmetro 'ramoDireito' da URL
+        // Captura os parâmetros da URL
         const url = new URL(request.url);
         const ramoDireito = url.searchParams.get("ramoDireito");
 
-        console.log("🔄 Buscando valores únicos de 'assunto_array[1]' com ramoDireito:", ramoDireito);
+        console.log("🔄 Buscando valores com ramoDireito:", ramoDireito);
 
         const { db } = await connectToDb(); // Garante conexão ativa
-
-        // Cria o filtro inicial para o assunto_array[1] não ser nulo
-        const match: any = { "assunto_array.1": { $exists: true, $ne: null } };
-
-        // Adiciona o filtro do ramoDireito, se fornecido
-        if (ramoDireito) {
-            match["ramoDireito"] = { $regex: new RegExp(ramoDireito, "i") };; // Adiciona o filtro de ramoDireito
+        if (!db) {
+            console.error("❌ Não foi possível conectar ao banco de dados");
+            return NextResponse.json({ error: "Falha na conexão com o banco de dados" }, { status: 500 });
         }
 
-        // Realiza a consulta com o filtro aplicado
+        // Cria o filtro para o assunto_array[1] não ser nulo
+        const match: any = { "assunto_array.1": { $exists: true, $ne: null } };
+
+        // Se ramoDireito for fornecido, filtra também pelo ramoDireito
+        if (ramoDireito) {
+            match["ramoDireito"] = { $regex: new RegExp(ramoDireito, "i") }; // Filtro por ramoDireito
+        }
+
+        // Consulta para valores únicos de 'assunto_array[1]', com filtro opcional de ramoDireito
         const uniqueValues = await db.collection("julgados").aggregate([
-            { $match: match }, // Aplica o filtro de ramoDireito (se existir)
+            { $match: match },
             { 
                 $project: { 
                     value: { $trim: { input: { $arrayElemAt: ["$assunto_array", 1] }, chars: " " } } 
                 } 
-            }, // Remove espaços extras antes e depois
-            { $group: { _id: "$value" } }, // Remove duplicatas após o trim
-            { $sort: { _id: 1 } }, // Ordena resultados
-            { $limit: 500 } // Limita a quantidade de resultados para evitar sobrecarga
+            },
+            { $group: { _id: "$value" } },
+            { $sort: { _id: 1 } },
+            { $limit: 500 }
         ]).toArray();
 
-        console.log(`✅ ${uniqueValues.length} valores encontrados.`);
+        console.log("🔍 Resultados de assunto:", uniqueValues);
+
+        // Obter valores únicos de situacaoRepGeral com agregação
+        const situacaoRepGeralValues = await db.collection("julgados").aggregate([
+            { $group: { _id: "$situacaoRepGeral" } },
+            { $sort: { _id: 1 } }
+        ]).toArray();
+
+        console.log("🔍 Resultados de situacaoRepGeral:", situacaoRepGeralValues);
+
+        // Obter valores únicos de situacaoTema com agregação
+        const situacaoTemaValues = await db.collection("julgados").aggregate([
+            { $group: { _id: "$situacaoTema" } },
+            { $sort: { _id: 1 } }
+        ]).toArray();
+
+        console.log("🔍 Resultados de situacaoTema:", situacaoTemaValues);
 
         // Retorna os valores encontrados
-        return NextResponse.json({ values: uniqueValues.map((item) => item._id) });
+        return NextResponse.json({ 
+            assuntos: uniqueValues.map((item) => item._id),
+            situacaoRepGeralValues: situacaoRepGeralValues.map((item) => item._id),
+            situacaoTemaValues: situacaoTemaValues.map((item) => item._id)
+        });
     } catch (error) {
         console.error("❌ Erro ao buscar valores únicos:", error);
-        return NextResponse.json({ error: "Erro ao buscar valores únicos" }, { status: 500 });
+        return NextResponse.json({ error: "Erro ao buscar valores únicos", details: error }, { status: 500 });
     }
 }

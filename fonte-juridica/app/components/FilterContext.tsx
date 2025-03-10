@@ -3,21 +3,43 @@
 import { createContext, useContext, useState, ReactNode } from "react";
 
 interface FilterContextProps {
+  // court: string;
+  // setCourt: (court: string) => void;
   ramoDireito: string;
-  setRamoDireito: (category: string) => void;
+  setRamoDireito: (ramoDireito: string) => void;
   assunto: string;
-  setAssunto: (category: string) => void;
+  setAssunto: (assunto: string) => void;
+  situacaoRepGeral: string;
+  setSituacaoRepGeral: (situacaoRepGeral: string) => void;
+  situacaoTema: string;
+  setSituacaoTema: (situacaoTema: string) => void;
 }
 
 const FilterContext = createContext<FilterContextProps | undefined>(undefined);
 
 export function FilterProvider({ children }: { children: ReactNode }) {
-  const [court, setCourt] = useState(""); // Tribunal selecionado
+  // Estados para armazenar os valores dos filtros
+  // const [court, setCourt] = useState(""); // Tribunal selecionado
   const [ramoDireito, setRamoDireito] = useState(""); // Ramo do Direito selecionado
-  const [assunto, setAssunto] = useState("")
+  const [assunto, setAssunto] = useState(""); // Assunto selecionado
+  const [situacaoRepGeral, setSituacaoRepGeral] = useState(""); // Situação Rep Geral
+  const [situacaoTema, setSituacaoTema] = useState(""); // Situação do Tema
 
   return (
-    <FilterContext.Provider value={{ ramoDireito, setRamoDireito, assunto, setAssunto }}>
+    <FilterContext.Provider
+      value={{
+        // court,
+        // setCourt,
+        ramoDireito,
+        setRamoDireito,
+        assunto,
+        setAssunto,
+        situacaoRepGeral,
+        setSituacaoRepGeral,
+        situacaoTema,
+        setSituacaoTema,
+      }}
+    >
       {children}
     </FilterContext.Provider>
   );

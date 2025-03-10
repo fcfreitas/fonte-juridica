@@ -8,8 +8,10 @@ export async function GET(request: Request) {
     const court = url.searchParams.get("court");
     const ramoDireito = url.searchParams.get("ramoDireito");
     const assunto = url.searchParams.get("assunto");
+    const situacaoRepGeral = url.searchParams.get("situacaoRepGeral");
+    const situacaoTema = url.searchParams.get("situacaoTema");
 
-    console.log("🔍 Parâmetros recebidos:", { court, ramoDireito, assunto });
+    console.log("🔍 Parâmetros recebidos:", { court, ramoDireito, assunto, situacaoRepGeral, situacaoTema });
 
     // Conectar ao banco de dados
     const { db } = await connectToDb();
@@ -17,16 +19,28 @@ export async function GET(request: Request) {
     // Criar a query com base nos filtros
     const query: any = {};
 
+    // Filtro por tribunal (court)
     if (court) query.mainCourt = court;
 
+    // Filtro por ramoDireito
     if (ramoDireito && ramoDireito.trim() !== "") {
       query.ramoDireito = { $regex: ramoDireito.trim(), $options: "i" }; // Case insensitive
     }
 
-    // Aplicando filtro exato no assunto_array
+    // Filtro por assunto
     if (assunto) {
       console.log("📌 Aplicando filtro de Assunto:", assunto);
       query.assunto_array = { $regex: assunto.trim() };
+    }
+
+    // Filtro por situacaoRepGeral
+    if (situacaoRepGeral && situacaoRepGeral.trim() !== "") {
+      query.situacaoRepGeral = { $regex: situacaoRepGeral.trim(), $options: "i" }; // Case insensitive
+    }
+
+    // Filtro por situacaoTema
+    if (situacaoTema && situacaoTema.trim() !== "") {
+      query.situacaoTema = { $regex: situacaoTema.trim(), $options: "i" }; // Case insensitive
     }
 
     console.log("🛠 Query gerada:", JSON.stringify(query, null, 2));
