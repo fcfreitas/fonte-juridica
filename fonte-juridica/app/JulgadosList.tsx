@@ -75,7 +75,7 @@ export default function JulgadosList() {
               </h2>
             </Link>
             <p className="text-gray-600">Ramo do Direito: {j.ramoDireito}</p>
-            <p className="text-gray-600 text-justify mt-2 mb-2">Tese: {j.tese}</p>
+            <p className="text-gray-600 text-justify mt-2 mb-2 font-semibold">Tese: {j.tese}</p>
             <p className="text-gray-600">Data de julgamento: {formatDate(j.dataJulgamento)}</p>
             <p className="text-gray-600">Situação de Repercussão Geral: {j.situacaoRepGeral}</p>
             <p className="text-gray-600">Situação do Tema: {j.situacaoTema}</p>
@@ -83,7 +83,7 @@ export default function JulgadosList() {
             {j.assunto_array && j.assunto_array.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-2">
                 <p>Assuntos:</p>
-                {j.assunto_array.map((assunto_array, index) => (
+                {j.assunto_array.slice(1).map((assunto_array, index) => (
                   <span key={index} className="text-sm bg-gray-100 p-2 rounded-lg">
                     {assunto_array}
                   </span>

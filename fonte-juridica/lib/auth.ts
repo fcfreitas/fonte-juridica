@@ -19,11 +19,17 @@ export const authOptions: NextAuthOptions = {
 
         if (!user) throw new Error("Email ou senha incorretos");
 
+        console.log("User from DB:", user);
+
         // Verifica se a senha está correta
         const passwordMatch = await bcrypt.compare(credentials!.password, user.password);
         if (!passwordMatch) throw new Error("Email ou senha incorretos");
 
-        return { id: user._id.toString(), name: user.name, email: user.email };
+        return { id: user._id.toString(), 
+                  name: user.name, 
+                  email: user.email,
+                  role: user.role 
+                };
       },
     }),
   ],
@@ -34,12 +40,15 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.id = String(user.id); // Garante que será uma string
+        token.role = user.role || "user";
+        console.log("JWT Token:", token); 
       }
       return token;
     },
     async session({ session, token }) {
       if (token) {
         session.user.id = String(token.id); // Garante que será uma string
+        session.user.role = token.role as string;
       }
       return session;
     },

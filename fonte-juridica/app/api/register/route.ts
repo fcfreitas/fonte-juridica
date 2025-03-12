@@ -22,7 +22,7 @@ export async function POST(req: Request) {
 
     // Criptografa a senha antes de salvar
     const hashedPassword = await hash(password, 10);
-    const newUser = { name, email, password: hashedPassword };
+    const newUser = { name, email, password: hashedPassword, role: "user" };
 
     // Insere o usuário no banco
     await db.collection("user").insertOne(newUser);

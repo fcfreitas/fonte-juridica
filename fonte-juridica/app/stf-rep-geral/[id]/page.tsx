@@ -5,6 +5,7 @@ import { useParams } from "next/navigation"; // Importa useParams
 import NotFoundPage from "@/app/not-found"
 import { Julgado } from "@/app/julgados-data";
 import Link from "next/link";
+import AdminTextEditor from "@/app/components/textEditor";
 
 export const dynamic = "force-dynamic";
 
@@ -74,7 +75,11 @@ export default function JulgadoDetailPage() {
                     <link rel="icon" href="/favicon.ico" />
                     Link do processo
                 </Link>
+                <AdminTextEditor />
             </div>
+        </div>
+        <div>
+            
         </div>
         </>
     )
