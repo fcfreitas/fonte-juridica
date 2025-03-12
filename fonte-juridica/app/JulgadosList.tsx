@@ -74,7 +74,7 @@ export default function JulgadosList() {
                 Tema {j.tema.toString()} - {j.titulo}
               </h2>
             </Link>
-            <p className="text-gray-600">Área: {j.ramoDireito}</p>
+            <p className="text-gray-600">Ramo do Direito: {j.ramoDireito}</p>
             <p className="text-gray-600 text-justify mt-2 mb-2">Tese: {j.tese}</p>
             <p className="text-gray-600">Data de julgamento: {formatDate(j.dataJulgamento)}</p>
             <p className="text-gray-600">Situação de Repercussão Geral: {j.situacaoRepGeral}</p>
