@@ -42,7 +42,7 @@ const AdminTextEditor = ({
   const [loading, setLoading] = useState(false);
 
   if (session?.user?.role !== 'admin') {
-    return <p>Apenas administradores podem publicar comentários.</p>;
+    return <p></p>;  //Apenas administradores podem publicar comentários.
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
