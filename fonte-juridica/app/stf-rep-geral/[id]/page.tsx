@@ -21,8 +21,10 @@ export default function JulgadoDetailPage() {
   const router = useRouter();
   const params = useParams();
   const [julgado, setJulgado] = useState<Julgado | null>(null);
-  const [comentarios, setComentarios] = useState<{ text: string, createdAt: string }[]>([]);
+  const [comentarios, setComentarios] = useState<{ _id: string, text: string, createdAt: string }[]>([]);
   const [loading, setLoading] = useState(true);
+  const [editando, setEditando] = useState<{ [key: string]: boolean }>({});
+  const [novoTexto, setNovoTexto] = useState<{ [key: string]: string }>({});
 
   // Redirecionar para login se não estiver autenticado
   useEffect(() => {
@@ -73,6 +75,34 @@ export default function JulgadoDetailPage() {
 
     fetchComentarios();
   }, [julgado?.tema]);
+
+  const handleEditar = (id: string, textoAtual: string) => {
+    setEditando((prev) => ({ ...prev, [id]: true }));
+    setNovoTexto((prev) => ({ ...prev, [id]: textoAtual }));
+  };
+
+  const handleSalvar = async (id: string) => {
+    try {
+      const response = await fetch("/api/publish-text", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, text: novoTexto[id] }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Erro ao atualizar comentário.");
+      }
+
+      setComentarios((prev) =>
+        prev.map((comentario) =>
+          comentario._id === id ? { ...comentario, text: novoTexto[id] } : comentario
+        )
+      );
+      setEditando((prev) => ({ ...prev, [id]: false }));
+    } catch (error) {
+      console.error("Erro ao atualizar comentário:", error);
+    }
+  };
 
   if (status === "loading" || loading) {
     return <p className="text-center text-lg">Carregando...</p>;
@@ -127,16 +157,56 @@ export default function JulgadoDetailPage() {
           Link do processo
         </Link>
 
-        {/* Editor de Comentários */}
+        {/* Editor de Novos Comentários */}
         <AdminTextEditor tema={julgado.tema} onCommentPosted={() => setComentarios} />
 
         {/* Seção de Comentários */}
         <h3 className="text-xl font-semibold mt-6">Comentários</h3>
         {comentarios.length > 0 ? (
-          comentarios.map((comentario, index) => (
-            <div key={index} className="border p-4 rounded shadow-md mb-2">
-              <div className="quill-content text-gray-700" dangerouslySetInnerHTML={{ __html: comentario.text }} ></div>
-              <p className="text-sm text-gray-500">Publicado em {formatDate(comentario.createdAt)}</p>
+          comentarios.map((comentario) => (
+            <div key={comentario._id} className="border p-4 rounded shadow-md mb-2">
+              {editando[comentario._id] ? (
+                // Exibe o editor para editar o conteúdo
+                <AdminTextEditor
+                  tema={julgado.tema}
+                  value={novoTexto[comentario._id]} // Passa o texto salvo para editar
+                  onChange={(value) => setNovoTexto((prev) => ({
+                    ...prev,
+                    [comentario._id]: value,
+                  }))}
+                  onCommentPosted={() => setComentarios} // Atualiza os comentários na página
+                />
+              ) : (
+                // Exibe o conteúdo formatado com dangerouslySetInnerHTML
+                <div
+                  className="quill-content text-gray-700"
+                  dangerouslySetInnerHTML={{ __html: comentario.text }}
+                />
+              )}
+          
+              <p className="text-sm text-gray-500">
+                Publicado em {formatDate(comentario.createdAt)}
+              </p>
+          
+              {session?.user?.role === "admin" && (
+                <div className="mt-2">
+                  {editando[comentario._id] ? (
+                    <button
+                      onClick={() => handleSalvar(comentario._id)}
+                      className="px-3 py-1 bg-green-500 text-white rounded mr-2"
+                    >
+                      Salvar
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => handleEditar(comentario._id, comentario.text)}
+                      className="px-3 py-1 bg-blue-500 text-white rounded"
+                    >
+                      Editar
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
           ))
         ) : (

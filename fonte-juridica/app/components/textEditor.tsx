@@ -24,9 +24,21 @@ const formats = [
   'list', 'bullet', 'link'
 ];
 
-const AdminTextEditor = ({ tema, onCommentPosted }: { tema: IntegerType, onCommentPosted: () => void }) => {
+interface AdminTextEditorProps {
+  tema: IntegerType;
+  value?: string; // Tornar o value opcional
+  onChange?: (value: string) => void; // Tornar o onChange opcional
+  onCommentPosted: () => void;
+}
+
+const AdminTextEditor = ({
+  tema,
+  value = '', // Default vazio se não houver value
+  onChange,
+  onCommentPosted,
+}: AdminTextEditorProps) => {
   const { data: session } = useSession();
-  const [content, setContent] = useState('');
+  const [content, setContent] = useState(value); // Inicializa com o value, se existir
   const [loading, setLoading] = useState(false);
 
   if (session?.user?.role !== 'admin') {
@@ -45,7 +57,7 @@ const AdminTextEditor = ({ tema, onCommentPosted }: { tema: IntegerType, onComme
       });
 
       if (response.ok) {
-        setContent(""); // Limpa o editor
+        setContent(''); // Limpa o editor
         onCommentPosted(); // Atualiza os comentários na página
       } else {
         alert('Erro ao publicar o comentário.');
@@ -57,13 +69,37 @@ const AdminTextEditor = ({ tema, onCommentPosted }: { tema: IntegerType, onComme
     }
   };
 
+  // Se o onChange for fornecido, significa que estamos editando
+  const handleChange = (newContent: string) => {
+    if (onChange) {
+      onChange(newContent); // Se onChange for fornecido, passa a alteração para o componente pai
+    }
+    setContent(newContent); // Atualiza o conteúdo localmente
+  };
+
   return (
     <div className="admin-editor border p-4 rounded shadow-md">
       <h2 className="text-lg font-bold mb-2">Incluir Comentários</h2>
-      <ReactQuill value={content} onChange={setContent} modules={modules} formats={formats} className="mb-4" placeholder='Escreva aqui...' />
-      <button type="submit" disabled={loading} onClick={handleSubmit} className="mt-2 px-4 py-2 bg-blue-600 text-white rounded">
-        {loading ? 'Publicando...' : 'Publicar'}
-      </button>
+      <ReactQuill
+        value={content}
+        onChange={handleChange}
+        modules={modules}
+        formats={formats}
+        className="mb-4"
+        placeholder="Escreva aqui..."
+      />
+      
+      {/* Exibe o botão apenas para novas publicações */}
+      {!value && (
+        <button
+          type="submit"
+          disabled={loading}
+          onClick={handleSubmit}
+          className="mt-2 px-4 py-2 bg-blue-600 text-white rounded"
+        >
+          {loading ? 'Publicando...' : 'Publicar'}
+        </button>
+      )}
     </div>
   );
 };

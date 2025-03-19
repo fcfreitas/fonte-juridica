@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { connectToDb } from "@/app/api/db";
+import { ObjectId } from "mongodb";
 
 // Função para o método POST - Publicar o texto
 export async function POST(request: Request) {
@@ -37,5 +38,24 @@ export async function GET() {
   } catch (error) {
     console.error(error);
     return NextResponse.json({ message: "Erro ao buscar os textos." }, { status: 500 });
+  }
+}
+
+// Função para o método PUT - Atualizar os textos publicados
+
+export async function PUT(req: Request) {
+  try {
+    const { id, text } = await req.json();
+    const { db } = await connectToDb();
+
+    await db.collection("posts").updateOne(
+      { _id: new ObjectId(id) },
+      { $set: { text } }
+    );
+
+    return NextResponse.json({ message: "Comentário atualizado com sucesso" });
+  } catch (error) {
+    console.error("Erro ao atualizar comentário:", error);
+    return NextResponse.json({ error: "Erro ao atualizar comentário" }, { status: 500 });
   }
 }
