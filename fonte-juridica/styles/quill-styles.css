@@ -1,0 +1,24 @@
+/* Estilização dos elementos gerados pelo Quill */
+.quill-content h1 {
+    @apply text-3xl font-bold uppercase;
+}
+
+.quill-content h2 {
+    @apply text-2xl font-semibold;
+}
+
+.quill-content ol {
+    @apply pl-5; /* Mantém o recuo */
+}
+
+.quill-content ol li[data-list="ordered"] {
+    list-style-type: decimal; /* Números ordenados */
+}
+
+.quill-content ol li[data-list="bullet"] {
+    list-style-type: disc; /* Bullet points */
+}
+  
+.quill-content p {
+    @apply text-gray-700;
+}

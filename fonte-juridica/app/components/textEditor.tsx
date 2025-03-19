@@ -11,18 +11,22 @@ const modules = {
   toolbar: [
     [{ header: [1, 2, false] }],
     ['bold', 'italic', 'underline'],
-    [{ list: 'ordered' }, { list: 'bullet' }],
+    [{ list: 'ordered' }, { list: 'bullet' }], // Mantém a configuração padrão
     ['link'],
   ],
+  clipboard: {
+    matchVisual: false, // Garante que o Quill respeite a estrutura do HTML
+  },
 };
 
 const formats = [
-  'header', 'bold', 'italic', 'underline', 'list', 'bullet', 'link'
+  'header', 'bold', 'italic', 'underline', 
+  'list', 'bullet', 'link'
 ];
 
 const AdminTextEditor = ({ tema, onCommentPosted }: { tema: IntegerType, onCommentPosted: () => void }) => {
   const { data: session } = useSession();
-  const [content, setContent] = useState('<p>Escreva aqui...</p>');
+  const [content, setContent] = useState('');
   const [loading, setLoading] = useState(false);
 
   if (session?.user?.role !== 'admin') {
@@ -56,7 +60,7 @@ const AdminTextEditor = ({ tema, onCommentPosted }: { tema: IntegerType, onComme
   return (
     <div className="admin-editor border p-4 rounded shadow-md">
       <h2 className="text-lg font-bold mb-2">Incluir Comentários</h2>
-      <ReactQuill value={content} onChange={setContent} modules={modules} formats={formats} className="mb-4" />
+      <ReactQuill value={content} onChange={setContent} modules={modules} formats={formats} className="mb-4" placeholder='Escreva aqui...' />
       <button type="submit" disabled={loading} onClick={handleSubmit} className="mt-2 px-4 py-2 bg-blue-600 text-white rounded">
         {loading ? 'Publicando...' : 'Publicar'}
       </button>

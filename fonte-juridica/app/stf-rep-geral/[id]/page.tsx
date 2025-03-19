@@ -8,6 +8,7 @@ import NotFoundPage from "@/app/not-found";
 import { Julgado } from "@/app/julgados-data";
 import Link from "next/link";
 import AdminTextEditor from "@/app/components/textEditor";
+import "@/styles/quill-styles.css";
 
 export const dynamic = "force-dynamic";
 
@@ -134,7 +135,7 @@ export default function JulgadoDetailPage() {
         {comentarios.length > 0 ? (
           comentarios.map((comentario, index) => (
             <div key={index} className="border p-4 rounded shadow-md mb-2">
-              <p dangerouslySetInnerHTML={{ __html: comentario.text }} className="text-gray-700"></p>
+              <div className="quill-content text-gray-700" dangerouslySetInnerHTML={{ __html: comentario.text }} ></div>
               <p className="text-sm text-gray-500">Publicado em {formatDate(comentario.createdAt)}</p>
             </div>
           ))
