@@ -20,6 +20,7 @@ export default function JulgadoDetailPage() {
   const router = useRouter();
   const params = useParams();
   const [julgado, setJulgado] = useState<Julgado | null>(null);
+  const [comentarios, setComentarios] = useState<{ text: string, createdAt: string }[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Redirecionar para login se não estiver autenticado
@@ -52,6 +53,25 @@ export default function JulgadoDetailPage() {
 
     fetchJulgado();
   }, [params?.id]);
+
+  // Buscar os comentários relacionados ao julgado
+  useEffect(() => {
+    if (!params?.id) return;
+
+    async function fetchComentarios() {
+      try {
+        const response = await fetch(`/api/publish-text?tema=${julgado?.tema}`);
+        if (!response.ok) throw new Error("Erro ao buscar comentários");
+
+        const data = await response.json();
+        setComentarios(data);
+      } catch (error) {
+        console.error("Erro ao buscar comentários:", error);
+      }
+    }
+
+    fetchComentarios();
+  }, [julgado?.tema]);
 
   if (status === "loading" || loading) {
     return <p className="text-center text-lg">Carregando...</p>;
@@ -105,7 +125,22 @@ export default function JulgadoDetailPage() {
         >
           Link do processo
         </Link>
-        <AdminTextEditor />
+
+        {/* Editor de Comentários */}
+        <AdminTextEditor tema={julgado.tema} onCommentPosted={() => setComentarios} />
+
+        {/* Seção de Comentários */}
+        <h3 className="text-xl font-semibold mt-6">Comentários</h3>
+        {comentarios.length > 0 ? (
+          comentarios.map((comentario, index) => (
+            <div key={index} className="border p-4 rounded shadow-md mb-2">
+              <p dangerouslySetInnerHTML={{ __html: comentario.text }} className="text-gray-700"></p>
+              <p className="text-sm text-gray-500">Publicado em {formatDate(comentario.createdAt)}</p>
+            </div>
+          ))
+        ) : (
+          <p className="text-gray-500">Nenhum comentário ainda.</p>
+        )}
       </div>
     </div>
   );

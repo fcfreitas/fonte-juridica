@@ -5,16 +5,17 @@ import { connectToDb } from "@/app/api/db";
 export async function POST(request: Request) {
   try {
     const { db }  = await connectToDb();
-    const { text, userId, role } = await request.json();
+    const { text, userId, role, tema } = await request.json();
 
     // Verificar se o usuário é admin
-    if (role !== "admin") {
-      return NextResponse.json({ message: "Acesso negado!" }, { status: 403 });
-    }
+    // if (role !== "admin") {
+    //   return NextResponse.json({ message: "Acesso negado!" }, { status: 403 });
+    // }
 
     // Salvar o texto no banco de dados
     await db.collection("posts").insertOne({
       text,
+      tema,
       userId,
       createdAt: new Date(),
     });

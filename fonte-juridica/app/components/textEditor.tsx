@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import dynamic from 'next/dynamic';
 import 'react-quill-new/dist/quill.snow.css'; // Importa o tema padrão do Quill
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { IntegerType } from 'mongodb';
 
 const ReactQuill = dynamic(() => import('react-quill-new'), { ssr: true });
 
@@ -19,11 +20,10 @@ const formats = [
   'header', 'bold', 'italic', 'underline', 'list', 'bullet', 'link'
 ];
 
-const AdminTextEditor = () => {
+const AdminTextEditor = ({ tema, onCommentPosted }: { tema: IntegerType, onCommentPosted: () => void }) => {
   const { data: session } = useSession();
   const [content, setContent] = useState('<p>Escreva aqui...</p>');
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
   if (session?.user?.role !== 'admin') {
     return <p>Apenas administradores podem publicar comentários.</p>;
@@ -37,16 +37,17 @@ const AdminTextEditor = () => {
       const response = await fetch('/api/publish-text', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: content, userId: session.user.id }),
+        body: JSON.stringify({ text: content, userId: session.user.id, tema }),
       });
+
       if (response.ok) {
-        router.refresh();
+        setContent(""); // Limpa o editor
+        onCommentPosted(); // Atualiza os comentários na página
       } else {
-        alert('Erro ao publicar o texto.');
+        alert('Erro ao publicar o comentário.');
       }
     } catch (error) {
-      console.error('Erro ao publicar o texto:', error);
-      alert('Erro ao publicar o texto.');
+      console.error('Erro ao publicar o comentário:', error);
     } finally {
       setLoading(false);
     }
