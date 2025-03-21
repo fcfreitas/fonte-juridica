@@ -22,6 +22,7 @@ export default function JulgadoDetailPage() {
   const params = useParams();
   const [julgado, setJulgado] = useState<Julgado | null>(null);
   const [comentarios, setComentarios] = useState<{ _id: string, text: string, createdAt: string }[]>([]);
+  const [lido, setLido] = useState(false);
   const [loading, setLoading] = useState(true);
   const [editando, setEditando] = useState<{ [key: string]: boolean }>({});
   const [novoTexto, setNovoTexto] = useState<{ [key: string]: string }>({});
@@ -76,6 +77,44 @@ export default function JulgadoDetailPage() {
     fetchComentarios();
   }, [julgado?.tema]);
 
+
+  useEffect(() => {
+    if (!session || !julgado?.tema) return;
+
+    async function fetchLidoStatus() {
+      try {
+        const response = await fetch(`/api/temas-lidos?userId=${session?.user.id}&tema=${julgado?.tema}`);
+        const data = await response.json();
+        setLido(data.lido);
+      } catch (error) {
+        console.error("Erro ao buscar status de leitura:", error);
+      }
+    }
+
+    fetchLidoStatus();
+  }, [session, params?.id]);
+
+  const toggleLido = async () => {
+    if (!session || !julgado?.tema) return;
+
+    setLoading(true);
+    try {
+      const response = await fetch("/api/temas-lidos", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: session.user.id, tema: julgado.tema }),
+      });
+
+      const data = await response.json();
+      setLido(data.lido);
+    } catch (error) {
+      console.error("Erro ao alternar status de leitura:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
   const handleEditar = (id: string, textoAtual: string) => {
     setEditando((prev) => ({ ...prev, [id]: true }));
     setNovoTexto((prev) => ({ ...prev, [id]: textoAtual }));
@@ -122,6 +161,13 @@ export default function JulgadoDetailPage() {
         <h1 className="text-3xl font-bold mb-8 text-justify">
           Tema {julgado.tema.toString()} - {julgado.titulo}
         </h1>
+        <button
+        onClick={toggleLido}
+        disabled={loading}
+        className={`px-4 py-2 rounded ${lido ? "bg-green-500 text-white" : "bg-gray-300 text-black"}`}
+      >
+        {loading ? "Salvando..." : lido ? "Marcar como Não Lido" : "Marcar como Lido"}
+      </button>
         <p className="text-lg text-gray-600 mb-2">
           Ramo do Direito: {julgado.ramoDireito}
         </p>
@@ -212,6 +258,10 @@ export default function JulgadoDetailPage() {
         ) : (
           <p className="text-gray-500">Nenhum comentário ainda.</p>
         )}
+        <iframe 
+            src={julgado.linkProcesso}
+            className="w-full h-screen border rounded-lg"
+        ></iframe> 
       </div>
     </div>
   );

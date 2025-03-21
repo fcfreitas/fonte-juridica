@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useFilter } from "./components/FilterContext";
 import { Julgado } from "./julgados-data";
+import { useSession } from "next-auth/react";
+import { IntegerType } from "mongodb";
 
 const formatDate = (date: string | null | undefined): string => {
   if (!date) {
@@ -12,10 +14,12 @@ const formatDate = (date: string | null | undefined): string => {
 };
 
 export default function JulgadosList() {
+  const { data: session } = useSession();
   const { ramoDireito, assunto, situacaoRepGeral, situacaoTema } = useFilter();
   const [julgados, setJulgados] = useState<Julgado[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
+  const [temasLidos, setTemasLidos] = useState<Record<number, boolean>>({}); // Armazena quais temas foram marcados como lidos
 
   useEffect(() => {
     async function fetchJulgados() {
@@ -51,8 +55,49 @@ export default function JulgadosList() {
       }
     }
 
+    async function fetchTemasLidos() {
+      if (!session) return;
+      try {
+        console.log("🟢 Sessão atual:", session);
+        const res = await fetch(`/api/temas-lidos?userId=${session.user.id}`);
+        if (!res.ok) throw new Error("Erro ao buscar temas lidos");
+        const data = await res.json();
+        const lidos = data.reduce((acc: Record<number, boolean>, item: { tema: number; lido: boolean }) => {
+          acc[item.tema] = item.lido;
+          return acc;
+        }, {});
+        setTemasLidos(lidos);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
     fetchJulgados();
-  }, [ramoDireito, assunto, situacaoRepGeral, situacaoTema]); // Atualiza sempre que os filtros mudarem
+    if (session) fetchTemasLidos();
+  }, [ramoDireito, assunto, situacaoRepGeral, situacaoTema, session]); // Atualiza sempre que os filtros mudarem
+
+  const toggleLido = async (tema: number) => {
+    if (!session) return alert("Você precisa estar logado para marcar como lido.");
+
+    const novoEstado = !temasLidos[tema]; // Alterna entre true/false
+
+    try {
+      const response = await fetch("/api/temas-lidos", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: session.user.id, tema, lido: novoEstado }),
+      });
+
+      if (!response.ok) throw new Error("Erro ao atualizar tema lido");
+
+      setTemasLidos((prev) => ({
+        ...prev,
+        [tema]: novoEstado,
+      }));
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   if (loading) return <div>Carregando...</div>;
   if (error) return <div>{error}</div>;
@@ -65,6 +110,15 @@ export default function JulgadosList() {
             key={j._id}
             className="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition duration-300"
           >
+                      {/* Botão de Marcar como Lido */}
+          <button
+            className={`mt-3 px-4 py-2 text-white rounded-lg ${
+              temasLidos[parseInt(j.tema.toString(),10)] ? "bg-green-600 hover:bg-green-700" : "bg-gray-500 hover:bg-gray-600"
+            }`}
+            onClick={() => toggleLido(parseInt(j.tema.toString(),10))}
+          >
+            {temasLidos[parseInt(j.tema.toString(),10)] ? "Lido ✔" : "Marcar como Lido"}
+          </button>
             <Link
               href={"/stf-rep-geral/" + j._id}
               className="block"
