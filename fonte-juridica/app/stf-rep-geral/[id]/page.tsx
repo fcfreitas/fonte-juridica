@@ -84,6 +84,7 @@ export default function JulgadoDetailPage() {
     async function fetchLidoStatus() {
       try {
         const response = await fetch(`/api/temas-lidos?userId=${session?.user.id}&tema=${julgado?.tema}`);
+        console.log('Parametros de busca dos comentarios', julgado?.tema, session?.user.id)
         const data = await response.json();
         setLido(data.lido);
       } catch (error) {
@@ -102,7 +103,7 @@ export default function JulgadoDetailPage() {
       const response = await fetch("/api/temas-lidos", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId: session.user.id, tema: julgado.tema }),
+        body: JSON.stringify({ userId: session.user.id, tema: julgado?.tema }),
       });
 
       const data = await response.json();
@@ -161,13 +162,15 @@ export default function JulgadoDetailPage() {
         <h1 className="text-3xl font-bold mb-8 text-justify">
           Tema {julgado.tema.toString()} - {julgado.titulo}
         </h1>
-        <button
+        { /* BOTAO PARA MARCAR COMO LIDO / NAO LIDO */}
+        <button 
         onClick={toggleLido}
         disabled={loading}
-        className={`px-4 py-2 rounded ${lido ? "bg-green-500 text-white" : "bg-gray-300 text-black"}`}
+        className={`px-4 py-2 rounded mb-4 ${lido ? "bg-gray-300 text-white" : "bg-gray-300 text-black"}`}
       >
-        {loading ? "Salvando..." : lido ? "Marcar como Não Lido" : "Marcar como Lido"}
+        {loading ? "Salvando..." : lido ? "📕  Marcar como Não Lido" : "📖  Marcar como Lido"}
       </button>
+        {/* INFORMACOES GERAIS DO JULGADO */}
         <p className="text-lg text-gray-600 mb-2">
           Ramo do Direito: {julgado.ramoDireito}
         </p>

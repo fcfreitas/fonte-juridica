@@ -45,9 +45,17 @@ export default function JulgadosPage() {
     setIsOpen(false);
   };
 
+  const clearFilters = () => {
+    setRamoDireito("")
+    setAssunto("")
+    setSituacaoRepGeral("")
+    setSituacaoTema("")
+    // setSearchQuery("")
+  }
+
   return (
-    <div className="container mx-auto p-8">
-      <h1 className="text-4xl font-bold mb-4">STF - Temas de Repercussão Geral</h1>
+    <div className="container mx-auto p-4">
+      <h2 className="text-2xl md:text-3xl font-bold mb-6 text-slate-800">STF - Temas de Repercussão Geral</h2>
 
       {/* Botão para abrir filtros no mobile */}
       <div className="md:hidden flex justify-start mb-4">
@@ -78,8 +86,7 @@ export default function JulgadosPage() {
 
       <div className="group flex w-full">
         {/* Filtros desktop */}
-        <div className="hidden md:block w-[300px] h-screen sticky top-0 p-8">
-          <div className="bg-white rounded-lg shadow-md p-4">
+        <div className="hidden md:block w-[300px] h-screen sticky top-0 hidden space-y-6 bg-white p-6 rounded-lg shadow-sm border border-slate-200">
             <Filters />
             <FiltersDynamic
               onFilterSelect={(field, value) => {
@@ -90,7 +97,6 @@ export default function JulgadosPage() {
               }}
               ramoDireito={ramoDireito}
             />
-          </div>
         </div>
 
         {/* Lista de julgados */}

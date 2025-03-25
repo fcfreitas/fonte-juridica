@@ -1,6 +1,9 @@
 'use client'
 
 import { useEffect, useState } from "react";
+import { Loader2 } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Label } from "@/components/ui/label"
 
 interface FilterDynamicProps {
   onFilterSelect: (field: string, value: string) => void;
@@ -52,8 +55,8 @@ export function FiltersDynamic({ onFilterSelect, ramoDireito }: FilterDynamicPro
     fetchValues();
   }, [ramoDireito]); // Quando 'ramoDireito' mudar, a função é chamada novamente.
 
-  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>, filterType: string) => {
-    const value = e.target.value.trim(); // Remover espaços extras
+  const handleSelectChange = (e: string, filterType: string) => {
+    const value = e.trim(); // Remover espaços extras
     console.log(`🎯 ${filterType} selecionado para filtragem:`, value);
 
     switch (filterType) {
@@ -76,78 +79,171 @@ export function FiltersDynamic({ onFilterSelect, ramoDireito }: FilterDynamicPro
   };
 
   return (
-    <div className="mb-4">
-      {/* Filtro de Assunto */}
-      <div>
-        <label className="block text-lg font-semibold mb-2">Assunto:</label>
-        <select
-          value={assunto}
-          onChange={(e) => handleSelectChange(e, "assunto")}
-          className="w-full mb-2 px-4 py-2 bg-slate-100 border border-slate-300 rounded focus:ring-2 focus:ring-slate-500 focus:border-slate-500"
-          disabled={loading || values.length === 0}
-        >
-          {loading ? (
-            <option>Carregando...</option>
-          ) : (
-            <>
-              <option value="">Todos</option>
-              {values.map((value) => (
-                <option key={value} value={value}>
-                  {value}
-                </option>
-              ))}
-            </>
-          )}
-        </select>
-      </div>
-
-      {/* Filtro de SituacaoRepGeral */}
-      <div>
-        <label className="block text-lg font-semibold mb-2">Situação Rep. Geral:</label>
-        <select
-          value={situacaoRepGeral}
-          onChange={(e) => handleSelectChange(e, "situacaoRepGeral")}
-          className="w-full mb-2 px-4 py-2 bg-slate-100 border border-slate-300 rounded focus:ring-2 focus:ring-slate-500 focus:border-slate-500"
-          disabled={loading || situacaoRepGeralValues.length === 0}
-        >
-          {loading ? (
-            <option>Carregando...</option>
-          ) : (
-            <>
-              <option value="">Todos</option>
-              {situacaoRepGeralValues.map((value) => (
-                <option key={value} value={value}>
-                  {value}
-                </option>
-              ))}
-            </>
-          )}
-        </select>
-      </div>
-
-      {/* Filtro de SituacaoTema */}
-      <div>
-        <label className="block text-lg font-semibold mb-2">Situação Tema:</label>
-        <select
-          value={situacaoTema}
-          onChange={(e) => handleSelectChange(e, "situacaoTema")}
-          className="w-full mb-2 px-4 py-2 bg-slate-100 border border-slate-300 rounded focus:ring-2 focus:ring-slate-500 focus:border-slate-500"
-          disabled={loading || situacaoTemaValues.length === 0}
-        >
-          {loading ? (
-            <option>Carregando...</option>
-          ) : (
-            <>
-              <option value="">Todos</option>
-              {situacaoTemaValues.map((value) => (
-                <option key={value} value={value}>
-                  {value}
-                </option>
-              ))}
-            </>
-          )}
-        </select>
-      </div>
+  <>
+    <div className="space-y-2">
+    <Label htmlFor="assunto" className="font-semibold">Assunto:</Label>
+    <Select 
+      value={assunto} 
+      onValueChange={(e) => handleSelectChange(e, "assunto")}
+      disabled={loading || values.length === 0}
+    >
+      <SelectTrigger id="assunto" className="w-full bg-slate-50">
+        {loading ? (
+          <div className="flex items-center gap-2">
+            <Loader2 className="h-4 w-4 animate-spin" />
+            <span>Carregando...</span>
+          </div>
+        ) : (
+          <SelectValue placeholder="Todos" />
+        )}
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value=" ">Todos</SelectItem>
+        {values.map((value) => (
+          <SelectItem key={value} value={value}>
+            {value}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
     </div>
+
+    <div className="space-y-2">
+    <Label htmlFor="situacao-rep-geral" className="font-semibold">Situação Rep. Geral:</Label>
+    <Select 
+      value={situacaoRepGeral} 
+      onValueChange={(e) => handleSelectChange(e, "situacaoRepGeral")}
+      disabled={loading || situacaoRepGeralValues.length === 0}
+    >
+      <SelectTrigger id="situacao-rep-geral" className="w-full bg-slate-50">
+        {loading ? (
+          <div className="flex items-center gap-2">
+            <Loader2 className="h-4 w-4 animate-spin" />
+            <span>Carregando...</span>
+          </div>
+        ) : (
+          <SelectValue placeholder="Todos" />
+        )}
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value=" ">Todos</SelectItem>
+        {situacaoRepGeralValues.map((value) => (
+          <SelectItem key={value} value={value}>
+            {value}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+    </div>
+
+    <div className="space-y-2">
+    <Label htmlFor="situacao-tema" className="font-semibold">Situação Tema:</Label>
+    <Select 
+      value={situacaoTema} 
+      onValueChange={(e) => handleSelectChange(e, "situacaoTema")}
+      disabled={loading || situacaoTemaValues.length === 0}
+    >
+      <SelectTrigger id="situacao-tema" className="w-full bg-slate-50">
+        {loading ? (
+          <div className="flex items-center gap-2">
+            <Loader2 className="h-4 w-4 animate-spin" />
+            <span>Carregando...</span>
+          </div>
+        ) : (
+          <SelectValue placeholder="Todos" />
+        )}
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value=" ">Todos</SelectItem>
+        {situacaoTemaValues.map((value) => (
+          <SelectItem key={value} value={value}>
+            {value}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+    </div>
+  </>
   );
 }
+
+
+
+
+
+
+///////////////////
+
+// <div className="space-y-2">
+// {/* Filtro de Assunto */}
+// <div>
+//   <label className="block text-lg font-semibold mb-2">Assunto:</label>
+//   <select
+//     value={assunto}
+//     onChange={(e) => handleSelectChange(e, "assunto")}
+//     className="w-full mb-2 px-4 py-2 bg-slate-100 border border-slate-300 rounded focus:ring-2 focus:ring-slate-500 focus:border-slate-500"
+//     disabled={loading || values.length === 0}
+//   >
+//     {loading ? (
+//       <option>Carregando...</option>
+//     ) : (
+//       <>
+//         <option value="">Todos</option>
+//         {values.map((value) => (
+//           <option key={value} value={value}>
+//             {value}
+//           </option>
+//         ))}
+//       </>
+//     )}
+//   </select>
+// </div>
+
+// {/* Filtro de SituacaoRepGeral */}
+// <div>
+//   <label className="block text-lg font-semibold mb-2">Situação Rep. Geral:</label>
+//   <select
+//     value={situacaoRepGeral}
+//     onChange={(e) => handleSelectChange(e, "situacaoRepGeral")}
+//     className="w-full mb-2 px-4 py-2 bg-slate-100 border border-slate-300 rounded focus:ring-2 focus:ring-slate-500 focus:border-slate-500"
+//     disabled={loading || situacaoRepGeralValues.length === 0}
+//   >
+//     {loading ? (
+//       <option>Carregando...</option>
+//     ) : (
+//       <>
+//         <option value="">Todos</option>
+//         {situacaoRepGeralValues.map((value) => (
+//           <option key={value} value={value}>
+//             {value}
+//           </option>
+//         ))}
+//       </>
+//     )}
+//   </select>
+// </div>
+
+// {/* Filtro de SituacaoTema */}
+// <div>
+//   <label className="block text-lg font-semibold mb-2">Situação Tema:</label>
+//   <select
+//     value={situacaoTema}
+//     onChange={(e) => handleSelectChange(e, "situacaoTema")}
+//     className="w-full mb-2 px-4 py-2 bg-slate-100 border border-slate-300 rounded focus:ring-2 focus:ring-slate-500 focus:border-slate-500"
+//     disabled={loading || situacaoTemaValues.length === 0}
+//   >
+//     {loading ? (
+//       <option>Carregando...</option>
+//     ) : (
+//       <>
+//         <option value="">Todos</option>
+//         {situacaoTemaValues.map((value) => (
+//           <option key={value} value={value}>
+//             {value}
+//           </option>
+//         ))}
+//       </>
+//     )}
+//   </select>
+// </div>
+// </div>

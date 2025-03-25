@@ -23,7 +23,7 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="bg-gray-100 text-gray-700">
+      <body className="bg-slate-50 text-gray-700">
         <AuthProvider>
             <FilterProvider>  
               <HeaderBar />
