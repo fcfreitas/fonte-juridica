@@ -78,8 +78,7 @@ const AdminTextEditor = ({
   };
 
   return (
-    <div className="admin-editor border p-4 rounded shadow-md">
-      <h2 className="text-lg font-bold mb-2">Incluir Comentários</h2>
+    <div className="admin-editor">
       <ReactQuill
         value={content}
         onChange={handleChange}
@@ -95,7 +94,7 @@ const AdminTextEditor = ({
           type="submit"
           disabled={loading}
           onClick={handleSubmit}
-          className="mt-2 px-4 py-2 bg-blue-600 text-white rounded"
+          className="mt-2 px-4 py-2 bg-neutral-400 text-white rounded"
         >
           {loading ? 'Publicando...' : 'Publicar'}
         </button>

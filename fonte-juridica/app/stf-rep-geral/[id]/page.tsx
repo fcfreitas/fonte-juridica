@@ -9,6 +9,11 @@ import { Julgado } from "@/app/julgados-data";
 import Link from "next/link";
 import AdminTextEditor from "@/app/components/textEditor";
 import "@/styles/quill-styles.css";
+import { Badge } from "@/components/ui/badge";
+import { Bookmark, BookOpen, BookIcon, FileText, Info, Calendar, User, Flag, MessageSquare, ExternalLink, FileCheck } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const dynamic = "force-dynamic";
 
@@ -22,10 +27,11 @@ export default function JulgadoDetailPage() {
   const params = useParams();
   const [julgado, setJulgado] = useState<Julgado | null>(null);
   const [comentarios, setComentarios] = useState<{ _id: string, text: string, createdAt: string }[]>([]);
-  const [lido, setLido] = useState(false);
+  const [lido, setLido] = useState(false); //useState<Record<number, boolean>>({});
   const [loading, setLoading] = useState(true);
   const [editando, setEditando] = useState<{ [key: string]: boolean }>({});
   const [novoTexto, setNovoTexto] = useState<{ [key: string]: string }>({});
+  const [temasLidos, setTemasLidos] = useState<Record<number, boolean>>({}); // Armazena quais temas foram marcados como lidos
 
   // Redirecionar para login se não estiver autenticado
   useEffect(() => {
@@ -56,7 +62,7 @@ export default function JulgadoDetailPage() {
     }
 
     fetchJulgado();
-  }, [params?.id]);
+  }, [params?.id, ]);
 
   // Buscar os comentários relacionados ao julgado
   useEffect(() => {
@@ -93,26 +99,29 @@ export default function JulgadoDetailPage() {
     }
 
     fetchLidoStatus();
-  }, [session, params?.id]);
+  }, [session, julgado?.tema]);
 
-  const toggleLido = async () => {
+  const toggleLido = async (tema: number) => {
     if (!session || !julgado?.tema) return;
+
+    const novoEstado = !lido; // Alterna entre true/false
 
     setLoading(true);
     try {
       const response = await fetch("/api/temas-lidos", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId: session.user.id, tema: julgado?.tema }),
+        body: JSON.stringify({ userId: session.user.id, tema: julgado?.tema, lido: novoEstado }),
       });
 
-      const data = await response.json();
-      setLido(data.lido);
-    } catch (error) {
-      console.error("Erro ao alternar status de leitura:", error);
-    } finally {
-      setLoading(false);
-    }
+      if (!response.ok) throw new Error("Erro ao atualizar tema lido");
+
+      setLido(novoEstado);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
   };
 
 
@@ -157,115 +166,270 @@ export default function JulgadoDetailPage() {
   }
 
   return (
-    <div className="container mx-auto p-8 flex flex-col md:flex-row">
-      <div className="w-full">
-        <h1 className="text-3xl font-bold mb-8 text-justify">
-          Tema {julgado.tema.toString()} - {julgado.titulo}
-        </h1>
-        { /* BOTAO PARA MARCAR COMO LIDO / NAO LIDO */}
-        <button 
-        onClick={toggleLido}
-        disabled={loading}
-        className={`px-4 py-2 rounded mb-4 ${lido ? "bg-gray-300 text-white" : "bg-gray-300 text-black"}`}
-      >
-        {loading ? "Salvando..." : lido ? "📕  Marcar como Não Lido" : "📖  Marcar como Lido"}
-      </button>
-        {/* INFORMACOES GERAIS DO JULGADO */}
-        <p className="text-lg text-gray-600 mb-2">
-          Ramo do Direito: {julgado.ramoDireito}
-        </p>
-        <h3 className="text-xl font-semibold mb-2 mt-4">Descrição</h3>
-        <p className="text-lg text-gray-600 mb-2 text-justify">
-          {julgado.descricao}
-        </p>
-        <h3 className="text-xl font-semibold mb-2 mt-4">Tese</h3>
-        <p className="text-lg text-gray-600 mb-6 text-justify">
-          {julgado.tese}
-        </p>
-        <p className="text-lg text-gray-600 mb-2">
-          Data de julgamento: {formatDate(julgado.dataJulgamento)}
-        </p>
-        <p className="text-lg text-gray-600 mb-2">
-          Situação de Repercussão Geral: {julgado.situacaoRepGeral}
-        </p>
-        <p className="text-lg text-gray-600 mb-2">
-          Situação do Tema: {julgado.situacaoTema}
-        </p>
-        <p className="text-lg text-gray-600 mb-2">
-          Recurso Paradigma: {julgado.leadingCase}
-        </p>
-        <p className="text-lg text-gray-600 mb-2">Relator: {julgado.relator}</p>
-        <p className="text-lg text-gray-600 mb-2">
-          Data da Tese: {formatDate(julgado.dataTese)}
-        </p>
-        <Link
-          href={julgado.linkProcesso}
-          target="_blank"
-          className="text-md font-bold text-gray-600 mb-2"
-        >
-          Link do processo
-        </Link>
-
-        {/* Editor de Novos Comentários */}
-        <AdminTextEditor tema={julgado.tema} onCommentPosted={() => setComentarios} />
-
-        {/* Seção de Comentários */}
-        <h3 className="text-xl font-semibold mt-6">Comentários</h3>
-        {comentarios.length > 0 ? (
-          comentarios.map((comentario) => (
-            <div key={comentario._id} className="border p-4 rounded shadow-md mb-2">
-              {editando[comentario._id] ? (
-                // Exibe o editor para editar o conteúdo
-                <AdminTextEditor
-                  tema={julgado.tema}
-                  value={novoTexto[comentario._id]} // Passa o texto salvo para editar
-                  onChange={(value) => setNovoTexto((prev) => ({
-                    ...prev,
-                    [comentario._id]: value,
-                  }))}
-                  onCommentPosted={() => setComentarios} // Atualiza os comentários na página
-                />
-              ) : (
-                // Exibe o conteúdo formatado com dangerouslySetInnerHTML
-                <div
-                  className="quill-content text-gray-700"
-                  dangerouslySetInnerHTML={{ __html: comentario.text }}
-                />
-              )}
-          
-              <p className="text-sm text-gray-500">
-                Publicado em {formatDate(comentario.createdAt)}
-              </p>
-          
-              {session?.user?.role === "admin" && (
-                <div className="mt-2">
-                  {editando[comentario._id] ? (
-                    <button
-                      onClick={() => handleSalvar(comentario._id)}
-                      className="px-3 py-1 bg-green-500 text-white rounded mr-2"
-                    >
-                      Salvar
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => handleEditar(comentario._id, comentario.text)}
-                      className="px-3 py-1 bg-blue-500 text-white rounded"
-                    >
-                      Editar
-                    </button>
-                  )}
+    <main className="container mx-auto p-4 md:p-6">
+        <div className="bg-white rounded-lg shadow-sm border mb-6">
+          <div className="p-6">
+            <div className="flex justify-between items-start gap-4 mb-4">
+              <div>
+                <div className="flex items-center gap-2 text-lg text-muted-foreground mb-2">
+                  <Badge variant="outline" className="bg-slate-100">
+                    Tema {julgado.tema.toString()}
+                  </Badge>
+                  <Badge variant="outline" className="bg-slate-100">
+                    {julgado.leadingCase}
+                  </Badge>
+                  <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">
+                    {julgado.situacaoTema}
+                  </Badge>
                 </div>
-              )}
+                <h1 className="text-xl md:text-2xl font-bold text-slate-900 leading-tight mb-6">{julgado.titulo}</h1>
+                {julgado.tese && (<Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-lg flex items-center">
+                      <FileCheck className="h-5 w-5 mr-2 text-slate-500" />
+                      Tese
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-slate-700">{julgado.tese}</p>
+                  </CardContent>
+                </Card>
+                )}
+                {julgado.linkProcesso && (
+                  <div className="flex justify-start">
+                    <Button variant="outline" size="sm">
+                      <ExternalLink className="h-4 w-4 mr-2" />
+                        <Link
+                          href={julgado.linkProcesso}
+                          target="_blank"
+                        >
+                          Link do processo
+                        </Link>
+                    </Button>
+                  </div>
+                )}
+              </div>
+              <Button
+                  variant={lido ? "outline" : "secondary"}
+                  size="sm"
+                  className="h-9 gap-2"
+                  onClick={() => toggleLido}
+                >
+                  {lido ? (
+                    <>
+                      <BookIcon size={16} />
+                      <span>Lido</span>
+                    </>
+                  ) : (
+                    <>
+                      <BookOpen size={16} />
+                      <span>Marcar como Lido</span>
+                    </>
+                  )}
+                </Button>
             </div>
-          ))
-        ) : (
-          <p className="text-gray-500">Nenhum comentário ainda.</p>
-        )}
-        <iframe 
-            src={julgado.linkProcesso}
-            className="w-full h-screen border rounded-lg"
-        ></iframe> 
+
+            <Tabs defaultValue="informacoes" className="w-full">
+              <TabsList className="grid grid-cols-3 mb-6">
+                <TabsTrigger value="informacoes">Informações</TabsTrigger>
+                <TabsTrigger value="comentarios">Comentários e Análises</TabsTrigger>
+                <TabsTrigger value="documento">Documento</TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="informacoes" className="space-y-6">
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-lg flex items-center">
+                      <FileText className="h-5 w-5 mr-2 text-slate-500" />
+                      Ramo do Direito
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-slate-700">{julgado.ramoDireito}</p>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-lg flex items-center">
+                      <Info className="h-5 w-5 mr-2 text-slate-500" />
+                      Descrição
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-slate-700">{julgado.descricao}</p>
+                  </CardContent>
+                </Card>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Card>
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-lg flex items-center">
+                        <Calendar className="h-5 w-5 mr-2 text-slate-500" />
+                        Datas
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-2">
+                      <div>
+                        <p className="text-sm font-medium text-slate-500">Data de julgamento</p>
+                        <p className="text-slate-700">{julgado.dataJulgamento}</p>
+                      </div>
+                      {julgado.dataTese && (
+                        <div>
+                          <p className="text-sm font-medium text-slate-500">Data da Tese</p>
+                          <p className="text-slate-700">{julgado.dataTese}</p>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-lg flex items-center">
+                        <Flag className="h-5 w-5 mr-2 text-slate-500" />
+                        Situação
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-2">
+                      <div>
+                        <p className="text-sm font-medium text-slate-500">Situação de Repercussão Geral</p>
+                        <p className="text-slate-700">{julgado.situacaoRepGeral}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-slate-500">Situação do Tema</p>
+                        <p className="text-slate-700">{julgado.situacaoTema}</p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-lg flex items-center">
+                      <User className="h-5 w-5 mr-2 text-slate-500" />
+                      Relator
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-slate-700">{julgado.relator}</p>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              <TabsContent value="comentarios">
+                <Card className="mb-6">
+                  <CardHeader>
+                    <CardTitle className="text-lg flex items-center">
+                      <MessageSquare className="h-5 w-5 mr-2 text-slate-500" />
+                      Comentários
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {comentarios.length > 0 ? (
+                      <div className="space-y-4">
+                        {comentarios.map((comentario) => (
+                          <div key={comentario._id} className="border rounded-lg p-4">
+
+                            {editando[comentario._id] ? (
+                              // Exibe o editor para editar o conteúdo
+                              <AdminTextEditor
+                                tema={julgado.tema}
+                                value={novoTexto[comentario._id]} // Passa o texto salvo para editar
+                                onChange={(value) => setNovoTexto((prev) => ({
+                                  ...prev,
+                                  [comentario._id]: value,
+                                }))}
+                                onCommentPosted={() => setComentarios} // Atualiza os comentários na página
+                              />
+                            ) : (
+                              // Exibe o conteúdo formatado com dangerouslySetInnerHTML
+                              <>
+                                <div
+                                  className="quill-content text-gray-700 mb-2"
+                                  dangerouslySetInnerHTML={{ __html: comentario.text }}
+                                />
+                                <div className="flex justify-between items-center mb-1 mt-2">
+                                  <div className="text-sm text-muted-foreground"> Publicado em:
+                                    {new Date(comentario.createdAt).toLocaleDateString("pt-BR")}
+                                  </div>
+                                  {/* <div className="mt-2 text-sm text-muted-foreground">Por: {comentario.autor}</div> */}
+                                </div>   
+                              </>
+                            )}                          
+                            {session?.user?.role === "admin" && (
+                              <div className="mt-2">
+                                {editando[comentario._id] ? (
+                                  <button
+                                    onClick={() => handleSalvar(comentario._id)}
+                                    className="px-3 py-1 bg-green-500 text-white rounded mr-2"
+                                  >
+                                    Salvar
+                                  </button>
+                                ) : (
+                                  <button
+                                    onClick={() => handleEditar(comentario._id, comentario.text)}
+                                    className="px-3 py-1 bg-neutral-400 text-white rounded"
+                                  >
+                                    Editar
+                                  </button>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-muted-foreground">Nenhum comentário disponível.</p>
+                    )}
+                  </CardContent>
+                </Card>
+                {session?.user?.role === "admin" && (
+                  <Card className="mt-6">
+                    <CardHeader>
+                      <CardTitle className="text-lg flex items-center">
+                        <MessageSquare className="h-5 w-5 mr-2 text-slate-500" />
+                        Incluir novos comentários e análises
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      {/* Inserir Novos Comentários */}
+                      <AdminTextEditor tema={julgado.tema} onCommentPosted={() => setComentarios} />
+                    </CardContent>
+                  </Card>
+                )}
+              </TabsContent>
+
+              <TabsContent value="documento">
+                <Card className="mb-4">
+                  <CardHeader>
+                    <CardTitle className="text-lg">Documento Original</CardTitle>
+                    <CardDescription>Visualize o documento completo relacionado a este julgado</CardDescription>
+                  </CardHeader>
+                </Card>
+
+                {/* Embedded Browser Section */}
+                <div className="border rounded-lg overflow-hidden bg-white shadow-sm">
+                  <div className="bg-slate-100 border-b px-4 py-2 flex items-center">
+                    <div className="flex space-x-1.5">
+                      <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                      <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+                      <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                    </div>
+                    <div className="mx-auto text-sm text-slate-500 font-medium">Documento: Tema {julgado.tema.toString()}</div>
+                  </div>
+                  <div className="h-[500px] w-full">
+                    <iframe
+                      src={julgado.linkProcesso}
+                      className="w-full h-full border-0"
+                      title={`Documento do Tema ${julgado.tema}`}
+                      sandbox="allow-same-origin allow-scripts"
+                    />
+                  </div>
+                </div>
+              </TabsContent>
+            </Tabs>
+          </div>
       </div>
-    </div>
+    </main>
   );
 }
