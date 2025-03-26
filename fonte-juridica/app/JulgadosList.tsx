@@ -122,8 +122,11 @@ export default function JulgadosList() {
                 className="block"
                 target="_blank"
                 >
-                  <CardTitle className="text-lg font-bold text-slate-800">{j.tema.toString()} - {j.titulo}</CardTitle>
+                  <CardTitle className="text-lg font-bold text-slate-800 text-justify">{j.tema.toString()} - {j.titulo}</CardTitle>
                 </Link>
+              </div>
+              <div className="flex items-center justify-between mt-1">
+                <p className="text-sm text-slate-600 mt-1">Ramo do Direito: {j.ramoDireito}</p>
                 <Button
                   variant={!!temasLidos[Number(j.tema)] ? "outline" : "secondary"}
                   size="sm"
@@ -143,12 +146,11 @@ export default function JulgadosList() {
                   )}
                 </Button>
               </div>
-              <p className="text-sm text-slate-600 mt-1">Ramo do Direito: {j.ramoDireito}</p>
             </CardHeader>
             <CardContent className="pt-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <p className="text-slate-700 text-justify mb-2 font-semibold text-sm">Tese:<span className="font-normal text-slate-600"> {j.tese}</span></p>
+                  <p className="text-slate-700 text-justify mb-2 font-semibold text-sm">Tese:<span className="font-normal text-slate-600 text-justify"> {j.tese}</span></p>
                   <p className="text-slate-600 font-medium text-sm">Data de julgamento: {formatDate(j.dataJulgamento)}</p>
                 </div>
                 <div>

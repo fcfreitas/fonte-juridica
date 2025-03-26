@@ -29,10 +29,17 @@ export async function POST(request: Request) {
 }
 
 // Função para o método GET - Obter todos os textos publicados
-export async function GET() {
+export async function GET(req: Request) {
   try {
     const {db} = await connectToDb();
-    const posts = await db.collection("posts").find().toArray();
+
+    const { searchParams } = new URL(req.url);
+    const temaParam = searchParams.get("tema")?.trim(); // Agora é opcional
+
+    const tema = temaParam ? Number(temaParam) : null;
+    const query = { tema }
+
+    const posts = await db.collection("posts").find(query).toArray();
 
     return NextResponse.json(posts);
   } catch (error) {

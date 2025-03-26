@@ -10,21 +10,22 @@ export async function POST(req: Request) {
     }
 
     const { db } = await connectToDb();
-    const collection =  db.collection("temasLidos");
+    const collection = db.collection("temasLidos");
 
     // Verifica se já existe um registro para esse usuário e tema
     const existingRecord = await collection.findOne({ userId, tema });
 
     if (existingRecord) {
-      // Alterna entre true e false
-      const updatedRecord = await collection.updateOne(
+      // Alterna entre true e false e retorna o valor atualizado
+      const updatedRecord = await collection.findOneAndUpdate(
         { _id: new ObjectId(existingRecord._id) },
-        { $set: { lido: !existingRecord.lido } }
+        { $set: { lido: !existingRecord.lido } },
+        { returnDocument: "after" } // Retorna o novo valor
       );
-      return NextResponse.json({ success: true, lido: !existingRecord.lido });
+      return NextResponse.json({ success: true, lido: updatedRecord?.value?.lido });
     } else {
       // Insere um novo registro como lido (true)
-      await collection.insertOne({ userId, tema, lido: true });
+      const newRecord = await collection.insertOne({ userId, tema, lido: true });
       return NextResponse.json({ success: true, lido: true });
     }
   } catch (error) {
@@ -33,32 +34,40 @@ export async function POST(req: Request) {
   }
 }
 
+
 export async function GET(req: Request) {
-    try {
-      const { searchParams } = new URL(req.url);
-      const userId = searchParams.get("userId");
-      const tema = searchParams.get("tema"); // Agora é opcional
-  
-      if (!userId) {
-        return NextResponse.json({ error: "Dados inválidos" }, { status: 400 });
-      }
-  
-      const { db } = await connectToDb();
-      const collection = db.collection("temasLidos");
-  
-      // Busca todos os temas do usuário ou um tema específico
-      const query = tema ? { userId, tema } : { userId };
-      const records = await collection.find(query).toArray();
-  
-      // Se houver um tema específico, retorna o objeto diretamente
-      if (tema) {
-        return NextResponse.json(records[0] || { lido: false });
-      }
-  
-      // Se não houver tema, retorna todos
-      return NextResponse.json(records);
-    } catch (error) {
-      console.error("Erro ao buscar status de leitura:", error);
-      return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });
+  try {
+    const { searchParams } = new URL(req.url);
+    const userId = searchParams.get("userId");
+    const temaParam = searchParams.get("tema")?.trim(); // Agora é opcional
+
+    if (!userId) {
+      return NextResponse.json({ error: "Dados inválidos" }, { status: 400 });
     }
-  }  
+
+    const { db } = await connectToDb();
+    const collection = db.collection("temasLidos");
+
+    const tema = temaParam ? Number(temaParam) : null;
+
+    // Monta a query corretamente
+    const query = tema !== null ? { userId, tema } : { userId };
+    const records = await collection.find(query).toArray();
+
+    // Log para garantir que estamos vendo o que estamos buscando
+    console.log("Query:", query);
+    console.log("Records encontrados:", records);
+
+    // Se houver um tema específico, retorna o objeto diretamente
+    if (tema !== null) {
+      return NextResponse.json(records[0] || { lido: false });
+    }
+
+    // Se não houver tema, retorna todos
+    return NextResponse.json(records);
+  } catch (error) {
+    console.error("Erro ao buscar status de leitura:", error);
+    return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });
+  }
+}
+  

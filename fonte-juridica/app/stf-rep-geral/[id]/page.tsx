@@ -27,7 +27,7 @@ export default function JulgadoDetailPage() {
   const params = useParams();
   const [julgado, setJulgado] = useState<Julgado | null>(null);
   const [comentarios, setComentarios] = useState<{ _id: string, text: string, createdAt: string }[]>([]);
-  const [lido, setLido] = useState(false); //useState<Record<number, boolean>>({});
+  const [lido, setLido] = useState<boolean | null>(null);
   const [loading, setLoading] = useState(true);
   const [editando, setEditando] = useState<{ [key: string]: boolean }>({});
   const [novoTexto, setNovoTexto] = useState<{ [key: string]: string }>({});
@@ -92,7 +92,7 @@ export default function JulgadoDetailPage() {
         const response = await fetch(`/api/temas-lidos?userId=${session?.user.id}&tema=${julgado?.tema}`);
         console.log('Parametros de busca dos comentarios', julgado?.tema, session?.user.id)
         const data = await response.json();
-        setLido(data.lido);
+        setLido(data?.lido ?? false);
       } catch (error) {
         console.error("Erro ao buscar status de leitura:", error);
       }
@@ -101,7 +101,7 @@ export default function JulgadoDetailPage() {
     fetchLidoStatus();
   }, [session, julgado?.tema]);
 
-  const toggleLido = async (tema: number) => {
+  const toggleLido = async () => {
     if (!session || !julgado?.tema) return;
 
     const novoEstado = !lido; // Alterna entre true/false
@@ -116,12 +116,13 @@ export default function JulgadoDetailPage() {
 
       if (!response.ok) throw new Error("Erro ao atualizar tema lido");
 
-      setLido(novoEstado);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
+      const data = await response.json();
+      console.log("Resposta do toggle:", data); // Para ver o retorno
+  
+      setLido(data.lido); // Atualiza com o valor retornado
+    } catch (error) {
+      console.error("Erro ao atualizar tema lido:", error);
+    }
   };
 
 
@@ -169,8 +170,8 @@ export default function JulgadoDetailPage() {
     <main className="container mx-auto p-4 md:p-6">
         <div className="bg-white rounded-lg shadow-sm border mb-6">
           <div className="p-6">
-            <div className="flex justify-between items-start gap-4 mb-4">
-              <div>
+            <div className="space-y-3 mb-4">
+              <div className="flex justify-between items-center justify-center gap-4 mb-4">
                 <div className="flex items-center gap-2 text-lg text-muted-foreground mb-2">
                   <Badge variant="outline" className="bg-slate-100">
                     Tema {julgado.tema.toString()}
@@ -182,7 +183,26 @@ export default function JulgadoDetailPage() {
                     {julgado.situacaoTema}
                   </Badge>
                 </div>
-                <h1 className="text-xl md:text-2xl font-bold text-slate-900 leading-tight mb-6">{julgado.titulo}</h1>
+                <Button
+                  variant={lido ? "outline" : "secondary"}
+                  size="sm"
+                  className="h-9 gap-2 items-center mb-2"
+                  onClick={toggleLido}
+                >
+                  {lido ? (
+                    <>
+                      <BookIcon size={16} />
+                      <span>Lido</span>
+                    </>
+                  ) : (
+                    <>
+                      <BookOpen size={16} />
+                      <span>Marcar como Lido</span>
+                    </>
+                  )}
+                </Button>
+              </div>
+                <h1 className="text-xl md:text-2xl font-bold text-slate-900 leading-tight mb-6 text-justify">{julgado.titulo}</h1>
                 {julgado.tese && (<Card>
                   <CardHeader className="pb-2">
                     <CardTitle className="text-lg flex items-center">
@@ -191,7 +211,7 @@ export default function JulgadoDetailPage() {
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-slate-700">{julgado.tese}</p>
+                    <p className="text-slate-700 text-justify">{julgado.tese}</p>
                   </CardContent>
                 </Card>
                 )}
@@ -208,25 +228,6 @@ export default function JulgadoDetailPage() {
                     </Button>
                   </div>
                 )}
-              </div>
-              <Button
-                  variant={lido ? "outline" : "secondary"}
-                  size="sm"
-                  className="h-9 gap-2"
-                  onClick={() => toggleLido}
-                >
-                  {lido ? (
-                    <>
-                      <BookIcon size={16} />
-                      <span>Lido</span>
-                    </>
-                  ) : (
-                    <>
-                      <BookOpen size={16} />
-                      <span>Marcar como Lido</span>
-                    </>
-                  )}
-                </Button>
             </div>
 
             <Tabs defaultValue="informacoes" className="w-full">
