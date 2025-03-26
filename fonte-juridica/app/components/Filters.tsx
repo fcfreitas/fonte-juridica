@@ -16,19 +16,22 @@ export function Filters() {
       </SelectTrigger>
       <SelectContent>
         <SelectItem value=" ">Todos</SelectItem>
-        <SelectItem value="DIREITO ADMINISTRATIVO E OUTRAS MATÉRIAS DE DIREITO PÚBLICO">
-          Administrativo
-        </SelectItem>
-        <SelectItem value="DIREITO ASSISTENCIAL">Assistencial</SelectItem>
-        <SelectItem value="DIREITO CIVIL">Civil</SelectItem>
-        <SelectItem value="DIREITO DO CONSUMIDOR">Consumidor</SelectItem>
-        <SelectItem value="DIREITO DO TRABALHO">Trabalho</SelectItem>
-        <SelectItem value="DIREITO ELEITORAL">Eleitoral</SelectItem>
-        <SelectItem value="DIREITO PREVIDENCIÁRIO">Previdenciário</SelectItem>
-        <SelectItem value="DIREITO PROCESSUAL CIVIL E DO TRABALHO">Processual Civil e do Trabalho</SelectItem>
-        <SelectItem value="DIREITO PROCESSUAL PENAL">Processual Penal</SelectItem>
-        <SelectItem value="MILITAR">Militar</SelectItem>
-        <SelectItem value="DIREITO TRIBUTÁRIO">Tributário</SelectItem>
+        <SelectItem value="Administrativo">Administrativo</SelectItem>
+        <SelectItem value="Ambiental">Ambiental</SelectItem>
+        <SelectItem value="Civil">Civil</SelectItem>
+        <SelectItem value="Consumidor">Consumidor</SelectItem>
+        <SelectItem value="Trabalho">Trabalho</SelectItem>
+        <SelectItem value="Eleitoral">Eleitoral</SelectItem>
+        <SelectItem value="Internacional">Internacional</SelectItem>
+        <SelectItem value="Penal">Penal</SelectItem>
+        <SelectItem value="Penal Militar">Penal Militar</SelectItem>
+        <SelectItem value="Previdenciário">Previdenciário</SelectItem>
+        <SelectItem value="Processual Civil e do Trabalho">Processual Civil e do Trabalho</SelectItem>
+        <SelectItem value="Processual Penal">Processual Penal</SelectItem>
+        <SelectItem value="Processual Penal Militar">Processual Penal Militar</SelectItem>
+        <SelectItem value="Registral">Registral</SelectItem>
+        <SelectItem value="Militar">Militar</SelectItem>
+        <SelectItem value="Tributário">Tributário</SelectItem>
       </SelectContent>
     </Select>
   </div>
