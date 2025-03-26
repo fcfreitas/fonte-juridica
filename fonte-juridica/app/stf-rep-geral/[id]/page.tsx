@@ -203,7 +203,7 @@ export default function JulgadoDetailPage() {
                 </Button>
               </div>
                 <h1 className="text-xl md:text-2xl font-bold text-slate-900 leading-tight mb-6 text-justify">{julgado.titulo}</h1>
-                {julgado.tese && (<Card>
+                {julgado.tese ? (<Card>
                   <CardHeader className="pb-2">
                     <CardTitle className="text-lg flex items-center">
                       <FileCheck className="h-5 w-5 mr-2 text-slate-500" />
@@ -214,6 +214,18 @@ export default function JulgadoDetailPage() {
                     <p className="text-slate-700 text-justify">{julgado.tese}</p>
                   </CardContent>
                 </Card>
+                ) : (<Card>
+                  <CardHeader className="pb-2">
+                  <CardTitle className="text-lg flex items-center">
+                    <FileCheck className="h-5 w-5 mr-2 text-slate-500" />
+                    Tese
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-slate-700 text-justify">Tese ainda não publicada.</p>
+                </CardContent>
+              </Card>
+
                 )}
                 {julgado.linkProcesso && (
                   <div className="flex justify-start">
@@ -246,7 +258,19 @@ export default function JulgadoDetailPage() {
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-slate-700">{julgado.ramoDireito}</p>
+                    <p className="text-slate-700 mb-4">{julgado.ramoDireito}</p>
+                    <div className="flex justify-start items-center gap-2">
+                        <p className="text-sm font-medium text-slate-500">Assuntos:</p>
+                        <p className="flex flex-wrap gap-2 text-sm font-medium text-slate-600">              
+                          {julgado.assunto_array && julgado.assunto_array.length > 0 && (
+                            julgado.assunto_array.slice(1).map((assunto, index) => (
+                              <Badge key={Number(index)} variant="secondary" className="text-sm p-1 rounded-lg">
+                                <span>{assunto}</span>
+                              </Badge>
+                            ))
+                          )}
+                        </p>
+                      </div>
                   </CardContent>
                 </Card>
 
