@@ -159,7 +159,7 @@ export default function JulgadosList() {
               <CardContent className="pt-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <p className="text-slate-700 text-justify mb-2 font-semibold text-sm">Tese:<span className="font-normal text-slate-600 text-justify"> {j.tese}</span></p>
+                    <p className="text-slate-700 text-justify mb-2 font-semibold text-sm">Tese:<span className="font-normal text-slate-600 text-justify">{j.tese ? j.tese.slice(0, 250) + (j.tese.length > 250 ? ' (...)' : '') : ''}</span></p>
                     <p className="text-slate-600 font-medium text-sm">Data de julgamento: {formatDate(j.dataJulgamento)}</p>
                   </div>
                   <div>
@@ -228,7 +228,7 @@ export default function JulgadosList() {
               <CardContent className="pt-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <p className="text-slate-700 text-justify mb-2 font-semibold text-sm">Tese:<span className="font-normal text-slate-600 text-justify"> {j.tese}</span></p>
+                    <p className="text-slate-700 text-justify mb-2 font-semibold text-sm">Tese:<span className="font-normal text-slate-600 text-justify">{j.tese ? j.tese.slice(0, 250) + (j.tese.length > 250 ? ' (...)' : '') : ''}</span></p>
                     <p className="text-slate-600 font-medium text-sm">Data de julgamento: {formatDate(j.dataJulgamento)}</p>
                   </div>
                   <div>
@@ -296,7 +296,7 @@ export default function JulgadosList() {
               <CardContent className="pt-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <p className="text-slate-700 text-justify mb-2 font-semibold text-sm">Tese:<span className="font-normal text-slate-600 text-justify"> {j.tese}</span></p>
+                    <p className="text-slate-700 text-justify mb-2 font-semibold text-sm">Tese:<span className="font-normal text-slate-600 text-justify">{j.tese ? j.tese.slice(0, 250) + (j.tese.length > 250 ? ' (...)' : '') : ''}</span></p>
                     <p className="text-slate-600 font-medium text-sm">Data de julgamento: {formatDate(j.dataJulgamento)}</p>
                   </div>
                   <div>
