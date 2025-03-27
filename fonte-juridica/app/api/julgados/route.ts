@@ -10,8 +10,9 @@ export async function GET(request: Request) {
     const assunto = url.searchParams.get("assunto");
     const situacaoRepGeral = url.searchParams.get("situacaoRepGeral");
     const situacaoTema = url.searchParams.get("situacaoTema");
+    const campoTexto = url.searchParams.get("searchText");
 
-    console.log("🔍 Parâmetros recebidos:", { court, ramoDireito, assunto, situacaoRepGeral, situacaoTema });
+    console.log("🔍 Parâmetros recebidos:", { court, ramoDireito, assunto, situacaoRepGeral, situacaoTema, campoTexto });
 
     // Conectar ao banco de dados
     const { db } = await connectToDb();

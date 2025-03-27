@@ -9,6 +9,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Button } from "@/components/ui/button";
 import { BookOpen, BookIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const formatDate = (date: string | null | undefined): string => {
   if (!date) {
@@ -107,74 +108,220 @@ export default function JulgadosList() {
   if (error) return <div>{error}</div>;
 
   return (
-    <div>
-      <div className="grid grid-cols-1 gap-8">
-        {julgados.map((j) => (
-          <Card
-            key={j._id}
-            className={`overflow-hidden transition-all duration-200 ${!!temasLidos[Number(j.tema)] ? "border-l-4 border-l-green-500" : "border-l-4 border-l-blue-500"}`}
-          >
+    <div className="grid grid-cols-1 gap-8">
+      <Tabs defaultValue="all" className="w-full">
+        <div className="flex justify-between items-center mb-4">
+          <TabsList>
+            <TabsTrigger value="all">Todos</TabsTrigger>
+            <TabsTrigger value="unread">Não Lidos</TabsTrigger>
+            <TabsTrigger value="read">Lidos</TabsTrigger>
+          </TabsList>
+        </div>
+        <TabsContent value="all" className="space-y-6 mt-0">
+          {julgados.map((j) => (
+            <Card
+              key={j._id}
+              className={`overflow-hidden transition-all duration-200 ${!!temasLidos[Number(j.tema)] ? "border-l-4 border-l-green-500" : "border-l-4 border-l-blue-500"}`}
+            >
 
-            <CardHeader className="bg-slate-50 pb-2">
-              <div className="flex justify-between items-start">
-                <Link
-                href={"/stf-rep-geral/" + j._id}
-                className="block"
-                target="_blank"
-                >
-                  <CardTitle className="text-lg font-bold text-slate-800 text-justify">{j.tema.toString()} - {j.titulo}</CardTitle>
-                </Link>
-              </div>
-              <div className="flex items-center justify-between mt-1">
-                <p className="text-sm text-slate-600 mt-1">Ramo do Direito: {j.ramoDireito}</p>
-                <Button
-                  variant={!!temasLidos[Number(j.tema)] ? "outline" : "secondary"}
-                  size="sm"
-                  className="h-9 gap-2"
-                  onClick={() => toggleLido(Number(j.tema))}
-                >
-                  {!!temasLidos[Number(j.tema)] ? (
-                    <>
-                      <BookIcon size={16} />
-                      <span>Lido</span>
-                    </>
-                  ) : (
-                    <>
-                      <BookOpen size={16} />
-                      <span>Marcar como Lido</span>
-                    </>
-                  )}
-                </Button>
-              </div>
-            </CardHeader>
-            <CardContent className="pt-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <p className="text-slate-700 text-justify mb-2 font-semibold text-sm">Tese:<span className="font-normal text-slate-600 text-justify"> {j.tese}</span></p>
-                  <p className="text-slate-600 font-medium text-sm">Data de julgamento: {formatDate(j.dataJulgamento)}</p>
+              <CardHeader className="bg-slate-50 pb-2">
+                <div className="flex justify-between items-start">
+                  <Link
+                  href={"/stf-rep-geral/" + j._id}
+                  className="block"
+                  target="_blank"
+                  >
+                    <CardTitle className="text-lg font-bold text-slate-800 text-justify">{j.tema.toString()} - {j.titulo}</CardTitle>
+                  </Link>
                 </div>
-                <div>
-                  <div className="space-y-1">
-                    <p className="text-slate-600 font-medium text-sm">Situação de Repercussão Geral: <span className="font-normal">{j.situacaoRepGeral}</span></p>
-                    <p className="text-slate-600 font-medium text-sm">Situação do Tema: <span className="font-normal">{j.situacaoTema}</span></p>
-                    <p className="text-slate-600 font-medium text-sm">Recurso Paradigma: <span className="font-normal">{j.leadingCase}</span></p>
+                <div className="flex items-center justify-between mt-1">
+                  <p className="text-sm text-slate-600 mt-1">Ramo do Direito: {j.ramoDireito}</p>
+                  <Button
+                    variant={!!temasLidos[Number(j.tema)] ? "outline" : "secondary"}
+                    size="sm"
+                    className="h-9 gap-2"
+                    onClick={() => toggleLido(Number(j.tema))}
+                  >
+                    {!!temasLidos[Number(j.tema)] ? (
+                      <>
+                        <BookIcon size={16} />
+                        <span>Lido</span>
+                      </>
+                    ) : (
+                      <>
+                        <BookOpen size={16} />
+                        <span>Marcar como Lido</span>
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent className="pt-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-slate-700 text-justify mb-2 font-semibold text-sm">Tese:<span className="font-normal text-slate-600 text-justify"> {j.tese}</span></p>
+                    <p className="text-slate-600 font-medium text-sm">Data de julgamento: {formatDate(j.dataJulgamento)}</p>
+                  </div>
+                  <div>
+                    <div className="space-y-1">
+                      <p className="text-slate-600 font-medium text-sm">Situação de Repercussão Geral: <span className="font-normal">{j.situacaoRepGeral}</span></p>
+                      <p className="text-slate-600 font-medium text-sm">Situação do Tema: <span className="font-normal">{j.situacaoTema}</span></p>
+                      <p className="text-slate-600 font-medium text-sm">Recurso Paradigma: <span className="font-normal">{j.leadingCase}</span></p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </CardContent>
-            <CardFooter className="bg-slate-50 flex flex-wrap gap-2 pt-3 pb-3">
-            <p className="text-sm font-medium text-slate-700 mr-2">Assuntos:</p>
-              {j.assunto_array && j.assunto_array.length > 0 && (
-                  j.assunto_array.slice(1).map((assunto, index) => (
-                    <Badge key={Number(index)} variant="secondary" className="text-sm bg-gray-100 p-2 rounded-lg">
-                      <span>{assunto}</span>
-                    </Badge>
-                  ))
-              )}
-            </CardFooter>
-          </Card>
-        ))}
-      </div>
+              </CardContent>
+              <CardFooter className="bg-slate-50 flex flex-wrap gap-2 pt-3 pb-3">
+              <p className="text-sm font-medium text-slate-700 mr-2">Assuntos:</p>
+                {j.assunto_array && j.assunto_array.length > 0 && (
+                    j.assunto_array.slice(1).map((assunto, index) => (
+                      <Badge key={Number(index)} variant="secondary" className="text-sm bg-gray-100 p-2 rounded-lg">
+                        <span>{assunto}</span>
+                      </Badge>
+                    ))
+                )}
+              </CardFooter>
+            </Card>
+          ))}
+        </TabsContent>
+
+
+        <TabsContent value="unread" className="space-y-6 mt-0">
+          {julgados.filter((j) => !temasLidos[Number(j.tema)]).map((j) => (
+            <Card
+              key={j._id}
+              className={`overflow-hidden transition-all duration-200 ${!!temasLidos[Number(j.tema)] ? "border-l-4 border-l-green-500" : "border-l-4 border-l-blue-500"}`}
+            >
+
+              <CardHeader className="bg-slate-50 pb-2">
+                <div className="flex justify-between items-start">
+                  <Link
+                  href={"/stf-rep-geral/" + j._id}
+                  className="block"
+                  target="_blank"
+                  >
+                    <CardTitle className="text-lg font-bold text-slate-800 text-justify">{j.tema.toString()} - {j.titulo}</CardTitle>
+                  </Link>
+                </div>
+                <div className="flex items-center justify-between mt-1">
+                  <p className="text-sm text-slate-600 mt-1">Ramo do Direito: {j.ramoDireito}</p>
+                  <Button
+                    variant={!!temasLidos[Number(j.tema)] ? "outline" : "secondary"}
+                    size="sm"
+                    className="h-9 gap-2"
+                    onClick={() => toggleLido(Number(j.tema))}
+                  >
+                    {!!temasLidos[Number(j.tema)] ? (
+                      <>
+                        <BookIcon size={16} />
+                        <span>Lido</span>
+                      </>
+                    ) : (
+                      <>
+                        <BookOpen size={16} />
+                        <span>Marcar como Lido</span>
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent className="pt-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-slate-700 text-justify mb-2 font-semibold text-sm">Tese:<span className="font-normal text-slate-600 text-justify"> {j.tese}</span></p>
+                    <p className="text-slate-600 font-medium text-sm">Data de julgamento: {formatDate(j.dataJulgamento)}</p>
+                  </div>
+                  <div>
+                    <div className="space-y-1">
+                      <p className="text-slate-600 font-medium text-sm">Situação de Repercussão Geral: <span className="font-normal">{j.situacaoRepGeral}</span></p>
+                      <p className="text-slate-600 font-medium text-sm">Situação do Tema: <span className="font-normal">{j.situacaoTema}</span></p>
+                      <p className="text-slate-600 font-medium text-sm">Recurso Paradigma: <span className="font-normal">{j.leadingCase}</span></p>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+              <CardFooter className="bg-slate-50 flex flex-wrap gap-2 pt-3 pb-3">
+              <p className="text-sm font-medium text-slate-700 mr-2">Assuntos:</p>
+                {j.assunto_array && j.assunto_array.length > 0 && (
+                    j.assunto_array.slice(1).map((assunto, index) => (
+                      <Badge key={Number(index)} variant="secondary" className="text-sm bg-gray-100 p-2 rounded-lg">
+                        <span>{assunto}</span>
+                      </Badge>
+                    ))
+                )}
+              </CardFooter>
+            </Card>
+          ))}
+        </TabsContent>
+
+        <TabsContent value="read" className="space-y-6 mt-0">
+          {julgados.filter((j) => !!temasLidos[Number(j.tema)]).map((j) => (
+            <Card
+              key={j._id}
+              className={`overflow-hidden transition-all duration-200 ${!!temasLidos[Number(j.tema)] ? "border-l-4 border-l-green-500" : "border-l-4 border-l-blue-500"}`}
+            >
+
+              <CardHeader className="bg-slate-50 pb-2">
+                <div className="flex justify-between items-start">
+                  <Link
+                  href={"/stf-rep-geral/" + j._id}
+                  className="block"
+                  target="_blank"
+                  >
+                    <CardTitle className="text-lg font-bold text-slate-800 text-justify">{j.tema.toString()} - {j.titulo}</CardTitle>
+                  </Link>
+                </div>
+                <div className="flex items-center justify-between mt-1">
+                  <p className="text-sm text-slate-600 mt-1">Ramo do Direito: {j.ramoDireito}</p>
+                  <Button
+                    variant={!!temasLidos[Number(j.tema)] ? "outline" : "secondary"}
+                    size="sm"
+                    className="h-9 gap-2"
+                    onClick={() => toggleLido(Number(j.tema))}
+                  >
+                    {!!temasLidos[Number(j.tema)] ? (
+                      <>
+                        <BookIcon size={16} />
+                        <span>Lido</span>
+                      </>
+                    ) : (
+                      <>
+                        <BookOpen size={16} />
+                        <span>Marcar como Lido</span>
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent className="pt-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-slate-700 text-justify mb-2 font-semibold text-sm">Tese:<span className="font-normal text-slate-600 text-justify"> {j.tese}</span></p>
+                    <p className="text-slate-600 font-medium text-sm">Data de julgamento: {formatDate(j.dataJulgamento)}</p>
+                  </div>
+                  <div>
+                    <div className="space-y-1">
+                      <p className="text-slate-600 font-medium text-sm">Situação de Repercussão Geral: <span className="font-normal">{j.situacaoRepGeral}</span></p>
+                      <p className="text-slate-600 font-medium text-sm">Situação do Tema: <span className="font-normal">{j.situacaoTema}</span></p>
+                      <p className="text-slate-600 font-medium text-sm">Recurso Paradigma: <span className="font-normal">{j.leadingCase}</span></p>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+              <CardFooter className="bg-slate-50 flex flex-wrap gap-2 pt-3 pb-3">
+              <p className="text-sm font-medium text-slate-700 mr-2">Assuntos:</p>
+                {j.assunto_array && j.assunto_array.length > 0 && (
+                    j.assunto_array.slice(1).map((assunto, index) => (
+                      <Badge key={Number(index)} variant="secondary" className="text-sm bg-gray-100 p-2 rounded-lg">
+                        <span>{assunto}</span>
+                      </Badge>
+                    ))
+                )}
+              </CardFooter>
+            </Card>
+          ))}
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

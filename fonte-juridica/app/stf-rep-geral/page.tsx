@@ -15,7 +15,7 @@ export default function JulgadosPage() {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
 
-  const { ramoDireito, setRamoDireito, assunto, setAssunto, situacaoRepGeral, setSituacaoRepGeral, situacaoTema, setSituacaoTema } = useFilter();
+  const { ramoDireito, setRamoDireito, assunto, setAssunto, situacaoRepGeral, setSituacaoRepGeral, situacaoTema, setSituacaoTema, searchText, setSearchText } = useFilter();
 
   useEffect(() => {
     if (status === "loading") return;
@@ -33,13 +33,14 @@ export default function JulgadosPage() {
   }
 
   const handleApplyFilters = () => {
-    console.log("📌 Aplicando filtros:", { ramoDireito, assunto, situacaoRepGeral, situacaoTema });
+    console.log("📌 Aplicando filtros:", { ramoDireito, assunto, situacaoRepGeral, situacaoTema, searchText });
 
     const query = new URLSearchParams();
     if (assunto) query.append("assunto", assunto);
     if (ramoDireito) query.append("ramoDireito", ramoDireito);
     if (situacaoRepGeral) query.append("situacaoRepGeral", situacaoRepGeral);
     if (situacaoTema) query.append("situacaoTema", situacaoTema);
+    if(searchText) query.append("searchText", searchText);
 
     router.push(`?${query.toString()}`);
     setIsOpen(false);
@@ -50,7 +51,7 @@ export default function JulgadosPage() {
     setAssunto("")
     setSituacaoRepGeral("")
     setSituacaoTema("")
-    // setSearchQuery("")
+     setSearchText("")
   }
 
   return (
@@ -67,7 +68,7 @@ export default function JulgadosPage() {
           </DialogTrigger>
           <DialogContent className="w-full max-w-md md:max-w-lg h-auto max-h-[90vh] overflow-y-auto rounded-lg">
             <DialogTitle className="text-lg font-semibold">Filtros</DialogTitle>
-            <Filters />
+            <Filters onFilter={setSearchText} />
             <FiltersDynamic
               onFilterSelect={(field, value) => {
                 if (field === "assunto") setAssunto(value);
@@ -87,7 +88,7 @@ export default function JulgadosPage() {
       <div className="group flex w-full">
         {/* Filtros desktop */}
         <div className="hidden md:block w-[300px] h-screen sticky top-0 hidden space-y-6 bg-white p-6 rounded-lg shadow-sm border border-slate-200">
-            <Filters />
+            <Filters onFilter={setSearchText} />
             <FiltersDynamic
               onFilterSelect={(field, value) => {
                 if (field === "assunto") setAssunto(value);

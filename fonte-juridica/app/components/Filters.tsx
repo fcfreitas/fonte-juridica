@@ -1,12 +1,34 @@
 import { useFilter } from "./FilterContext";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Label } from "@/components/ui/label"
+import { Search } from "lucide-react";
+import { useState } from "react";
 
-export function Filters() {
+type FreeTextFilterProps = {
+  onFilter: (text: string) => void;
+};
+
+export function Filters({ onFilter }: FreeTextFilterProps) {      ////dentro do () { onFilter }: FreeTextFilterProps
   const { ramoDireito, setRamoDireito } = useFilter();
+    const [searchText, setSearchText] = useState(""); //Campo livre para pesquisa
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setSearchText(e.target.value);
+      onFilter(e.target.value);
+    };
 
   return (
     <div className="space-y-2">
+      {/* <div className="relative mb-4">
+        <input
+          type="text"
+          placeholder="Buscar..."
+          value={searchText}
+          onChange={handleChange}
+          className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-400"
+        />
+        <Search size={16} className="absolute right-3 top-2.5 text-slate-400" />
+      </div> */}
     <Label htmlFor="ramo-direito" className="font-semibold text-md">
       Ramo do Direito:
     </Label>
