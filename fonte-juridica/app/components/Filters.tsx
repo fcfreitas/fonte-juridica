@@ -10,11 +10,12 @@ type FreeTextFilterProps = {
 
 export function Filters({ onFilter }: FreeTextFilterProps) {      ////dentro do () { onFilter }: FreeTextFilterProps
   const { ramoDireito, setRamoDireito } = useFilter();
-    const [searchText, setSearchText] = useState(""); //Campo livre para pesquisa
+  const [searchText, setSearchText] = useState(""); //Campo livre para pesquisa
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       setSearchText(e.target.value);
       onFilter(e.target.value);
+      console.log("searchText:", searchText)
     };
 
   return (

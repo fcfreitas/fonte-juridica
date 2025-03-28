@@ -176,9 +176,7 @@ export default function JulgadoDetailPage() {
                   <Badge variant="outline" className="bg-slate-100">
                     Tema {julgado.tema.toString()}
                   </Badge>
-                  <Badge variant="outline" className="bg-slate-100">
-                    {julgado.leadingCase}
-                  </Badge>
+
                   <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">
                     {julgado.situacaoTema}
                   </Badge>
@@ -222,11 +220,15 @@ export default function JulgadoDetailPage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-slate-700 text-justify">Tese ainda não publicada.</p>
+                  <p className="text-slate-700 text-justify">Pendente.</p>
                 </CardContent>
               </Card>
 
                 )}
+                <div className="flex items-center justify-start gap-4 mb-4">
+                  <Badge variant="outline" className="bg-slate-100">
+                    {julgado.leadingCase}
+                  </Badge>
                 {julgado.linkProcesso && (
                   <div className="flex justify-start">
                     <Button variant="outline" size="sm">
@@ -240,6 +242,7 @@ export default function JulgadoDetailPage() {
                     </Button>
                   </div>
                 )}
+                </div>
             </div>
 
             <Tabs defaultValue="informacoes" className="w-full">
@@ -290,27 +293,6 @@ export default function JulgadoDetailPage() {
                   <Card>
                     <CardHeader className="pb-2">
                       <CardTitle className="text-lg flex items-center">
-                        <Calendar className="h-5 w-5 mr-2 text-slate-500" />
-                        Datas
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-2">
-                      <div>
-                        <p className="text-sm font-medium text-slate-500">Data de julgamento</p>
-                        <p className="text-slate-700">{julgado.dataJulgamento}</p>
-                      </div>
-                      {julgado.dataTese && (
-                        <div>
-                          <p className="text-sm font-medium text-slate-500">Data da Tese</p>
-                          <p className="text-slate-700">{julgado.dataTese}</p>
-                        </div>
-                      )}
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-lg flex items-center">
                         <Flag className="h-5 w-5 mr-2 text-slate-500" />
                         Situação
                       </CardTitle>
@@ -324,6 +306,27 @@ export default function JulgadoDetailPage() {
                         <p className="text-sm font-medium text-slate-500">Situação do Tema</p>
                         <p className="text-slate-700">{julgado.situacaoTema}</p>
                       </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-lg flex items-center">
+                        <Calendar className="h-5 w-5 mr-2 text-slate-500" />
+                        Datas
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-2">
+                      <div>
+                        <p className="text-sm font-medium text-slate-500">Data de Repercussão Geral</p>
+                        <p className="text-slate-700">{julgado.dataJulgamento}</p>
+                      </div>
+                      {julgado.dataTese && (
+                        <div>
+                          <p className="text-sm font-medium text-slate-500">Data da Tese</p>
+                          <p className="text-slate-700">{julgado.dataTese}</p>
+                        </div>
+                      )}
                     </CardContent>
                   </Card>
                 </div>
