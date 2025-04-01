@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Eye, EyeOff } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -12,6 +13,8 @@ export default function RegisterPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const router = useRouter();
 
   // Função para verificar a força da senha
@@ -72,20 +75,38 @@ export default function RegisterPage() {
         onChange={(e) => setEmail(e.target.value)}
         className="border p-2 mb-2 w-80"
       />
-      <input
-        type="password"
-        placeholder="Senha"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        className="border p-2 mb-2 w-80"
-      />
-      <input
-        type="password"
-        placeholder="Redigite a senha"
-        value={confirmPassword}
-        onChange={(e) => setConfirmPassword(e.target.value)}
-        className="border p-2 mb-2 w-80"
-      />
+      <div className="relative w-80">
+        <input
+          type={showPassword ? "text" : "password"}
+          placeholder="Senha"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="border p-2 mb-2 w-full"
+        />
+        <button
+          type="button"
+          className="absolute right-3 top-3"
+          onClick={() => setShowPassword(!showPassword)}
+        >
+          {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+        </button>
+      </div>
+      <div className="relative w-80">
+        <input
+          type={showConfirmPassword ? "text" : "password"}
+          placeholder="Redigite a senha"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          className="border p-2 mb-2 w-full"
+        />
+        <button
+          type="button"
+          className="absolute right-3 top-3"
+          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+        >
+          {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+        </button>
+      </div>
 
       {/* Verificação da senha */}
       <div className="text-sm text-left w-80 mb-2">

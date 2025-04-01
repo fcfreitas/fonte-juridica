@@ -20,7 +20,7 @@ export function Filters({ onFilter }: FreeTextFilterProps) {      ////dentro do 
 
   return (
     <div className="space-y-2">
-      {/* <div className="relative mb-4">
+      <div className="relative mb-4">
         <input
           type="text"
           placeholder="Buscar..."
@@ -29,7 +29,7 @@ export function Filters({ onFilter }: FreeTextFilterProps) {      ////dentro do 
           className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-400"
         />
         <Search size={16} className="absolute right-3 top-2.5 text-slate-400" />
-      </div> */}
+      </div>
     <Label htmlFor="ramo-direito" className="font-semibold text-md">
       Ramo do Direito:
     </Label>

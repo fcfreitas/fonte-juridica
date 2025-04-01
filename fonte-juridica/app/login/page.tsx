@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
+import { Eye, EyeOff } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -13,6 +14,7 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const { data: session } = useSession();
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -55,13 +57,22 @@ export default function LoginPage() {
           onChange={(e) => setEmail(e.target.value)}
           className="border p-2 mb-2 w-full"
         />
-        <input
-          type="password"
-          placeholder="Senha"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="border p-2 mb-2 w-full"
-        />
+        <div className="relative w-80">
+          <input
+          type={showPassword ? "text" : "password"}
+            placeholder="Senha"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="border p-2 mb-2 w-full"
+          />
+          <button
+            type="button"
+            className="absolute right-3 top-3"
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+          </button>
+        </div>
         <button
           type="submit"
           className="bg-blue-500 text-white p-2 w-full"
