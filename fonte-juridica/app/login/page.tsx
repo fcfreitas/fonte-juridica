@@ -73,6 +73,13 @@ export default function LoginPage() {
             {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
           </button>
         </div>
+
+        <p className="mb-2">
+          <Link href="/forgot-password" className="text-blue-500">
+            Esqueci minha senha
+          </Link>
+        </p>
+
         <button
           type="submit"
           className="bg-blue-500 text-white p-2 w-full"

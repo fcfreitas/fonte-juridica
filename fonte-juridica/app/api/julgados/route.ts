@@ -44,6 +44,25 @@ export async function GET(request: Request) {
       query.situacaoTema = { $regex: situacaoTema.trim(), $options: "i" }; // Case insensitive
     }
 
+    // Filtro por campoTexto em todos os campos
+    if (campoTexto && campoTexto.trim() !== "") {
+      const searchRegex = { $regex: campoTexto.trim(), $options: "i" }; // Case insensitive
+
+      query.$or = [
+        { tema: searchRegex },
+        { leadingCase: searchRegex},
+        { relator: searchRegex},
+        { titulo: searchRegex},
+        { descricao: searchRegex},
+        { tese: searchRegex},
+        { ramoDireito: searchRegex },
+        { assunto: searchRegex },
+        { situacaoRepGeral: searchRegex },
+        { situacaoTema: searchRegex },
+        { tema: { $eq: parseInt(campoTexto) } } // Caso tema seja um número e a pesquisa seja numérica
+      ];
+    }
+
     console.log("🛠 Query gerada:", JSON.stringify(query, null, 2));
 
     // Buscar os julgados com os filtros e limitar o tempo da consulta

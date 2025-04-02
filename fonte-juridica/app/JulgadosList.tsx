@@ -20,7 +20,7 @@ const formatDate = (date: string | null | undefined): string => {
 
 export default function JulgadosList() {
   const { data: session } = useSession();
-  const { ramoDireito, assunto, situacaoRepGeral, situacaoTema } = useFilter();
+  const { ramoDireito, assunto, situacaoRepGeral, situacaoTema, searchText } = useFilter();
   const [julgados, setJulgados] = useState<Julgado[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
@@ -31,13 +31,14 @@ export default function JulgadosList() {
       let url = process.env.NEXT_PUBLIC_SITE_URL + "/api/julgados"; // Ajuste para o endpoint correto
       const params = new URLSearchParams();
 
-      console.log("🎯 Filtros do Context API:", { ramoDireito, assunto, situacaoRepGeral, situacaoTema });
+      console.log("🎯 Filtros do Context API:", { ramoDireito, assunto, situacaoRepGeral, situacaoTema, searchText });
 
       // Adiciona os parâmetros de filtro
       if (ramoDireito) params.append("ramoDireito", ramoDireito);
       if (assunto) params.append("assunto", assunto.trim());
       if (situacaoRepGeral) params.append("situacaoRepGeral", situacaoRepGeral.trim());
       if (situacaoTema) params.append("situacaoTema", situacaoTema.trim());
+      if (searchText) params.append("searchText", searchText.trim());
 
       // if (params.toString()) {
       //   url += `?${params.toString()}`;
@@ -79,7 +80,7 @@ export default function JulgadosList() {
 
     fetchJulgados();
     if (session) fetchTemasLidos();
-  }, [ramoDireito, assunto, situacaoRepGeral, situacaoTema, session]); // Atualiza sempre que os filtros mudarem
+  }, [ramoDireito, assunto, situacaoRepGeral, situacaoTema, searchText || "", session]); // Atualiza sempre que os filtros mudarem
 
   const toggleLido = async (tema: number) => {
     if (!session) return alert("Você precisa estar logado para marcar como lido.");
