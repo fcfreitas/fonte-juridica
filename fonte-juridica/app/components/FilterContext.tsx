@@ -15,6 +15,8 @@ interface FilterContextProps {
   setSituacaoTema: (situacaoTema: string) => void;
   searchText: string;
   setSearchText : (searchText: string) => void;
+  searchTema: string;
+  setSearchTema : (searchTema: string) => void;
 }
 
 const FilterContext = createContext<FilterContextProps | undefined>(undefined);
@@ -27,6 +29,7 @@ export function FilterProvider({ children }: { children: ReactNode }) {
   const [situacaoRepGeral, setSituacaoRepGeral] = useState(""); // Situação Rep Geral
   const [situacaoTema, setSituacaoTema] = useState(""); // Situação do Tema
   const [searchText, setSearchText] = useState(""); //Campo livre para pesquisa
+  const [searchTema, setSearchTema] = useState(""); //Campo livre para pesquisa
 
   return (
     <FilterContext.Provider
@@ -42,7 +45,9 @@ export function FilterProvider({ children }: { children: ReactNode }) {
         situacaoTema,
         setSituacaoTema,
         searchText,
-        setSearchText
+        setSearchText,
+        searchTema,
+        setSearchTema
       }}
     >
       {children}

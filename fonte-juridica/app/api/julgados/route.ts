@@ -11,8 +11,9 @@ export async function GET(request: Request) {
     const situacaoRepGeral = url.searchParams.get("situacaoRepGeral");
     const situacaoTema = url.searchParams.get("situacaoTema");
     const campoTexto = url.searchParams.get("searchText");
+    const campoTema = url.searchParams.get("searchTema");
 
-    console.log("🔍 Parâmetros recebidos:", { court, ramoDireito, assunto, situacaoRepGeral, situacaoTema, campoTexto });
+    console.log("🔍 Parâmetros recebidos:", { court, ramoDireito, assunto, situacaoRepGeral, situacaoTema, campoTexto, campoTema });
 
     // Conectar ao banco de dados
     const { db } = await connectToDb();
@@ -61,6 +62,11 @@ export async function GET(request: Request) {
         { situacaoTema: searchRegex },
         { tema: { $eq: parseInt(campoTexto) } } // Caso tema seja um número e a pesquisa seja numérica
       ];
+    }
+
+    // Filtro por campoTema em tema
+    if (campoTema && campoTema.trim() !== "") {
+      query.tema = parseInt(campoTema); // Caso tema seja um número e a pesquisa seja numérica
     }
 
     console.log("🛠 Query gerada:", JSON.stringify(query, null, 2));

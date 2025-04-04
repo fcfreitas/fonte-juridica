@@ -15,7 +15,8 @@ export default function JulgadosPage() {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
 
-  const { ramoDireito, setRamoDireito, assunto, setAssunto, situacaoRepGeral, setSituacaoRepGeral, situacaoTema, setSituacaoTema, searchText, setSearchText } = useFilter();
+  const { ramoDireito, setRamoDireito, assunto, setAssunto, situacaoRepGeral, setSituacaoRepGeral, situacaoTema, setSituacaoTema, searchText, setSearchText, searchTema, setSearchTema } = useFilter();
+
 
   useEffect(() => {
     if (status === "loading") return;
@@ -41,6 +42,7 @@ export default function JulgadosPage() {
     if (situacaoRepGeral) query.append("situacaoRepGeral", situacaoRepGeral);
     if (situacaoTema) query.append("situacaoTema", situacaoTema);
     if(searchText) query.append("searchText", searchText);
+    if(searchTema) query.append("searchTema", searchTema);
 
     router.push(`?${query.toString()}`);
     setIsOpen(false);
@@ -51,7 +53,8 @@ export default function JulgadosPage() {
     setAssunto("")
     setSituacaoRepGeral("")
     setSituacaoTema("")
-     setSearchText("")
+    setSearchText("")
+    setSearchTema("")
   }
 
   return (
@@ -68,7 +71,7 @@ export default function JulgadosPage() {
           </DialogTrigger>
           <DialogContent className="w-full max-w-md md:max-w-lg h-auto max-h-[90vh] overflow-y-auto rounded-lg">
             <DialogTitle className="text-lg font-semibold">Filtros</DialogTitle>
-            <Filters onFilter={setSearchText} />
+            <Filters onFilter={() => {}} />
             <FiltersDynamic
               onFilterSelect={(field, value) => {
                 if (field === "assunto") setAssunto(value);
@@ -88,7 +91,7 @@ export default function JulgadosPage() {
       <div className="group flex w-full">
         {/* Filtros desktop */}
         <div className="hidden md:block w-[300px] h-screen sticky top-0 hidden space-y-6 bg-white p-6 rounded-lg shadow-sm border border-slate-200">
-            <Filters onFilter={setSearchText} />
+            <Filters onFilter={() => {}} />
             <FiltersDynamic
               onFilterSelect={(field, value) => {
                 if (field === "assunto") setAssunto(value);
