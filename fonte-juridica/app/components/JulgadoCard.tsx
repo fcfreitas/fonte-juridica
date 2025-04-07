@@ -25,7 +25,7 @@ export function JulgadoCard({ j, temasLidos, toggleLido, formatDate }: JulgadoCa
     <Card
       key={j._id}
       className={`overflow-hidden transition-all duration-200 ${
-        lido ? "border-l-4 border-l-green-500" : "border-l-4 border-l-blue-500"
+        lido ? "border-l-4 border-l-emerald-500" : "border-l-4 border-l-red-400"
       }`}
     >
       <CardHeader className="bg-slate-50 pb-2">

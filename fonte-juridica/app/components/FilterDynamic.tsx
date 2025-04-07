@@ -109,7 +109,7 @@ export function FiltersDynamic({ onFilterSelect, ramoDireito }: FilterDynamicPro
     </div>
 
     <div className="space-y-2">
-    <Label htmlFor="situacao-rep-geral" className="font-semibold">Situação Rep. Geral:</Label>
+    <Label htmlFor="situacao-rep-geral" className="font-semibold">Situação de Repercussão Geral:</Label>
     <Select 
       value={situacaoRepGeral} 
       onValueChange={(e) => handleSelectChange(e, "situacaoRepGeral")}
@@ -137,7 +137,7 @@ export function FiltersDynamic({ onFilterSelect, ramoDireito }: FilterDynamicPro
     </div>
 
     <div className="space-y-2">
-    <Label htmlFor="situacao-tema" className="font-semibold">Situação Tema:</Label>
+    <Label htmlFor="situacao-tema" className="font-semibold">Situação do Tema:</Label>
     <Select 
       value={situacaoTema} 
       onValueChange={(e) => handleSelectChange(e, "situacaoTema")}

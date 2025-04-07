@@ -45,7 +45,7 @@ export default function NavBar() {
                                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                                 className="hover:text-slate-800 font-large transition-colors focus:outline-none"
                             >
-                                Buscar
+                                Menu
                             </button>
 
                             {isDropdownOpen && (
