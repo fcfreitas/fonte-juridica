@@ -1,14 +1,14 @@
 "use client";
 import { useState, useEffect } from "react";
-import Link from "next/link";
+// import Link from "next/link";
 import { useFilter } from "./components/FilterContext";
 import { Julgado } from "./julgados-data";
 import { useSession } from "next-auth/react";
-import { IntegerType } from "mongodb";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button";
-import { BookOpen, BookIcon } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+// import { IntegerType } from "mongodb";
+// import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+// import { Button } from "@/components/ui/button";
+// import { BookOpen, BookIcon } from "lucide-react";
+// import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { JulgadoCard } from "./components/JulgadoCard";
 
@@ -26,6 +26,15 @@ export default function JulgadosList() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
   const [temasLidos, setTemasLidos] = useState<Record<number, boolean>>({}); // Armazena quais temas foram marcados como lidos
+    type SortOption = "temasRecentes" | "temasAntigos" | "tesesRecentes" | "tesesAntigas";
+  const [sortOption, setSortOption] = useState<SortOption>("temasRecentes");
+
+  const sortMap: Record<SortOption, { sortField: string; sortOrder: string }> = {
+    temasRecentes: { sortField: "tema", sortOrder: "desc" },
+    temasAntigos: { sortField: "tema", sortOrder: "asc" },
+    tesesRecentes: { sortField: "dataTese", sortOrder: "desc" },
+    tesesAntigas: { sortField: "dataTese", sortOrder: "asc" },
+  };  
 
   useEffect(() => {
     async function fetchJulgados() {
@@ -41,6 +50,9 @@ export default function JulgadosList() {
       if (situacaoTema) params.append("situacaoTema", situacaoTema.trim());
       if (searchText) params.append("searchText", searchText.trim());
       if (searchTema) params.append("searchTema", searchTema.trim());
+      const { sortField, sortOrder } = sortMap[sortOption];
+      params.append("sortField", sortField);
+      params.append("sortOrder", sortOrder);
 
       // if (params.toString()) {
       //   url += `?${params.toString()}`;
@@ -82,7 +94,7 @@ export default function JulgadosList() {
 
     fetchJulgados();
     if (session) fetchTemasLidos();
-  }, [ramoDireito, assunto, situacaoRepGeral, situacaoTema, searchText || "", searchTema || "", session]); // Atualiza sempre que os filtros mudarem
+  }, [ramoDireito, assunto, situacaoRepGeral, situacaoTema, searchText || "", searchTema || "", session, sortOption]); // Atualiza sempre que os filtros mudarem
 
   const toggleLido = async (tema: number) => {
     if (!session) return alert("Você precisa estar logado para marcar como lido.");
@@ -113,13 +125,31 @@ export default function JulgadosList() {
   return (
     <div className="grid grid-cols-1 gap-8">
       <Tabs defaultValue="all" className="w-full">
-        <div className="flex justify-between items-center mb-4">
+        <div className="flex justify-between items-center mb-4 gap-4">
           <TabsList>
             <TabsTrigger value="all">Todos</TabsTrigger>
             <TabsTrigger value="unread">Não Lidos</TabsTrigger>
             <TabsTrigger value="read">Lidos</TabsTrigger>
           </TabsList>
+
+          <div className="flex items-center gap-2">
+            <label htmlFor="sortSelect" className="text-sm font-medium">
+              Ordenar por:
+            </label>
+            <select
+              id="sortSelect"
+              value={sortOption}
+              onChange={(e) => setSortOption(e.target.value as SortOption)}
+              className="text-sm px-2 py-1 border rounded-md"
+            >
+              <option value="temasRecentes">Temas recentes</option>
+              <option value="temasAntigos">Temas antigos</option>
+              <option value="tesesRecentes">Teses recentes</option>
+              <option value="tesesAntigas">Teses antigas</option>
+            </select>
+          </div>
         </div>
+
 
         <TabsContent value="all" className="space-y-6 mt-0">
           {julgados.map((j) => (

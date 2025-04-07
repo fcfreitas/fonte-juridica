@@ -12,6 +12,9 @@ export async function GET(request: Request) {
     const situacaoTema = url.searchParams.get("situacaoTema");
     const campoTexto = url.searchParams.get("searchText");
     const campoTema = url.searchParams.get("searchTema");
+    const sortField = url.searchParams.get("sortField") || "tema"; // campo padrão
+    const sortOrder = url.searchParams.get("sortOrder") === "asc" ? 1 : -1; // asc ou desc
+
 
     console.log("🔍 Parâmetros recebidos:", { court, ramoDireito, assunto, situacaoRepGeral, situacaoTema, campoTexto, campoTema });
 
@@ -71,11 +74,57 @@ export async function GET(request: Request) {
 
     console.log("🛠 Query gerada:", JSON.stringify(query, null, 2));
 
+
+    // Se for ordenar por dataTese.toDate, converte pra Date
+    let pipeline: any[] = [{ $match: query }];
+
+    if (sortField === "dataTese") {
+      pipeline.push({
+        $addFields: {
+          dataTeseDate: {
+            $dateFromString: {
+              dateString: "$dataTese",
+              format: "%d/%m/%Y",
+              onError: null,
+              onNull: null
+            }
+          },
+          temDataTese: {
+            $cond: {
+              if: {
+                $ne: [
+                  {
+                    $dateFromString: {
+                      dateString: "$dataTese",
+                      format: "%d/%m/%Y",
+                      onError: null,
+                      onNull: null
+                    }
+                  },
+                  null
+                ]
+              },
+              then: true,
+              else: false
+            }
+          }
+        }
+      });
+    
+      pipeline.push({
+        $sort: {
+          temDataTese: -1, // Entradas com data vêm primeiro
+          dataTeseDate: sortOrder
+        }
+      });
+    } else {
+      pipeline.push({ $sort: { [sortField]: sortOrder } });
+    }
+
     // Buscar os julgados com os filtros e limitar o tempo da consulta
     const julgados = await db
       .collection("julgados")
-      .find(query)
-      .sort({ tema: -1 })
+      .aggregate(pipeline)
       .maxTimeMS(10000) // Timeout de 10 segundos para evitar travamentos
       .toArray();
 
