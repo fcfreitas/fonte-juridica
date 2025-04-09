@@ -59,8 +59,8 @@ export default function JulgadosPage() {
 
   return (
     <div className="container mx-auto p-4">
-      <h2 className="fixed z-50 text-2xl md:text-3xl font-bold mb-6 text-slate-800 bg-slate-50">STF - Temas de Repercussão Geral</h2>
-
+      <h2 className="fixed z-100 text-2xl md:text-3xl font-bold mb-6 text-slate-800 bg-slate-50 w-full">STF - Temas de Repercussão Geral</h2>
+      
       {/* Botão para abrir filtros no mobile */}
       <div className="md:hidden flex justify-start mb-4">
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -104,9 +104,9 @@ export default function JulgadosPage() {
         </div>
 
         {/* Lista de julgados */}
-        <div className="flex-1 flex flex-col p-4 max-h-screen overflow-hidden">
+        <main className="flex-1 p-6">
           <JulgadosList />
-        </div>
+        </main>
       </div>
     </div>
   );

@@ -123,35 +123,38 @@ export default function JulgadosList() {
   if (error) return <div>{error}</div>;
 
   return (
-    <div className="grid grid-cols-1 gap-8">
+    <div className="flex flex-col gap-4">
       <Tabs defaultValue="all" className="w-full">
-        <div className="flex justify-between items-center mb-4 gap-4">
-          <TabsList>
-            <TabsTrigger value="all">Todos</TabsTrigger>
-            <TabsTrigger value="unread">Não Lidos</TabsTrigger>
-            <TabsTrigger value="read">Lidos</TabsTrigger>
-          </TabsList>
-
-          <div className="flex items-center gap-2">
-            <label htmlFor="sortSelect" className="text-sm font-medium">
-              Ordenar por:
-            </label>
-            <select
-              id="sortSelect"
-              value={sortOption}
-              onChange={(e) => setSortOption(e.target.value as SortOption)}
-              className="text-sm px-2 py-1 border rounded-md"
-            >
-              <option value="temasRecentes">Temas recentes</option>
-              <option value="temasAntigos">Temas antigos</option>
-              <option value="tesesRecentes">Teses recentes</option>
-              <option value="tesesAntigas">Teses antigas</option>
-            </select>
+        {/* Cabeçalho fixo que os cards passam por baixo */}
+        <div className="sticky top-72 bg-white z-100 border-b border-gray-200">
+          <div className="flex justify-between items-center px-4 py-3 gap-4">
+            <TabsList>
+              <TabsTrigger value="all">Todos</TabsTrigger>
+              <TabsTrigger value="unread">Não Lidos</TabsTrigger>
+              <TabsTrigger value="read">Lidos</TabsTrigger>
+            </TabsList>
+  
+            <div className="flex items-center gap-2">
+              <label htmlFor="sortSelect" className="text-sm font-medium">
+                Ordenar por:
+              </label>
+              <select
+                id="sortSelect"
+                value={sortOption}
+                onChange={(e) => setSortOption(e.target.value as SortOption)}
+                className="text-sm px-2 py-1 border rounded-md"
+              >
+                <option value="temasRecentes">Temas recentes</option>
+                <option value="temasAntigos">Temas antigos</option>
+                <option value="tesesRecentes">Teses recentes</option>
+                <option value="tesesAntigas">Teses antigas</option>
+              </select>
+            </div>
           </div>
         </div>
-
-
-        <TabsContent value="all" className="space-y-6 mt-0">
+  
+        {/* Cards normais, scroll da página padrão */}
+        <TabsContent value="all" className="space-y-6 mt-4">
           {julgados.map((j) => (
             <JulgadoCard
               key={j._id}
@@ -162,35 +165,35 @@ export default function JulgadosList() {
             />
           ))}
         </TabsContent>
-
-        <TabsContent value="unread" className="space-y-6 mt-0">
+  
+        <TabsContent value="unread" className="space-y-6 mt-4">
           {julgados
             .filter((j) => !temasLidos[Number(j.tema)])
             .map((j) => (
               <JulgadoCard
-              key={j._id}
-              j={j}
-              temasLidos={temasLidos}
-              toggleLido={toggleLido}
-              formatDate={formatDate}
-            />
+                key={j._id}
+                j={j}
+                temasLidos={temasLidos}
+                toggleLido={toggleLido}
+                formatDate={formatDate}
+              />
             ))}
         </TabsContent>
-
-        <TabsContent value="read" className="space-y-6 mt-0">
+  
+        <TabsContent value="read" className="space-y-6 mt-4">
           {julgados
             .filter((j) => !!temasLidos[Number(j.tema)])
             .map((j) => (
               <JulgadoCard
-              key={j._id}
-              j={j}
-              temasLidos={temasLidos}
-              toggleLido={toggleLido}
-              formatDate={formatDate}
-            />
+                key={j._id}
+                j={j}
+                temasLidos={temasLidos}
+                toggleLido={toggleLido}
+                formatDate={formatDate}
+              />
             ))}
         </TabsContent>
       </Tabs>
     </div>
-  );
+  );  
 }
