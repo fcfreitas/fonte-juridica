@@ -26,9 +26,13 @@ export default async function RootLayout({
       <body className="bg-slate-50 text-gray-700">
         <AuthProvider>
             <FilterProvider>  
+            <div className="fixed top-0 left-0 w-full bg-slate-50 z-50 shadow-md flex flex-col">
               <HeaderBar />
               <NavBar />
+            </div>
+            <div className="pt-48">
               {children}
+            </div>  
             </FilterProvider>
         </AuthProvider>
       </body>

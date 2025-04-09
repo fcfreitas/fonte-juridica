@@ -44,14 +44,6 @@ export function JulgadoCard({ j, temasLidos, toggleLido, formatDate }: JulgadoCa
           <div>
             <div className="space-y-1">
               <p className="text-slate-600 font-medium text-sm">
-                Situação de Repercussão Geral:{" "}
-                <span className="font-normal">{j.situacaoRepGeral}</span>
-              </p>
-              <p className="text-slate-600 font-medium text-sm">
-                Situação do Tema:{" "}
-                <span className="font-normal">{j.situacaoTema}</span>
-              </p>
-              <p className="text-slate-600 font-medium text-sm">
                 Recurso Paradigma:{" "}
                 <span className="font-normal">{j.leadingCase}</span>
               </p>
@@ -118,7 +110,17 @@ export function JulgadoCard({ j, temasLidos, toggleLido, formatDate }: JulgadoCa
                 <span>{assunto}</span>
               </Badge>
             ))}
-        </div>
+          </div>
+          <div className="space-y-1">
+            <p className="text-slate-600 font-medium text-sm">
+              Situação de Repercussão Geral:{" "}
+              <span className="font-normal">{j.situacaoRepGeral}</span>
+            </p>
+            <p className="text-slate-600 font-medium text-sm">
+              Situação do Tema:{" "}
+              <span className="font-normal">{j.situacaoTema}</span>
+            </p>
+          </div>        
       </CardFooter>
     </Card>
   );
