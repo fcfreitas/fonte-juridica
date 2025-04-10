@@ -58,8 +58,10 @@ export default function JulgadosPage() {
   }
 
   return (
-    <div className="container mx-auto p-4">
-      <h2 className="fixed z-100 text-2xl md:text-3xl font-bold mb-6 text-slate-800 bg-slate-50 w-full">STF - Temas de Repercussão Geral</h2>
+    <div className="container mx-auto p-4 pt-12">
+      <div className="h-[100px] fixed top-[180px] z-40  bg-slate-50 w-full flex items-center">
+        <h2 className="text-xl font-semibold leading-none text-2xl md:text-3xl font-bold mt-4 text-slate-800 ml-4">STF - Temas de Repercussão Geral</h2>
+      </div>
       
       {/* Botão para abrir filtros no mobile */}
       <div className="md:hidden flex justify-start mb-4">
@@ -88,9 +90,9 @@ export default function JulgadosPage() {
         </Dialog>
       </div>
 
-      <div className="group flex w-full pt-16">
+      <div className="group flex w-full pt-8">
         {/* Filtros desktop */}
-        <div className="hidden md:block w-[300px] h-screen sticky top-72 hidden space-y-6 bg-white p-6 rounded-lg shadow-sm border border-slate-200">
+        <div className="hidden md:block w-[300px] h-screen sticky top-[275px] z-50 hidden space-y-6 bg-white p-6 rounded-lg shadow-sm border border-slate-200">
             <Filters onFilter={() => {}} />
             <FiltersDynamic
               onFilterSelect={(field, value) => {
@@ -104,7 +106,7 @@ export default function JulgadosPage() {
         </div>
 
         {/* Lista de julgados */}
-        <main className="flex-1 p-6">
+        <main className="flex-1 pr-6 pl-6 top-[275px]">
           <JulgadosList />
         </main>
       </div>

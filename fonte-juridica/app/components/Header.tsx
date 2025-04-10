@@ -1,6 +1,6 @@
 export default function HeaderBar() {
     return (
-        <div>
+        <div className="z-50">
             <div className='bg-amber-50 p-3 text-center text-sm font-medium text-amber-900 py-2'>
                 <p className=''>A sua fonte de decisões jurídicas. <span className="underline font-bold">Assine agora!</span></p>
             </div>

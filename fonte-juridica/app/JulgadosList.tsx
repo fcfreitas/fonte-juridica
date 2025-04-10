@@ -126,8 +126,8 @@ export default function JulgadosList() {
     <div className="flex flex-col gap-4">
       <Tabs defaultValue="all" className="w-full">
         {/* Cabeçalho fixo que os cards passam por baixo */}
-        <div className="sticky top-72 bg-white z-100 border-b border-gray-200">
-          <div className="flex justify-between items-center px-4 py-3 gap-4">
+        <div className="sticky top-[275px] bg-slate-50 z-50 pb-6">
+          <div className="flex justify-between items-center  gap-4">
             <TabsList>
               <TabsTrigger value="all">Todos</TabsTrigger>
               <TabsTrigger value="unread">Não Lidos</TabsTrigger>
@@ -154,7 +154,7 @@ export default function JulgadosList() {
         </div>
   
         {/* Cards normais, scroll da página padrão */}
-        <TabsContent value="all" className="space-y-6 mt-4">
+        <TabsContent value="all" className="space-y-6 pr-0.5">
           {julgados.map((j) => (
             <JulgadoCard
               key={j._id}
@@ -166,7 +166,7 @@ export default function JulgadosList() {
           ))}
         </TabsContent>
   
-        <TabsContent value="unread" className="space-y-6 mt-4">
+        <TabsContent value="unread" className="space-y-6 pr-0.5">
           {julgados
             .filter((j) => !temasLidos[Number(j.tema)])
             .map((j) => (
@@ -180,7 +180,7 @@ export default function JulgadosList() {
             ))}
         </TabsContent>
   
-        <TabsContent value="read" className="space-y-6 mt-4">
+        <TabsContent value="read" className="space-y-6 pr-0.5">
           {julgados
             .filter((j) => !!temasLidos[Number(j.tema)])
             .map((j) => (
