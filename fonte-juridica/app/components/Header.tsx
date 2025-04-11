@@ -5,6 +5,7 @@ export default function HeaderBar() {
                 <p className=''>A sua fonte de decisões jurídicas. <span className="underline font-bold">Assine agora!</span></p>
             </div>
             <header className='bg-sky-700 text-white p-3 md:p-6'>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
                     <div className='container mx-auto px-4'>
                         <h1 className='text-2xl md:text-3xl font-bold'>Fonte Jurídica</h1>
                     </div>
