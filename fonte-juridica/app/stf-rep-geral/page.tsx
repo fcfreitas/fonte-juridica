@@ -59,12 +59,17 @@ export default function JulgadosPage() {
 
   return (
     <div className="container mx-auto p-4">
-      <div className="h-[90px] fixed top-[170px] z-40  bg-slate-50 w-full flex items-center">
-        <h2 className="text-xl font-semibold leading-none text-2xl md:text-3xl font-bold mt-1 text-slate-800 ml-4">STF - Temas de Repercussão Geral</h2>
+    {/*Versão Desktop */}
+      <div className="hidden md:block h-[90px] fixed top-[170px] z-40  bg-slate-50 w-full flex items-center">
+        <h2 className="text-xl font-semibold leading-none text-2xl md:text-3xl font-bold mt-6 text-slate-800 ml-4">STF - Temas de Repercussão Geral</h2>
+      </div>
+    {/*Versão Mobile */}
+      <div className="block md:hidden h-[120px] fixed top-[130px] z-40  bg-slate-50 w-full flex items-center">
+        <h2 className="text-xl font-semibold leading-none text-2xl md:text-3xl font-bold mt-6 text-slate-800 ml-4">STF - Temas de Repercussão Geral</h2>
       </div>
       
       {/* Botão para abrir filtros no mobile */}
-      <div className="md:hidden flex justify-start mb-4">
+      <div className="md:hidden flex justify-end mb-4 z-50 fixed top-[200px] w-full pr-10">
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
           <DialogTrigger asChild>
             <Button variant="outline" onClick={() => setIsOpen(true)}>
