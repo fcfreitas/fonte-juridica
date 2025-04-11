@@ -68,7 +68,7 @@ export function Filters({ onFilter }: FreeTextFilterProps) {
   ]
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3">
       <div className="relative">
         <input
           type="text"
@@ -79,7 +79,7 @@ export function Filters({ onFilter }: FreeTextFilterProps) {
         />
         <Search size={16} className="absolute right-3 top-2.5 text-slate-400" />
       </div>
-      <div className="relative mb-6">
+      <div className="relative mb-3">
         <input
           type="text"
           placeholder="Número do tema..."

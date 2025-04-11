@@ -126,12 +126,12 @@ export default function JulgadosList() {
     <div className="flex flex-col gap-4">
       <Tabs defaultValue="all" className="w-full">
         {/* Cabeçalho fixo que os cards passam por baixo */}
-        <div className="sticky top-[275px] bg-slate-50 z-50 pb-6">
-          <div className="flex justify-between items-center  gap-4">
+        <div className="sticky top-[250px] bg-slate-50 z-50 pb-6">
+          <div className="flex justify-between items-center  gap-4 text-sm">
             <TabsList>
-              <TabsTrigger value="all">Todos</TabsTrigger>
-              <TabsTrigger value="unread">Não Lidos</TabsTrigger>
-              <TabsTrigger value="read">Lidos</TabsTrigger>
+              <TabsTrigger className="text-sm" value="all">Todos</TabsTrigger>
+              <TabsTrigger className="text-sm" value="unread">Não Lidos</TabsTrigger>
+              <TabsTrigger className="text-sm" value="read">Lidos</TabsTrigger>
             </TabsList>
   
             <div className="flex items-center gap-2">

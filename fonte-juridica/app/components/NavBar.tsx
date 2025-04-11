@@ -30,7 +30,7 @@ export default function NavBar() {
     return (
         <nav className="bg-slate-100 border-b border-slate-200 z-50">
             <div className="container mx-auto px-4">
-                <ul className="flex justify-between items-center space-x-8 py-4">
+                <ul className="flex justify-between items-center space-x-8 py-3">
                     <div className="flex space-x-4">
                         <li>
                         <Link
