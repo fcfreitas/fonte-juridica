@@ -23,7 +23,7 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="bg-slate-50 text-gray-700">
+      <body className="bg-slate-50 text-gray-700 overflow-x-hidden">
         <AuthProvider>
             <FilterProvider>  
             <div className="fixed top-0 left-0 w-full bg-slate-50 z-50 shadow-md flex flex-col">

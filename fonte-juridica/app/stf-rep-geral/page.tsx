@@ -111,7 +111,7 @@ export default function JulgadosPage() {
         </div>
 
         {/* Lista de julgados */}
-        <main className="flex-1 pr-6 pl-6 top-[250px]">
+        <main className="flex-1 px-4 md:px-6 top-[250px]">
           <JulgadosList />
         </main>
       </div>
