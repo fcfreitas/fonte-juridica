@@ -261,7 +261,7 @@ export default function JulgadoDetailPage() {
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-slate-700 mb-4">Direito {julgado.ramoDireito}</p>
+                    <div className="text-slate-700 mb-4">Direito {julgado.ramoDireito}</div>
                     <div className="flex justify-start items-center gap-2">
                         <p className="text-sm font-medium text-slate-500">Assuntos:</p>
                         <p className="flex flex-wrap gap-2 text-sm font-medium text-slate-600">              
