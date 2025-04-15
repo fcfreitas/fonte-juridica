@@ -8,9 +8,10 @@ import NotFoundPage from "@/app/not-found";
 import { Julgado } from "@/app/julgados-data";
 import Link from "next/link";
 import AdminTextEditor from "@/app/components/textEditor";
+import UserTextEditor from "@/app/components/UserTextEditor";
 import "@/styles/quill-styles.css";
 import { Badge } from "@/components/ui/badge";
-import { Bookmark, BookOpen, BookIcon, FileText, Info, Calendar, User, Flag, MessageSquare, ExternalLink, FileCheck } from "lucide-react";
+import { Bookmark, BookOpen, BookIcon, FileText, Info, Calendar, User, Flag, MessageSquare, ExternalLink, FileCheck, NotebookPen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -27,6 +28,7 @@ export default function JulgadoDetailPage() {
   const params = useParams();
   const [julgado, setJulgado] = useState<Julgado | null>(null);
   const [comentarios, setComentarios] = useState<{ _id: string, text: string, createdAt: string }[]>([]);
+  const [userNotes, setUserNotes] = useState<{ _id: string, text: string, createdAt: string }[]>([]);
   const [lido, setLido] = useState<boolean | null>(null);
   const [loading, setLoading] = useState(true);
   const [editando, setEditando] = useState<{ [key: string]: boolean }>({});
@@ -82,6 +84,25 @@ export default function JulgadoDetailPage() {
 
     fetchComentarios();
   }, [julgado?.tema]);
+
+  // Buscar as anotações do usuário relacionadas ao julgado
+  useEffect(() => {
+    if (!session || !julgado?.tema) return;
+
+    async function fetchUserNotes() {
+      try {
+        const response = await fetch(`/api/publish-user-notes?userId=${session?.user.id}&tema=${julgado?.tema}`);
+        if (!response.ok) throw new Error("Erro ao buscar anotações");
+
+        const data = await response.json();
+        setUserNotes(data);
+      } catch (error) {
+        console.error("Erro ao buscar anotações:", error);
+      }
+    }
+
+    fetchUserNotes();
+  }, [julgado?.tema, session?.user.id]);
 
 
   useEffect(() => {
@@ -249,7 +270,7 @@ export default function JulgadoDetailPage() {
               <TabsList className="grid grid-cols-3 mb-6">
                 <TabsTrigger value="informacoes">Informações</TabsTrigger>
                 <TabsTrigger value="comentarios">Comentários e Análises</TabsTrigger>
-                <TabsTrigger value="documento">Documento</TabsTrigger>
+                <TabsTrigger value="anotacoes">Anotações</TabsTrigger>
               </TabsList>
 
               <TabsContent value="informacoes" className="space-y-6">
@@ -427,32 +448,88 @@ export default function JulgadoDetailPage() {
                 )}
               </TabsContent>
 
-              <TabsContent value="documento">
+              <TabsContent value="anotacoes">
                 <Card className="mb-4">
                   <CardHeader>
-                    <CardTitle className="text-lg">Documento Original</CardTitle>
-                    <CardDescription>Visualize o documento completo relacionado a este julgado</CardDescription>
+                    <CardTitle className="text-lg flex items-center">
+                    <NotebookPen className="h-5 w-5 mr-2 text-slate-500" />
+                    Anotações pessoais
+                    </CardTitle>
+                    <CardDescription>Faça sua próprias anotações sobre o tema e revise sempre que precisar.</CardDescription>
                   </CardHeader>
-                </Card>
+                  <CardContent>
+                    {userNotes.length > 0 ? (
+                      <div className="space-y-4">
+                        {userNotes.map((anotacao) => (
+                          <div key={anotacao._id} className="border rounded-lg p-4">
 
+                            {editando[anotacao._id] ? (
+                              // Exibe o editor para editar o conteúdo
+                              <AdminTextEditor
+                                tema={julgado.tema}
+                                value={novoTexto[anotacao._id]} // Passa o texto salvo para editar
+                                onChange={(value) => setNovoTexto((prev) => ({
+                                  ...prev,
+                                  [anotacao._id]: value,
+                                }))}
+                                onCommentPosted={() => setUserNotes} // Atualiza os comentários na página
+                              />
+                            ) : (
+                              // Exibe o conteúdo formatado com dangerouslySetInnerHTML
+                              <>
+                                <div
+                                  className="quill-content text-gray-700 mb-2"
+                                  dangerouslySetInnerHTML={{ __html: anotacao.text }}
+                                />
+                                <div className="flex justify-between items-center mb-1 mt-2">
+                                  <div className="text-sm text-muted-foreground"> Publicado em:
+                                    {new Date(anotacao.createdAt).toLocaleDateString("pt-BR")}
+                                  </div>
+                                  {/* <div className="mt-2 text-sm text-muted-foreground">Por: {comentario.autor}</div> */}
+                                </div>   
+                              </>
+                            )}                          
+                            
+                              <div className="mt-2">
+                                {editando[anotacao._id] ? (
+                                  <button
+                                    onClick={() => handleSalvar(anotacao._id)}
+                                    className="px-3 py-1 bg-green-500 text-white rounded mr-2"
+                                  >
+                                    Salvar
+                                  </button>
+                                ) : (
+                                  <button
+                                    onClick={() => handleEditar(anotacao._id, anotacao.text)}
+                                    className="px-3 py-1 bg-neutral-400 text-white rounded"
+                                  >
+                                    Editar
+                                  </button>
+                                )}
+                              </div>
+                            
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-muted-foreground">Você ainda não fez nenhuma anotação.</p>
+                    )}
+                  </CardContent>
+                </Card>
+                <Card className="mt-6">
+                    <CardHeader>
+                      <CardTitle className="text-lg flex items-center">
+                        <MessageSquare className="h-5 w-5 mr-2 text-slate-500" />
+                        Incluir novas anotações
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      {/* Inserir Novos Comentários */}
+                      <UserTextEditor tema={julgado.tema} onCommentPosted={() => setUserNotes} />
+                    </CardContent>
+                  </Card>
                 {/* Embedded Browser Section */}
                 <div className="border rounded-lg overflow-hidden bg-white shadow-sm">
-                  <div className="bg-slate-100 border-b px-4 py-2 flex items-center">
-                    <div className="flex space-x-1.5">
-                      <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                      <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                      <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                    </div>
-                    <div className="mx-auto text-sm text-slate-500 font-medium">Documento: Tema {julgado.tema.toString()}</div>
-                  </div>
-                  <div className="h-[500px] w-full">
-                    <iframe
-                      src={julgado.linkProcesso}
-                      className="w-full h-full border-0"
-                      title={`Documento do Tema ${julgado.tema}`}
-                      sandbox="allow-same-origin allow-scripts"
-                    />
-                  </div>
                 </div>
               </TabsContent>
             </Tabs>
