@@ -59,7 +59,7 @@ export default function JulgadosPage() {
   }
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto p-3 md:px-10">
     {/*Versão Desktop */}
       <div className="bg-slate-50 w-full flex items-center">
         <h2 className="text-xl font-semibold leading-none text-2xl md:text-3xl font-bold text-slate-800">STF - Temas de Repercussão Geral</h2>

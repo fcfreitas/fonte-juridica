@@ -115,13 +115,13 @@ export function JulgadoCard({ j, temasLidos, toggleLido, formatDate }: JulgadoCa
             <div className="flex items-center gap-2">
               <span className="text-slate-600 font-medium text-sm">
                 Repercussão Geral:{" "}</span>
-                <Badge variant="secondary" className="bg-blue-50 text-blue-700 hover:bg-blue-100">{j.situacaoRepGeral}</Badge>
+                <Badge variant="secondary" className="bg-sky-100 text-sky-700">{j.situacaoRepGeral}</Badge>
             </div>
             <div className="flex items-center gap-2">
               <span className="text-slate-600 font-medium text-sm">
                 Tema:{" "}
               </span>
-                <Badge variant="secondary" className="bg-blue-50 text-blue-700 hover:bg-blue-100">{j.situacaoTema}</Badge>
+                <Badge variant="secondary" className="bg-sky-100 text-sky-700">{j.situacaoTema}</Badge>
             </div>
           </div>      
       </CardFooter>

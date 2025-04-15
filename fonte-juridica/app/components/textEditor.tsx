@@ -12,6 +12,7 @@ const modules = {
     [{ header: [1, 2, false] }],
     ['bold', 'italic', 'underline'],
     [{ list: 'ordered' }, { list: 'bullet' }], // Mantém a configuração padrão
+    [{ color: [] }, { background: [] }], // 🎨 Cor do texto e cor de fundo
     ['link'],
   ],
   clipboard: {
@@ -21,7 +22,8 @@ const modules = {
 
 const formats = [
   'header', 'bold', 'italic', 'underline', 
-  'list', 'bullet', 'link'
+  'list', 'bullet', 'link',
+  'color', 'background'
 ];
 
 interface AdminTextEditorProps {
