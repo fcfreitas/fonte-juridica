@@ -7,10 +7,11 @@ import { useSession } from "next-auth/react";
 // import { IntegerType } from "mongodb";
 // import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 // import { Button } from "@/components/ui/button";
-// import { BookOpen, BookIcon } from "lucide-react";
+import { BookOpen, BookIcon, SortDesc} from "lucide-react";
 // import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { JulgadoCard } from "./components/JulgadoCard";
+import { Select, SelectTrigger, SelectItem, SelectValue, SelectContent } from "@/components/ui/select";
 
 const formatDate = (date: string | null | undefined): string => {
   if (!date) {
@@ -126,7 +127,7 @@ export default function JulgadosList() {
     <div className="flex flex-col gap-4">
       <Tabs defaultValue="all" className="w-full">
         {/* Cabeçalho fixo que os cards passam por baixo */}
-        <div className="sticky top-[250px] bg-slate-50 z-50 pb-6">
+        <div className="bg-slate-50 z-50 pb-6">
           <div className="flex justify-between items-center  gap-4 text-sm">
             <TabsList>
               <TabsTrigger className="text-sm" value="all">Todos</TabsTrigger>
@@ -135,38 +136,43 @@ export default function JulgadosList() {
             </TabsList>
   
             <div className="flex items-center gap-2">
-              <label htmlFor="sortSelect" className="text-sm font-medium">
-                Ordenar por:
-              </label>
-              <select
-                id="sortSelect"
-                value={sortOption}
-                onChange={(e) => setSortOption(e.target.value as SortOption)}
-                className="text-sm px-2 py-1 border rounded-md"
+              <Select
+                value={sortOption} onValueChange={(value) => setSortOption(value as SortOption)}
               >
-                <option value="temasRecentes">Temas recentes</option>
-                <option value="temasAntigos">Temas antigos</option>
-                <option value="tesesRecentes">Teses recentes</option>
-                <option value="tesesAntigas">Teses antigas</option>
-              </select>
+                <SelectTrigger className="w-[180px]">
+                  <div className="flex items-center gap-2">
+                    <SortDesc size={16} />
+                    <SelectValue placeholder="Ordenar por" />
+                  </div>
+                </SelectTrigger>
+                <SelectContent>
+                <SelectItem value="temasRecentes">Temas recentes</SelectItem>
+                <SelectItem value="temasAntigos">Temas antigos</SelectItem>
+                <SelectItem value="tesesRecentes">Teses recentes</SelectItem>
+                <SelectItem value="tesesAntigas">Teses antigas</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
         </div>
   
         {/* Cards normais, scroll da página padrão */}
         <TabsContent value="all" className="space-y-6 pr-0.5">
-          {julgados.map((j) => (
-            <JulgadoCard
-              key={j._id}
-              j={j}
-              temasLidos={temasLidos}
-              toggleLido={toggleLido}
-              formatDate={formatDate}
-            />
-          ))}
+          <div className="h-[calc(100vh-70px)] overflow-y-auto space-y-6 pr-0.5 scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-slate-100">
+            {julgados.map((j) => (
+              <JulgadoCard
+                key={j._id}
+                j={j}
+                temasLidos={temasLidos}
+                toggleLido={toggleLido}
+                formatDate={formatDate}
+              />
+            ))}
+          </div>
         </TabsContent>
   
         <TabsContent value="unread" className="space-y-6 pr-0.5">
+        <div className="h-[calc(100vh-70px)] overflow-y-auto space-y-6 pr-0.5 scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-slate-100">
           {julgados
             .filter((j) => !temasLidos[Number(j.tema)])
             .map((j) => (
@@ -178,9 +184,11 @@ export default function JulgadosList() {
                 formatDate={formatDate}
               />
             ))}
+        </div>
         </TabsContent>
   
         <TabsContent value="read" className="space-y-6 pr-0.5">
+        <div className="h-[calc(100vh-70px)] overflow-y-auto space-y-6 pr-0.5 scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-slate-100">
           {julgados
             .filter((j) => !!temasLidos[Number(j.tema)])
             .map((j) => (
@@ -192,6 +200,7 @@ export default function JulgadosList() {
                 formatDate={formatDate}
               />
             ))}
+          </div>
         </TabsContent>
       </Tabs>
     </div>

@@ -9,6 +9,7 @@ import { FiltersDynamic } from "../components/FilterDynamic";
 import { useFilter } from "../components/FilterContext";
 import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Filter } from "lucide-react";
 
 export default function JulgadosPage() {
   const { data: session, status } = useSession();
@@ -60,12 +61,8 @@ export default function JulgadosPage() {
   return (
     <div className="container mx-auto p-4">
     {/*Versão Desktop */}
-      <div className="hidden md:block h-[90px] fixed top-[170px] z-40  bg-slate-50 w-full flex items-center">
-        <h2 className="text-xl font-semibold leading-none text-2xl md:text-3xl font-bold mt-6 text-slate-800 ml-4">STF - Temas de Repercussão Geral</h2>
-      </div>
-    {/*Versão Mobile */}
-      <div className="block md:hidden h-[120px] fixed top-[130px] z-40  bg-slate-50 w-full flex items-center">
-        <h2 className="text-xl font-semibold leading-none text-2xl md:text-3xl font-bold mt-6 text-slate-800 ml-4">STF - Temas de Repercussão Geral</h2>
+      <div className="bg-slate-50 w-full flex items-center">
+        <h2 className="text-xl font-semibold leading-none text-2xl md:text-3xl font-bold text-slate-800">STF - Temas de Repercussão Geral</h2>
       </div>
       
       {/* Botão para abrir filtros no mobile */}
@@ -97,7 +94,11 @@ export default function JulgadosPage() {
 
       <div className="group flex w-full pt-8">
         {/* Filtros desktop */}
-        <div className="hidden md:block w-[300px] h-screen sticky top-[250px] z-40 hidden space-y-2 bg-white p-4 rounded-lg shadow-sm border border-slate-200">
+        <div className="hidden md:block w-[300px] h-screen hidden space-y-2 bg-white p-4 rounded-lg shadow-sm border border-slate-200">
+          <h3 className="font-medium mb-4 flex items-center gap-2">
+            <Filter size={16} />
+            Filtros
+          </h3>
             <Filters onFilter={() => {}} />
             <FiltersDynamic
               onFilterSelect={(field, value) => {
@@ -111,7 +112,7 @@ export default function JulgadosPage() {
         </div>
 
         {/* Lista de julgados */}
-        <main className="flex-1 px-4 md:px-6 top-[250px]">
+        <main className="flex-1 px-4 md:px-6">
           <JulgadosList />
         </main>
       </div>

@@ -98,29 +98,32 @@ export function JulgadoCard({ j, temasLidos, toggleLido, formatDate }: JulgadoCa
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <p className="text-sm font-medium text-slate-700 mr-2">Assuntos:</p>
+          <p className="text-sm text-slate-700 mr-2">Assuntos:</p>
           {j.assunto_array &&
             j.assunto_array.length > 0 &&
             j.assunto_array.slice(1).map((assunto: string, index: number) => (
               <Badge
                 key={index}
-                variant="secondary"
-                className="text-sm bg-gray-100 p-2 rounded-lg"
+                variant="outline"
+                className="text-sm bg-gray-100 p-1 rounded-xl"
               >
                 <span>{assunto}</span>
               </Badge>
             ))}
           </div>
-          <div className="space-y-1">
-            <p className="text-slate-600 font-medium text-sm">
-              Situação de Repercussão Geral:{" "}
-              <span className="font-normal">{j.situacaoRepGeral}</span>
-            </p>
-            <p className="text-slate-600 font-medium text-sm">
-              Situação do Tema:{" "}
-              <span className="font-normal">{j.situacaoTema}</span>
-            </p>
-          </div>        
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-6 mt-1">
+            <div className="flex items-center gap-2">
+              <span className="text-slate-600 font-medium text-sm">
+                Repercussão Geral:{" "}</span>
+                <Badge variant="secondary" className="bg-blue-50 text-blue-700 hover:bg-blue-100">{j.situacaoRepGeral}</Badge>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-slate-600 font-medium text-sm">
+                Tema:{" "}
+              </span>
+                <Badge variant="secondary" className="bg-blue-50 text-blue-700 hover:bg-blue-100">{j.situacaoTema}</Badge>
+            </div>
+          </div>      
       </CardFooter>
     </Card>
   );
