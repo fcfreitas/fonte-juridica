@@ -43,7 +43,7 @@ const UserTextEditor = ({
   const [content, setContent] = useState(value); // Inicializa com o value, se existir
   const [loading, setLoading] = useState(false);
 
-  if (session?.user?.role !== 'admin') {
+  if (session?.user) {
     return <p></p>;  //Apenas administradores podem publicar comentários.
   }
 
@@ -55,7 +55,7 @@ const UserTextEditor = ({
       const response = await fetch('/api/publish-user-notes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: content, userId: session.user.id, tema }),
+        body: JSON.stringify({ text: content, userId: session?.user.id, tema }),
       });
 
       if (response.ok) {
