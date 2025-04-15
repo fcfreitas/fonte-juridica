@@ -43,10 +43,6 @@ const UserTextEditor = ({
   const [content, setContent] = useState(value); // Inicializa com o value, se existir
   const [loading, setLoading] = useState(false);
 
-  if (session?.user) {
-    return <p></p>;  //Apenas administradores podem publicar comentários.
-  }
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
