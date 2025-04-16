@@ -42,9 +42,7 @@ export function Filters({ onFilter }: FreeTextFilterProps) {
   const handleRamoSelect = (value: string) => {
     setRamoDireito(value)
     // Fechando o popover explicitamente após um pequeno delay
-    setTimeout(() => {
       setRamoOpen(false)
-    }, 10)
   }
 
   const ramoOptions = [
@@ -94,7 +92,7 @@ export function Filters({ onFilter }: FreeTextFilterProps) {
           Ramo do Direito:
         </Label>
         <Popover open={ramoOpen} onOpenChange={setRamoOpen}>
-          <PopoverTrigger asChild>
+          <PopoverTrigger>
             <Button
               id="ramo-direito"
               variant="outline"
