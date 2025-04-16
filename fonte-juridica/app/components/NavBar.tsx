@@ -28,7 +28,7 @@ export default function NavBar() {
     }, [isDropdownOpen]);
 
     return (
-        <nav className="bg-slate-100 border-b border-slate-200 z-50">
+        <nav className="bg-slate-100 border-b border-slate-200 z-40">
             <div className="container mx-auto px-3 md:px-6">
                 <ul className="flex justify-between items-center space-x-8 p-3 px-4 md:px-6">
                     <div className="flex space-x-4">

@@ -127,7 +127,7 @@ export default function JulgadosList() {
     <div className="flex flex-col gap-4">
       <Tabs defaultValue="all" className="w-full">
         {/* Cabeçalho fixo que os cards passam por baixo */}
-        <div className="bg-slate-50 z-50 pb-6">
+        <div className="bg-slate-50 z-40 pb-6">
           <div className="flex justify-between items-center  gap-4 text-sm">
             <TabsList>
               <TabsTrigger className="text-sm" value="all">Todos</TabsTrigger>
