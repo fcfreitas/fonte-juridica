@@ -70,7 +70,7 @@ export default function JulgadoDetailPage() {
   useEffect(() => {
     if (!params?.id) return;
 
-    async function fetchComentarios() {
+    async function fetchComentariosInicial() {
       try {
         const response = await fetch(`/api/publish-text?tema=${julgado?.tema}`);
         if (!response.ok) throw new Error("Erro ao buscar comentários");
@@ -82,14 +82,26 @@ export default function JulgadoDetailPage() {
       }
     }
 
-    fetchComentarios();
+    fetchComentariosInicial();
   }, [julgado?.tema]);
+
+  const fetchComentarios = async () => {
+    try {
+      const response = await fetch(`/api/publish-text?tema=${julgado?.tema}`);
+      if (!response.ok) throw new Error("Erro ao buscar comentários");
+
+      const data = await response.json();
+      setComentarios(data);
+    } catch (error) {
+      console.error("Erro ao buscar comentários:", error);
+    }
+  }
 
   // Buscar as anotações do usuário relacionadas ao julgado
   useEffect(() => {
     if (!session || !julgado?.tema) return;
 
-    async function fetchUserNotes() {
+    async function fetchUserNotesInicial() {
       try {
         const response = await fetch(`/api/publish-user-notes?userId=${session?.user.id}&tema=${julgado?.tema}`);
         if (!response.ok) throw new Error("Erro ao buscar anotações");
@@ -101,8 +113,20 @@ export default function JulgadoDetailPage() {
       }
     }
 
-    fetchUserNotes();
+    fetchUserNotesInicial();
   }, [julgado?.tema, session?.user.id]);
+
+  const fetchUserNotes = async () => {
+    try {
+      const response = await fetch(`/api/publish-user-notes?userId=${session?.user.id}&tema=${julgado?.tema}`);
+      if (!response.ok) throw new Error("Erro ao buscar anotações");
+
+      const data = await response.json();
+      setUserNotes(data);
+    } catch (error) {
+      console.error("Erro ao buscar anotações:", error);
+    }
+  }
 
 
   useEffect(() => {
@@ -150,6 +174,13 @@ export default function JulgadoDetailPage() {
   const handleEditar = (id: string, textoAtual: string) => {
     setEditando((prev) => ({ ...prev, [id]: true }));
     setNovoTexto((prev) => ({ ...prev, [id]: textoAtual }));
+    fetchComentarios;
+  };
+
+  const handleEditarAnotacao = (id: string, textoAtual: string) => {
+    setEditando((prev) => ({ ...prev, [id]: true }));
+    setNovoTexto((prev) => ({ ...prev, [id]: textoAtual }));
+    fetchUserNotes;
   };
 
   const handleSalvar = async (id: string) => {
@@ -170,6 +201,31 @@ export default function JulgadoDetailPage() {
         )
       );
       setEditando((prev) => ({ ...prev, [id]: false }));
+      fetchComentarios;
+    } catch (error) {
+      console.error("Erro ao atualizar comentário:", error);
+    }
+  };
+
+  const handleSalvarAnotacao = async (id: string) => {
+    try {
+      const response = await fetch("/api/publish-user-notes", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, text: novoTexto[id] }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Erro ao atualizar comentário.");
+      }
+
+      setComentarios((prev) =>
+        prev.map((anotacao) =>
+          anotacao._id === id ? { ...anotacao, text: novoTexto[id] } : anotacao
+        )
+      );
+      setEditando((prev) => ({ ...prev, [id]: false }));
+      fetchUserNotes;
     } catch (error) {
       console.error("Erro ao atualizar comentário:", error);
     }
@@ -397,7 +453,7 @@ export default function JulgadoDetailPage() {
                                   ...prev,
                                   [comentario._id]: value,
                                 }))}
-                                onCommentPosted={() => setComentarios} // Atualiza os comentários na página
+                                onCommentPosted={fetchComentarios} // Atualiza os comentários na página
                               />
                             ) : (
                               // Exibe o conteúdo formatado com dangerouslySetInnerHTML
@@ -451,7 +507,7 @@ export default function JulgadoDetailPage() {
                     </CardHeader>
                     <CardContent>
                       {/* Inserir Novos Comentários */}
-                      <AdminTextEditor tema={julgado.tema} onCommentPosted={() => setComentarios} />
+                      <AdminTextEditor tema={julgado.tema} onCommentPosted={fetchComentarios} />
                     </CardContent>
                   </Card>
                 )}
@@ -481,7 +537,7 @@ export default function JulgadoDetailPage() {
                                   ...prev,
                                   [anotacao._id]: value,
                                 }))}
-                                onCommentPosted={() => setUserNotes} // Atualiza os comentários na página
+                                onCommentPosted={fetchUserNotes} // Atualiza os comentários na página
                               />
                             ) : (
                               // Exibe o conteúdo formatado com dangerouslySetInnerHTML
@@ -502,14 +558,14 @@ export default function JulgadoDetailPage() {
                               <div className="mt-2">
                                 {editando[anotacao._id] ? (
                                   <button
-                                    onClick={() => handleSalvar(anotacao._id)}
+                                    onClick={() => handleSalvarAnotacao(anotacao._id)}
                                     className="px-3 py-1 bg-green-500 text-white rounded mr-2"
                                   >
                                     Salvar
                                   </button>
                                 ) : (
                                   <button
-                                    onClick={() => handleEditar(anotacao._id, anotacao.text)}
+                                    onClick={() => handleEditarAnotacao(anotacao._id, anotacao.text)}
                                     className="px-3 py-1 bg-neutral-400 text-white rounded"
                                   >
                                     Editar
@@ -534,7 +590,7 @@ export default function JulgadoDetailPage() {
                     </CardHeader>
                     <CardContent>
                       {/* Inserir Novos Comentários */}
-                      <UserTextEditor tema={julgado.tema} onCommentPosted={() => setUserNotes} />
+                      <UserTextEditor tema={julgado.tema} onCommentPosted={fetchUserNotes} />
                     </CardContent>
                   </Card>
                 {/* Embedded Browser Section */}
