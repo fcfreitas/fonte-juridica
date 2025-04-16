@@ -324,10 +324,10 @@ export default function JulgadoDetailPage() {
 
             <Tabs defaultValue="informacoes" className="w-full">
               <div className="md:hidden">
-              <TabsList className="grid grid-rows-3 mb-6">
-                <TabsTrigger value="informacoes">Informações</TabsTrigger>
-                <TabsTrigger value="comentarios">Comentários e Análises</TabsTrigger>
-                <TabsTrigger value="anotacoes">Anotações</TabsTrigger>
+              <TabsList className="flex flex-col gap-2 mb-6">
+                <TabsTrigger className="w-full" value="informacoes">Informações</TabsTrigger>
+                <TabsTrigger className="w-full" value="comentarios">Comentários e Análises</TabsTrigger>
+                <TabsTrigger className="w-full" value="anotacoes">Anotações</TabsTrigger>
               </TabsList>
               </div>
               <div className="hidden md:block">
