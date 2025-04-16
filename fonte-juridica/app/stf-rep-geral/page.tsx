@@ -66,7 +66,7 @@ export default function JulgadosPage() {
       </div>
       
       {/* Botão para abrir filtros no mobile */}
-      <div className="md:hidden flex justify-end mb-4 z-50 fixed top-[200px] w-full pr-10">
+      <div className="md:hidden flex justify-end mb-4 z-50 fixed top-[170px] w-full pr-10">
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
           <DialogTrigger asChild>
             <Button variant="outline" onClick={() => setIsOpen(true)}>

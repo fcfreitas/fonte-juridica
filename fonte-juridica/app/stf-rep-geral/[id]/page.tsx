@@ -188,12 +188,12 @@ export default function JulgadoDetailPage() {
   }
 
   return (
-    <main className="container mx-auto p-4 md:p-6">
+    <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div className="bg-white rounded-lg shadow-sm border mb-6">
           <div className="p-6">
             <div className="space-y-3 mb-4">
-              <div className="flex justify-between items-center justify-center gap-4 mb-4">
-                <div className="flex items-center gap-2 text-lg text-muted-foreground mb-2">
+              <div className="flex justify-between items-center justify-center gap-4 mb-4 md:flex-auto">
+                <div className="flex flex-col md:flex-row items-center gap-2 text-lg text-muted-foreground mb-2">
                   <Badge variant="outline" className="bg-slate-100">
                     Tema {julgado.tema.toString()}
                   </Badge>
@@ -267,11 +267,20 @@ export default function JulgadoDetailPage() {
             </div>
 
             <Tabs defaultValue="informacoes" className="w-full">
+              <div className="md:hidden">
+              <TabsList className="grid grid-rows-3 mb-6">
+                <TabsTrigger value="informacoes">Informações</TabsTrigger>
+                <TabsTrigger value="comentarios">Comentários e Análises</TabsTrigger>
+                <TabsTrigger value="anotacoes">Anotações</TabsTrigger>
+              </TabsList>
+              </div>
+              <div className="hidden md:block">
               <TabsList className="grid grid-cols-3 mb-6">
                 <TabsTrigger value="informacoes">Informações</TabsTrigger>
                 <TabsTrigger value="comentarios">Comentários e Análises</TabsTrigger>
                 <TabsTrigger value="anotacoes">Anotações</TabsTrigger>
               </TabsList>
+              </div>
 
               <TabsContent value="informacoes" className="space-y-6">
                 <Card>
@@ -284,8 +293,8 @@ export default function JulgadoDetailPage() {
                   <CardContent>
                     <div className="text-slate-700 mb-4">Direito {julgado.ramoDireito}</div>
                     <div className="flex justify-start items-center gap-2">
-                        <p className="text-sm font-medium text-slate-500">Assuntos:</p>
-                        <p className="flex flex-wrap gap-2 text-sm font-medium text-slate-600">              
+                        <div className="text-sm font-medium text-slate-500">Assuntos:</div>
+                        <div className="flex flex-wrap gap-2 text-sm font-medium text-slate-600">              
                           {julgado.assunto_array && julgado.assunto_array.length > 0 && (
                             julgado.assunto_array.slice(1).map((assunto, index) => (
                               <Badge key={Number(index)} variant="secondary" className="text-sm p-1 rounded-lg">
@@ -293,7 +302,7 @@ export default function JulgadoDetailPage() {
                               </Badge>
                             ))
                           )}
-                        </p>
+                        </div>
                       </div>
                   </CardContent>
                 </Card>
@@ -306,7 +315,7 @@ export default function JulgadoDetailPage() {
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-slate-700">{julgado.descricao}</p>
+                    <div className="text-slate-700">{julgado.descricao}</div>
                   </CardContent>
                 </Card>
 
@@ -360,7 +369,7 @@ export default function JulgadoDetailPage() {
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-slate-700">{julgado.relator}</p>
+                    <div className="text-slate-700">{julgado.relator}</div>
                   </CardContent>
                 </Card>
               </TabsContent>
@@ -428,7 +437,7 @@ export default function JulgadoDetailPage() {
                         ))}
                       </div>
                     ) : (
-                      <p className="text-muted-foreground">Nenhum comentário disponível.</p>
+                      <div className="text-muted-foreground">Nenhum comentário disponível.</div>
                     )}
                   </CardContent>
                 </Card>
@@ -512,7 +521,7 @@ export default function JulgadoDetailPage() {
                         ))}
                       </div>
                     ) : (
-                      <p className="text-muted-foreground">Você ainda não fez nenhuma anotação.</p>
+                      <div className="text-muted-foreground">Você ainda não fez nenhuma anotação.</div>
                     )}
                   </CardContent>
                 </Card>
