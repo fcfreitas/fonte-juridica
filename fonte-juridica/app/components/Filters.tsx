@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label"
 import { Search } from "lucide-react"
 import { useState } from "react"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Button } from "@/components/ui/button"
 import { Check, ChevronDown } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -42,7 +43,9 @@ export function Filters({ onFilter }: FreeTextFilterProps) {
   const handleRamoSelect = (value: string) => {
     setRamoDireito(value)
     // Fechando o popover explicitamente após um pequeno delay
+    setTimeout(() => {
       setRamoOpen(false)
+    }, 10)
   }
 
   const ramoOptions = [
@@ -87,12 +90,12 @@ export function Filters({ onFilter }: FreeTextFilterProps) {
         />
         <Search size={16} className="absolute right-3 top-2.5 text-slate-400" />
       </div>
-      <div className="space-y-2 mb-6">
+      <div className="hidden md:block space-y-2 mb-6">
         <Label htmlFor="ramo-direito" className="font-semibold">
           Ramo do Direito:
         </Label>
         <Popover open={ramoOpen} onOpenChange={setRamoOpen}>
-          <PopoverTrigger>
+          <PopoverTrigger asChild>
             <Button
               id="ramo-direito"
               variant="outline"
@@ -131,6 +134,29 @@ export function Filters({ onFilter }: FreeTextFilterProps) {
             </div>
           </PopoverContent>
         </Popover>
+      </div>
+      <div className="md:hidden space-y-2 mb-6">
+        <Label htmlFor="ramo-direito" className="font-semibold">
+          Ramo do Direito:
+        </Label>
+        <Select
+          value={ramoDireito}
+          onValueChange={(value) => setRamoDireito(value)}
+        >
+          <SelectTrigger
+            id="ramo-direito"
+            className="w-full bg-slate-50 h-auto py-2"
+          >
+            <SelectValue placeholder="Todos" />
+          </SelectTrigger>
+          <SelectContent className="max-h-[300px] overflow-auto">
+            {ramoOptions.map((option) => (
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
     </div>
   )
