@@ -15,10 +15,6 @@ import Footer from "./components/Footer";
 export const metadata: Metadata = {
   title: "Fonte Jurídica",
   description: "O applicativo para você ficar por dentro dos temas, julgados, julgamentos do STF, STJ e corte interamericana de direitos humanos. Temas e julgados comentados, organizados e prontos para serem usados",
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-  }
 };
 
 export default async function RootLayout({
