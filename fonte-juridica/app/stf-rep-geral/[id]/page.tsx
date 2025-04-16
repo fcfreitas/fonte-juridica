@@ -219,7 +219,7 @@ export default function JulgadoDetailPage() {
         throw new Error("Erro ao atualizar comentário.");
       }
 
-      setComentarios((prev) =>
+      setUserNotes((prev) =>
         prev.map((anotacao) =>
           anotacao._id === id ? { ...anotacao, text: novoTexto[id] } : anotacao
         )
@@ -530,7 +530,7 @@ export default function JulgadoDetailPage() {
 
                             {editando[anotacao._id] ? (
                               // Exibe o editor para editar o conteúdo
-                              <AdminTextEditor
+                              <UserTextEditor
                                 tema={julgado.tema}
                                 value={novoTexto[anotacao._id]} // Passa o texto salvo para editar
                                 onChange={(value) => setNovoTexto((prev) => ({
