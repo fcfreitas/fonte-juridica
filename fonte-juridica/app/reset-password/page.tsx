@@ -1,8 +1,9 @@
-"use client";
+"use client"; // Indica que este componente deve ser tratado no lado do cliente
 
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
+import { Suspense } from "react"; // Importe Suspense para envolver o componente
 
 export default function ResetPasswordPage() {
   const searchParams = useSearchParams();
