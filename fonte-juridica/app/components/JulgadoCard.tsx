@@ -98,7 +98,7 @@ export function JulgadoCard({ j, temasLidos, toggleLido, formatDate }: JulgadoCa
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <p className="text-sm text-slate-700 mr-2">Assuntos:</p>
+          <p className="text-sm text-slate-700 mr-2 font-medium">Assuntos:</p>
           {j.assunto_array &&
             j.assunto_array.length > 0 &&
             j.assunto_array.slice(1).map((assunto: string, index: number) => (
