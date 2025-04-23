@@ -1,10 +1,11 @@
 "use client"; // Indica que este componente deve ser tratado no lado do cliente
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation"; // useSearchParams é o hook correto
 import { Eye, EyeOff } from "lucide-react";
 
-export default function ResetPasswordPage() {
+// Componente que faz uso de `useSearchParams`
+function ResetPasswordPage() {
   const searchParams = useSearchParams(); // Corrigir aqui, agora usamos useSearchParams
   const token = searchParams.get("token"); // Pega o token da URL
 
@@ -129,5 +130,14 @@ export default function ResetPasswordPage() {
         </button>
       </form>
     </div>
+  );
+}
+
+// Componente Suspense que envolve o ResetPasswordPage
+export default function ResetPasswordPageSuspense() {
+  return (
+    <Suspense fallback={<div>Carregando...</div>}>
+      <ResetPasswordPage />
+    </Suspense>
   );
 }
