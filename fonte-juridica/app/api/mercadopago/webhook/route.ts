@@ -62,7 +62,7 @@ export async function POST(req: Request) {
     }
 
     // 📦 EVENTO DE CRIAÇÃO OU ALTERAÇÃO DE ASSINATURA
-    if (type === "preapproval") {
+    if (type === "preapproval" || type === "subscription_preapproval") {
       const preapprovalId = dataId;
       const result = await preapproval.get({ id: preapprovalId }) as PreApprovalWithMetadata;
 
