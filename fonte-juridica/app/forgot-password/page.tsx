@@ -25,7 +25,7 @@ export default function ForgotPasswordPage() {
     if (!response.ok) {
       setError(data.error);
     } else {
-      setMessage("Se o e-mail estiver cadastrado, você receberá um link para redefinir sua senha.");
+      setMessage("Você receberá um link para redefinir sua senha.");
     }
   };
 
