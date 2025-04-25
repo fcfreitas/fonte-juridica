@@ -1,71 +1,144 @@
+import { connectToDb } from "@/app/api/db";
+import { NextResponse } from "next/server";
+import { MercadoPagoConfig } from "mercadopago";
+import { PreApproval } from "mercadopago/dist/clients/preApproval";
+import { Payment } from "mercadopago/dist/clients/payment";
 
-import { connectToDb } from "@/app/api/db"; // sua função de conexão
+interface PreApprovalWithMetadata {
+  id: string;
+  status: string;
+  date_created: string;
+  next_payment_date?: string;
+  reason?: string;
+  auto_recurring?: {
+    frequency: number;
+    frequency_type: string;
+    transaction_amount: number;
+    currency_id: string;
+    start_date: string;
+    end_date?: string;
+  };
+  back_url?: string;
+  payer_email?: string;
+  external_reference?: string;
+  metadata?: {
+    userId: string;
+    plano: string;
+  };
+}
 
-import { NextResponse } from 'next/server';
-import { MercadoPagoConfig } from 'mercadopago';
-import { Payment } from 'mercadopago/dist/clients/payment';
 
 const mercadopago = new MercadoPagoConfig({
   accessToken: process.env.MERCADO_PAGO_ACCESS_TOKEN!,
 });
 
-// Cria o client de pagamento
+const preapproval = new PreApproval(mercadopago);
 const payment = new Payment(mercadopago);
 
 export async function POST(req: Request) {
-  const body = await req.json();
+  const rawBody = await req.text();
+  const params = new URLSearchParams(rawBody);
 
-  if (body.type === 'payment') {
-    const paymentId = Number(body.data.id); // o ID precisa ser número
+  const type = params.get("type");
+  const dataId = params.get("data.id");
 
-    try {
-      const result = await payment.get({ id: paymentId });
+  console.log("[WEBHOOK RECEBIDO]", { type, dataId });
 
-      if (result.status === 'approved') {
-        const plano = result.metadata?.plano;
-        const userId = result.metadata?.userId;
+  try {
+    if (type === "preapproval") {
+      const preapprovalId = dataId!;
+      const result = await preapproval.get({ id: preapprovalId }) as PreApprovalWithMetadata & {
+        metadata?: {
+          userId: string;
+          plano: string;
+        };
+      };
 
-        if (!userId) {
-          return NextResponse.json({ error: 'Usuário não identificado' }, { status: 400 });
-        }
+      const userId = result.metadata?.userId;
+      const plano = result.metadata?.plano;
 
-        const { db } = await connectToDb();
-
-        await db.collection('assinaturas').updateOne(
-          { userId },
-          {
-            $set: {
-              ativo: true,
-              plano,
-              atualizadoEm: new Date(),
-              expiracao: calcularExpiracao(plano),
-            },
-          },
-          { upsert: true }
-        );
+      if (!userId) {
+        console.warn("[PREAPPROVAL] userId ausente no metadata");
+        return NextResponse.json({ error: "Usuário não identificado" }, { status: 400 });
       }
 
-      return NextResponse.json({ status: 'ok' });
-    } catch (err: any) {
-      return NextResponse.json({ error: err.message || 'Erro ao processar pagamento' }, { status: 500 });
-    }
-  }
+      const { db } = await connectToDb();
 
-  return NextResponse.json({ received: true });
+      await db.collection("assinaturas").updateOne(
+        { userId },
+        {
+          $set: {
+            plano,
+            ativo: true,
+            preapprovalId,
+            criadoEm: new Date(),
+          },
+        },
+        { upsert: true }
+      );
+
+      console.log("[PREAPPROVAL] Assinatura registrada com sucesso");
+      return NextResponse.json({ status: "preapproval salvo" });
+    }
+
+    if (type === "authorized_payment") {
+      const paymentId = Number(dataId);
+      const result = await payment.get({ id: paymentId });
+
+      if (result.status !== "approved") {
+        console.warn("[AUTHORIZED_PAYMENT] Pagamento não aprovado");
+        return NextResponse.json({ status: "Pagamento não aprovado" });
+      }
+
+      const plano = result.metadata?.plano;
+      const userId = result.metadata?.userId;
+
+      if (!userId) {
+        console.warn("[AUTHORIZED_PAYMENT] userId ausente no metadata");
+        return NextResponse.json({ error: "Usuário não identificado" }, { status: 400 });
+      }
+
+      const { db } = await connectToDb();
+
+      await db.collection("assinaturas").updateOne(
+        { userId },
+        {
+          $set: {
+            plano,
+            ativo: true,
+            atualizadoEm: new Date(),
+            expiracao: calcularExpiracao(plano),
+            ultimoPagamento: new Date(result.date_approved!),
+          },
+        },
+        { upsert: true }
+      );
+
+      console.log("[AUTHORIZED_PAYMENT] Assinatura renovada com sucesso");
+      return NextResponse.json({ status: "pagamento salvo" });
+    }
+
+    return NextResponse.json({ status: "evento ignorado" });
+  } catch (err: any) {
+    console.error("[ERRO MERCADO PAGO WEBHOOK]", err);
+    return NextResponse.json({ error: err.message || "Erro interno" }, { status: 500 });
+  }
 }
 
 function calcularExpiracao(plano: string): Date {
   const hoje = new Date();
   switch (plano) {
-    case 'mensal':
+    case "mensal":
       hoje.setMonth(hoje.getMonth() + 1);
       break;
-    case 'semestral':
+    case "semestral":
       hoje.setMonth(hoje.getMonth() + 6);
       break;
-    case 'anual':
+    case "anual":
       hoje.setFullYear(hoje.getFullYear() + 1);
       break;
+    default:
+      hoje.setMonth(hoje.getMonth() + 1);
   }
   return hoje;
 }
