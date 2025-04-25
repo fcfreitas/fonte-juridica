@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useSession } from 'next-auth/react';
 
 const planos = {
   mensal: { title: 'Assinatura Mensal', price: 29.9 },
@@ -10,6 +11,7 @@ const planos = {
 
 export default function Planos() {
   const [carregando, setCarregando] = useState(false);
+  const { data: session } = useSession(); // Obter a sessão do usuário
 
   const handleAssinar = async (plano: keyof typeof planos) => {
     try {
@@ -18,7 +20,7 @@ export default function Planos() {
       const res = await fetch('/api/create-payment', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ plano }),
+        body: JSON.stringify({ plano, userId: session?.user.id }),
       });
 
       const data = await res.json();
