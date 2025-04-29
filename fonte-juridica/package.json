@@ -33,6 +33,7 @@
     "react-quill-new": "^3.4.1",
     "slate": "^0.112.0",
     "slate-react": "^0.112.1",
+    "stripe": "^18.0.0",
     "tailwind-merge": "^3.0.2",
     "tailwindcss-animate": "^1.0.7"
   },

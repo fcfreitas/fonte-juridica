@@ -3,35 +3,32 @@
 import { useState } from 'react';
 import { useSession } from 'next-auth/react';
 
-const planos = {
-  mensal: { title: 'Assinatura Mensal', price: 29.9 },
-  semestral: { title: 'Assinatura Semestral', price: 149.9 },
-  anual: { title: 'Assinatura Anual', price: 279.9 },
-};
-
-export default function Planos() {
+export default function Assinatura() {
   const [carregando, setCarregando] = useState(false);
-  const { data: session } = useSession(); // Obter a sessão do usuário
+  const { data: session } = useSession();
 
-  const handleAssinar = async (plano: keyof typeof planos) => {
+  const handleAssinar = async () => {
     try {
       setCarregando(true);
 
-      const res = await fetch('/api/create-payment', {
+      const res = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ plano, userId: session?.user.id }),
+        body: JSON.stringify({ 
+          userId: session?.user.id, 
+          email: session?.user.email 
+        }),
       });
 
       const data = await res.json();
-      if (data.init_point) {
-        window.location.href = data.init_point;
+      if (data.url) {
+        window.location.href = data.url; // Redireciona para o Stripe Checkout
       } else {
-        alert('Erro ao criar pagamento.');
+        alert('Erro ao criar checkout.');
       }
     } catch (error) {
       console.error(error);
-      alert('Erro ao processar o pagamento.');
+      alert('Erro ao processar a assinatura.');
     } finally {
       setCarregando(false);
     }
@@ -39,23 +36,19 @@ export default function Planos() {
 
   return (
     <div className="max-w-2xl mx-auto py-10 px-4">
-      <h1 className="text-2xl font-bold text-center mb-6">Escolha seu plano</h1>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {Object.entries(planos).map(([key, { title, price }]) => (
-          <div key={key} className="border p-4 rounded-2xl shadow-md flex flex-col justify-between">
-            <div>
-              <h2 className="text-xl font-semibold">{title}</h2>
-              <p className="text-lg mt-2">R$ {price.toFixed(2)}</p>
-            </div>
-            <button
-              onClick={() => handleAssinar(key as keyof typeof planos)}
-              className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 transition"
-              disabled={carregando}
-            >
-              {carregando ? 'Processando...' : 'Assinar'}
-            </button>
-          </div>
-        ))}
+      <h1 className="text-2xl font-bold text-center mb-6">Assinatura Fonte Jurídica</h1>
+      <div className="border p-6 rounded-2xl shadow-md flex flex-col justify-between items-center">
+        <div className="text-center">
+          <h2 className="text-xl font-semibold mb-2">Assinatura Mensal</h2>
+          <p className="text-lg">R$ 29,90 / mês</p>
+        </div>
+        <button
+          onClick={handleAssinar}
+          className="mt-6 bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 transition"
+          disabled={carregando}
+        >
+          {carregando ? 'Processando...' : 'Assinar agora'}
+        </button>
       </div>
     </div>
   );
