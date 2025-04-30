@@ -43,6 +43,7 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.id = String(user.id); // Garante que será uma string
         token.role = user.role || "user";
+        token.pagante = user?.pagante ?? token.pagante;
         console.log("JWT Token:", token); 
       }
       return token;
@@ -54,6 +55,7 @@ export const authOptions: NextAuthOptions = {
 
         session.user.id = String(token.id); // Garante que será uma string
         session.user.role = token.role as string;
+        session.user.pagante = token.pagante as boolean;
         if (user?.expireDate) {
           session.user.expireDate = user.expireDate; // ← aqui!
         }

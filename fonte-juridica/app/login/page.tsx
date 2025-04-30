@@ -18,10 +18,15 @@ export default function LoginPage() {
   const router = useRouter();
 
   useEffect(() => {
-    if (session) {
-      router.push(process.env.NEXT_PUBLIC_SITE_URL+"/");
+    if (session?.user) {
+      if (session.user.pagante) {
+        router.push("/home");
+      } else {
+        router.push("/assinatura");
+      }
     }
   }, [session, router]);
+  
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();

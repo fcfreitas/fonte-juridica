@@ -9,6 +9,7 @@ declare module "next-auth" {
       image?: string | null;
       role?: string | null; // Adicione o campo role aqui
       expireDate?: number | null;
+      pagante?: boolean;
     } & DefaultSession["user"];
   }
 
@@ -17,5 +18,7 @@ declare module "next-auth" {
     name?: string | null;
     email?: string | null;
     role?: string | null;
+    expireDate?: number | null;
+    pagante?: boolean;
   }
 }
