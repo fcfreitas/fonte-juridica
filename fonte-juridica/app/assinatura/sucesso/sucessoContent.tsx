@@ -18,7 +18,7 @@ export default function SucessoContent() {
       <h1 className="text-3xl font-bold text-green-600 mb-4">Assinatura Confirmada!</h1>
       <p className="text-lg text-center mb-6">Obrigado por assinar o Fonte Jurídica.</p>
       <a
-        href="/"
+        href="/home"
         className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-xl transition"
       >
         Voltar para Home

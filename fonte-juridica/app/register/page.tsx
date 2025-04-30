@@ -50,7 +50,7 @@ export default function RegisterPage() {
       setError(data.error);
     } else {
       setSuccess(true);
-      setTimeout(() => router.push("/login"), 2000);
+      setTimeout(() => router.push("/assinatura"), 2000);
     }
   };
 
