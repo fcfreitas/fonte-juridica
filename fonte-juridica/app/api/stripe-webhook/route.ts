@@ -38,12 +38,14 @@ export async function POST(req: Request) {
     if (userId && session.subscription) {
       try {
         const subscription = await stripe.subscriptions.retrieve(
-          session.subscription as string
+          session.subscription as string,
+          { expand: ['latest_invoice'] }
         ) as Stripe.Subscription;
         console.log("Subscription recebido:", subscription);
 
-        const expireDate = subscription.ended_at ;
-        
+        const invoice = subscription.latest_invoice as Stripe.Invoice;
+        const expireDate = invoice.lines.data[0].period.end; // timestamp UNIX
+                
   
         const result = await db.collection("user").updateOne(
           { _id: new ObjectId(userId) },
