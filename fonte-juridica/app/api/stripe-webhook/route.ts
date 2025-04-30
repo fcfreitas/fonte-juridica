@@ -35,18 +35,32 @@ export async function POST(req: Request) {
     console.log("Metadata userId recebido:", userId);
     console.log("Subscription ID recebido:", session.subscription);
 
-    if (userId) {
+    if (userId && session.subscription) {
       try {
+        const subscription = await stripe.subscriptions.retrieve(
+          session.subscription as string
+        ) as Stripe.Subscription;
+        
+        const expireDate = subscription.ended_at ;
+        
+  
         const result = await db.collection("user").updateOne(
           { _id: new ObjectId(userId) },
-          { $set: { pagante: true, stripeSubscriptionId: session.subscription } }
+          {
+            $set: {
+              pagante: true,
+              stripeSubscriptionId: session.subscription,
+              expireDate: expireDate, // timestamp UNIX
+            },
+          }
         );
+  
         console.log("Resultado da atualização:", result);
       } catch (error) {
-        console.error("Erro ao atualizar usuário:", error);
+        console.error("Erro ao buscar assinatura ou atualizar usuário:", error);
       }
     } else {
-      console.warn("userId ausente no metadata");
+      console.warn("userId ou subscription ausentes");
     }
   }
 
