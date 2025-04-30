@@ -40,7 +40,8 @@ export async function POST(req: Request) {
         const subscription = await stripe.subscriptions.retrieve(
           session.subscription as string
         ) as Stripe.Subscription;
-        
+        console.log("Subscription recebido:", subscription);
+
         const expireDate = subscription.ended_at ;
         
   
