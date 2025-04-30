@@ -2,6 +2,7 @@ import { connectToDb } from "@/app/api/db";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import type { NextAuthOptions } from "next-auth";
+import { ObjectId } from "mongodb";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -47,9 +48,15 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     async session({ session, token }) {
-      if (token) {
+      if (token?.sub) {
+        const { db } = await connectToDb();
+        const user = await db.collection("user").findOne({ _id: new ObjectId(token.sub) });
+
         session.user.id = String(token.id); // Garante que será uma string
         session.user.role = token.role as string;
+        if (user?.expireDate) {
+          session.user.expireDate = user.expireDate; // ← aqui!
+        }
       }
       return session;
     },

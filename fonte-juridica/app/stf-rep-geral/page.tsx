@@ -62,6 +62,10 @@ export default function JulgadosPage() {
   const agora = Math.floor(Date.now() / 1000);
   const assinaturaValida = expireDate && expireDate > agora;
 
+  console.log("session.user:", session?.user);
+  console.log("expireDate (timestamp):", session?.user?.expireDate);
+  console.log("agora:", Math.floor(Date.now() / 1000));
+
   return (
     <div className="container mx-auto p-3 md:px-10">
     {/*Versão Desktop */}
