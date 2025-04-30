@@ -58,6 +58,10 @@ export default function JulgadosPage() {
     setSearchTema("")
   }
 
+  const expireDate = session?.user?.expireDate;
+  const agora = Math.floor(Date.now() / 1000);
+  const assinaturaValida = expireDate && expireDate > agora;
+
   return (
     <div className="container mx-auto p-3 md:px-10">
     {/*Versão Desktop */}
@@ -113,7 +117,25 @@ export default function JulgadosPage() {
 
         {/* Lista de julgados */}
         <main className="flex-1 px-4 md:px-6">
-          <JulgadosList />
+        <div className="relative">
+      <div className={assinaturaValida ? "" : "blur-sm pointer-events-none select-none"}>
+        <JulgadosList />
+      </div>
+
+      {!assinaturaValida && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center z-10 bg-white/70 backdrop-blur-sm">
+          <p className="text-xl font-semibold text-slate-800 mb-4 text-center max-w-md">
+            Este conteúdo é exclusivo para assinantes.
+          </p>
+          <a
+            href="/assinatura"
+            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-xl transition"
+          >
+            Assinar agora
+          </a>
+        </div>
+      )}
+    </div>
         </main>
       </div>
     </div>
