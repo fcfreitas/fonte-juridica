@@ -30,7 +30,8 @@ export const authOptions: NextAuthOptions = {
                   name: user.name, 
                   email: user.email,
                   role: user.role,
-                  expireDate: user.expireDate
+                  expireDate: user.expireDate,
+                  pagante: user.pagante,
                 };
       },
     }),

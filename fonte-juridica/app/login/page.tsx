@@ -19,6 +19,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (session?.user) {
+      console.log("Session:", session);
       if (session.user.pagante) {
         router.push("/home");
       } else {
