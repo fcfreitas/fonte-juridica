@@ -37,7 +37,7 @@ export async function POST(req: Request) {
 
     if (userId) {
       try {
-        const result = await db.collection("users").updateOne(
+        const result = await db.collection("user").updateOne(
           { _id: new ObjectId(userId) },
           { $set: { pagante: true, stripeSubscriptionId: session.subscription } }
         );
