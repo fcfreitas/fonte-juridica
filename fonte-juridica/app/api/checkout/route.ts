@@ -14,7 +14,7 @@ export async function POST(req: Request) {
     customer_email: email,
     line_items: [
       {
-        price: "price_1RJKnLCW26BkvMnWktDJb9pZ", // Substitua pelo seu real price_id
+        price: "price_1RM8xFEAMiX09CraovsIbNYO", // Substitua pelo seu real price_id
         quantity: 1,
       },
     ],
