@@ -31,15 +31,17 @@ export default function HomePage() {
             <p className="text-slate-600">Encontre julgados por tribunal, categoria, ramo do Direito ou palavras-chave.</p>
           </div>
           <div>
-          <MessageSquareText className="mx-auto h-12 w-12 text-sky-700 mb-4" />
-            <h3 className="text-xl font-bold mb-2">Comentários e Análises</h3>
-            <p className="text-slate-600">Aprofunde-se nos principais temas com observações feitas por especialistas.</p>
-          </div>
-          <div>
           <Notebook className="mx-auto h-12 w-12 text-sky-700 mb-4" />
             <h3 className="text-xl font-bold mb-2">Organização Pessoal</h3>
-            <p className="text-slate-600">Marque como lido, faça suas anotações e construa seu caderno personalizado.</p>
+            <p className="text-slate-600">Marque como lido e faça suas anotações.</p>
           </div>
+          <div>
+          <MessageSquareText className="mx-auto h-12 w-12 text-sky-700 mb-4" />
+            <h3 className="text-xl font-bold mb-2">Comentários e Análises</h3>
+            <p className="text-slate-600 font-bold"> Em breve!</p>
+            <p className="text-slate-600">Aprofunde-se nos principais temas com observações feitas por especialistas.</p>
+          </div>
+
         </div>
       </section>
 
@@ -70,7 +72,7 @@ export default function HomePage() {
       <section className="bg-sky-600 text-white py-12 px-4 text-center">
         <h2 className="text-2xl font-bold mb-4">Pronto para transformar sua rotina de estudos?</h2>
         <p className="mb-6">Comece hoje mesmo a usar o Fonte Jurídica.</p>
-        <button className="bg-white text-sky-700 font-semibold px-6 py-3 rounded-xl">Crie sua conta</button>
+        <Link href={"/register/"} className="bg-white text-sky-700 font-semibold px-6 py-3 rounded-xl">Crie sua conta</Link>
       </section>
     </main>
   );

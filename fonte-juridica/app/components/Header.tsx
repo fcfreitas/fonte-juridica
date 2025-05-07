@@ -6,7 +6,8 @@ export default function HeaderBar() {
             </div> */}
             <header className='bg-sky-700 text-white p-3 md:p-6'>
                     <div className='container mx-auto px-4'>
-                        <h1 className='text-2xl md:text-3xl font-bold'>Fonte Jurídica</h1>
+                        <h1 className='text-2xl md:text-3xl font-bold'>
+                            <a href="/">Fonte Jurídica</a></h1>
                     </div>
             </header>           
         </div>

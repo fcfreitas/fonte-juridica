@@ -34,7 +34,7 @@ export default function NavBar() {
                     <div className="flex space-x-4">
                         <li>
                         <Link
-                        href="/"
+                        href="/home"
                          className="font-large"
                         >
                             Home
