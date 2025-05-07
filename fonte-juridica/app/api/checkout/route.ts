@@ -18,6 +18,7 @@ export async function POST(req: Request) {
         quantity: 1,
       },
     ],
+    locale: "pt-BR",
     success_url: process.env.NEXT_PUBLIC_SITE_URL+`/assinatura/sucesso?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: process.env.NEXT_PUBLIC_SITE_URL+`/assinatura/cancelado`,
     metadata: {
