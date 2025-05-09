@@ -1,3 +1,5 @@
+"use client"
+
 import React from "react";
 import type { Metadata } from "next";
 import "./globals.css";
@@ -15,6 +17,7 @@ import Footer from "./components/Footer";
 export const metadata: Metadata = {
   title: "Fonte Jurídica",
   description: "O applicativo para você ficar por dentro dos temas, julgados, julgamentos do STF, STJ e corte interamericana de direitos humanos. Temas e julgados comentados, organizados e prontos para serem usados",
+  keywords: "jurisprudência stj, jurisprudência stf, temas de repercussão geral stf, repetitivos stj, temas de repercussão geral comentados, repetitivos comentados, concurso público, concurso direito, procuradoria"
 };
 
 export default async function RootLayout({
