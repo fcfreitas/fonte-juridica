@@ -27,6 +27,7 @@ export default function JulgadosList() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
   const [temasLidos, setTemasLidos] = useState<Record<number, boolean>>({}); // Armazena quais temas foram marcados como lidos
+  const [temasDestacados, setTemasDestacados] = useState<Record<number, boolean>>({}); // Armazena quais temas foram destacados
     type SortOption = "temasRecentes" | "temasAntigos" | "tesesRecentes" | "tesesAntigas";
   const [sortOption, setSortOption] = useState<SortOption>("temasRecentes");
 
@@ -93,8 +94,26 @@ export default function JulgadosList() {
       }
     }
 
+    async function fetchTemasDestacados() {
+      if (!session) return;
+      try {
+        console.log("🟢 Sessão atual:", session);
+        const res = await fetch(`/api/tema-destaque?userId=${session.user.id}`);
+        if (!res.ok) throw new Error("Erro ao buscar temas destacados");
+        const data = await res.json();
+        const destacados = data.reduce((acc: Record<number, boolean>, item: { tema: number; destacado: boolean }) => {
+          acc[item.tema] = item.destacado;
+          return acc;
+        }, {});
+        setTemasDestacados(destacados);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
     fetchJulgados();
     if (session) fetchTemasLidos();
+    if (session) fetchTemasDestacados();
   }, [ramoDireito, assunto, situacaoRepGeral, situacaoTema, searchText || "", searchTema || "", session, sortOption]); // Atualiza sempre que os filtros mudarem
 
   const toggleLido = async (tema: number) => {
@@ -120,6 +139,29 @@ export default function JulgadosList() {
     }
   };
 
+  const toggleDestacado = async (tema: number) => {
+    if (!session) return alert("Você precisa estar logado para destacar.");
+
+    const novoEstado = !temasDestacados[tema]; // Alterna entre true/false
+
+    try {
+      const response = await fetch("/api/tema-destaque", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: session.user.id, tema, destacado: novoEstado }),
+      });
+
+      if (!response.ok) throw new Error("Erro ao atualizar tema destacado");
+
+      setTemasDestacados((prev) => ({
+        ...prev,
+        [tema]: novoEstado,
+      }));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   if (loading) return <div>Carregando...</div>;
   if (error) return <div>{error}</div>;
 
@@ -133,6 +175,7 @@ export default function JulgadosList() {
               <TabsTrigger className="text-sm" value="all">Todos</TabsTrigger>
               <TabsTrigger className="text-sm" value="unread">Não Lidos</TabsTrigger>
               <TabsTrigger className="text-sm" value="read">Lidos</TabsTrigger>
+              <TabsTrigger className="text-sm" value="destaque">Destaques</TabsTrigger>
             </TabsList>
   
             <div className="flex items-center gap-2">
@@ -165,6 +208,8 @@ export default function JulgadosList() {
                 j={j}
                 temasLidos={temasLidos}
                 toggleLido={toggleLido}
+                temasDestacados={temasDestacados}
+                toggleDestacado={toggleDestacado}
                 formatDate={formatDate}
               />
             ))}
@@ -181,6 +226,8 @@ export default function JulgadosList() {
                 j={j}
                 temasLidos={temasLidos}
                 toggleLido={toggleLido}
+                temasDestacados={temasDestacados}
+                toggleDestacado={toggleDestacado}
                 formatDate={formatDate}
               />
             ))}
@@ -197,6 +244,26 @@ export default function JulgadosList() {
                 j={j}
                 temasLidos={temasLidos}
                 toggleLido={toggleLido}
+                temasDestacados={temasDestacados}
+                toggleDestacado={toggleDestacado}
+                formatDate={formatDate}
+              />
+            ))}
+          </div>
+        </TabsContent>
+
+        <TabsContent value="destaque" className="space-y-6 pr-0.5">
+        <div className="h-[calc(100vh-70px)] overflow-y-auto space-y-6 pr-0.5 scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-slate-100">
+          {julgados
+            .filter((j) => !!temasDestacados[Number(j.tema)])
+            .map((j) => (
+              <JulgadoCard
+                key={j._id}
+                j={j}
+                temasLidos={temasLidos}
+                toggleLido={toggleLido}
+                temasDestacados={temasDestacados}
+                toggleDestacado={toggleDestacado}
                 formatDate={formatDate}
               />
             ))}

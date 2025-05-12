@@ -1,5 +1,5 @@
 // components/JulgadoCard.tsx
-import { BookIcon, BookOpen } from "lucide-react";
+import { BookIcon, BookOpen, StarOff, Star } from "lucide-react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -15,11 +15,14 @@ interface JulgadoCardProps {
   j: any;
   temasLidos: Record<number, boolean>;
   toggleLido: (tema: number) => void;
+  temasDestacados: Record<number, boolean>;
+  toggleDestacado: (tema: number) => void;
   formatDate: (date: string) => string;
 }
 
-export function JulgadoCard({ j, temasLidos, toggleLido, formatDate }: JulgadoCardProps) {
+export function JulgadoCard({ j, temasLidos, toggleLido, temasDestacados, toggleDestacado, formatDate }: JulgadoCardProps) {
   const lido = !!temasLidos[Number(j.tema)];
+  const destacado = !!temasDestacados[Number(j.tema)];
 
   return (
     <Card
@@ -28,7 +31,8 @@ export function JulgadoCard({ j, temasLidos, toggleLido, formatDate }: JulgadoCa
         lido ? "border-l-4 border-l-emerald-500" : "border-l-4 border-l-red-400"
       }`}
     >
-      <CardHeader className="bg-slate-50 pb-2">
+      <CardHeader className="bg-slate-50 pb-2 pt-2">
+        
         <div className="flex justify-between items-start">
           <Link
             href={`/stf-rep-geral/${j._id}`}
@@ -41,32 +45,49 @@ export function JulgadoCard({ j, temasLidos, toggleLido, formatDate }: JulgadoCa
           </Link>
         </div>
         <div className="flex items-center justify-between mt-1">
-          <div>
-            <div className="space-y-1">
-              <p className="text-slate-600 font-medium text-sm">
+              <p className="text-slate-600 font-normal text-sm">
                 Recurso Paradigma:{" "}
                 <span className="font-normal">{j.leadingCase}</span>
               </p>
-            </div>
-          </div>
-          <Button
-            variant={lido ? "outline" : "secondary"}
-            size="sm"
-            className="h-9 gap-2"
-            onClick={() => toggleLido(Number(j.tema))}
-          >
-            {lido ? (
-              <>
-                <BookIcon size={16} />
-                <span>Lido</span>
-              </>
-            ) : (
-              <>
-                <BookOpen size={16} />
-                <span>Marcar como Lido</span>
-              </>
-            )}
-          </Button>
+              <div className="flex justify-end items-center">
+                <Button
+                  variant={lido ? "outline" : "outline"}
+                  size="sm"
+                  className="h-8 gap-2 mr-2"
+                  onClick={() => toggleLido(Number(j.tema))}
+                >
+                  {lido ? (
+                    <>
+                      <BookIcon size={16} fill="oklch(90.1% 0.058 230.902)" />
+                      {/* <span>Lido</span> */}
+                    </>
+                  ) : (
+                    <>
+                      <BookOpen size={16} />
+                      {/* <span>Marcar como Lido</span> */}
+                    </>
+                  )}
+                </Button>
+              
+                <Button
+                  variant={destacado ? "outline" : "outline"}
+                  size="sm"
+                  className="h-8 gap-2"
+                  onClick={() => toggleDestacado(Number(j.tema))}
+                >
+                  {destacado ? (
+                    <>
+                      <Star size={16} fill="oklch(82.8% 0.189 84.429)" />
+                      {/* <span>Destaque</span> */}
+                    </>
+                  ) : (
+                    <>
+                      <StarOff size={16} />
+                      {/* <span>Destacar tema</span> */}
+                    </>
+                  )}
+                </Button>
+              </div>
         </div>
       </CardHeader>
 
@@ -105,7 +126,7 @@ export function JulgadoCard({ j, temasLidos, toggleLido, formatDate }: JulgadoCa
               <Badge
                 key={index}
                 variant="outline"
-                className="text-sm bg-gray-100 p-1 rounded-xl"
+                className="text-xs bg-gray-100 p-1 rounded-xl"
               >
                 <span>{assunto}</span>
               </Badge>
