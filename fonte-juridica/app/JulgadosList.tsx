@@ -7,7 +7,7 @@ import { useSession } from "next-auth/react";
 // import { IntegerType } from "mongodb";
 // import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 // import { Button } from "@/components/ui/button";
-import { BookOpen, BookIcon, SortDesc} from "lucide-react";
+import { BookOpen, BookIcon, SortDesc, Star, MenuSquare} from "lucide-react";
 // import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { JulgadoCard } from "./components/JulgadoCard";
@@ -172,10 +172,10 @@ export default function JulgadosList() {
         <div className="bg-slate-50 z-40 pb-6">
           <div className="flex justify-between items-center  gap-4 text-sm">
             <TabsList>
-              <TabsTrigger className="text-sm" value="all">Todos</TabsTrigger>
-              <TabsTrigger className="text-sm" value="unread">Não Lidos</TabsTrigger>
-              <TabsTrigger className="text-sm" value="read">Lidos</TabsTrigger>
-              <TabsTrigger className="text-sm" value="destaque">Destaques</TabsTrigger>
+              <TabsTrigger className="text-sm gap-1" value="all"><MenuSquare size={16}/>Todos</TabsTrigger>
+              <TabsTrigger className="text-sm gap-1" value="unread"><BookOpen size={16}/>  Não Lidos</TabsTrigger>
+              <TabsTrigger className="text-sm gap-1" value="read"><BookIcon size={16} fill="oklch(90.1% 0.058 230.902)" />  Lidos</TabsTrigger>
+              <TabsTrigger className="text-sm gap-1" value="destaque"><Star size={16} fill="oklch(82.8% 0.189 84.429)" />  Destaques</TabsTrigger>
             </TabsList>
   
             <div className="flex items-center gap-2">

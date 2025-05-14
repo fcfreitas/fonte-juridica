@@ -11,7 +11,7 @@ import AdminTextEditor from "@/app/components/textEditor";
 import UserTextEditor from "@/app/components/UserTextEditor";
 import "@/styles/quill-styles.css";
 import { Badge } from "@/components/ui/badge";
-import { Bookmark, BookOpen, BookIcon, FileText, Info, Calendar, User, Flag, MessageSquare, ExternalLink, FileCheck, NotebookPen } from "lucide-react";
+import { Bookmark, BookOpen, BookIcon, FileText, Info, Calendar, User, Flag, MessageSquare, ExternalLink, FileCheck, NotebookPen, Star, StarOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -34,6 +34,7 @@ export default function JulgadoDetailPage() {
   const [editando, setEditando] = useState<{ [key: string]: boolean }>({});
   const [novoTexto, setNovoTexto] = useState<{ [key: string]: string }>({});
   const [temasLidos, setTemasLidos] = useState<Record<number, boolean>>({}); // Armazena quais temas foram marcados como lidos
+  const [destacado, setDestacado] = useState<boolean | null>(null); // Armazena quais temas foram destacados
 
   // Redirecionar para login se não estiver autenticado
   useEffect(() => {
@@ -146,6 +147,22 @@ export default function JulgadoDetailPage() {
     fetchLidoStatus();
   }, [session, julgado?.tema]);
 
+  useEffect(() => {
+    if (!session || !julgado?.tema) return;
+    async function fetchDestaqueStatus() {
+      try {
+        const response = await fetch(`/api/tema-destaque?userId=${session?.user.id}&tema=${julgado?.tema}`);
+        console.log('Parametros de busca dos comentarios', julgado?.tema, session?.user.id)
+        const data = await response.json();
+        setDestacado(data?.destacado ?? false);
+      } catch (error) {
+        console.error("Erro ao buscar status de destaque:", error);
+      }
+    }
+
+    fetchDestaqueStatus();
+  }, [session, julgado?.tema]);
+
   const toggleLido = async () => {
     if (!session || !julgado?.tema) return;
 
@@ -167,6 +184,28 @@ export default function JulgadoDetailPage() {
       setLido(data.lido); // Atualiza com o valor retornado
     } catch (error) {
       console.error("Erro ao atualizar tema lido:", error);
+    }
+  };
+
+  const toggleDestacado = async () => {
+    if (!session || !julgado?.tema) return alert("Você precisa estar logado para destacar.");
+
+    const novoEstado = !destacado; // Alterna entre true/false
+
+    try {
+      const response = await fetch("/api/tema-destaque", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: session.user.id, tema: julgado?.tema, destacado: novoEstado }),
+      });
+
+      if (!response.ok) throw new Error("Erro ao atualizar tema destacado");
+      const data = await response.json();
+      console.log("Resposta do toggle:", data); // Para ver o retorno
+
+      setDestacado(data.destacado);
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -247,26 +286,27 @@ export default function JulgadoDetailPage() {
     <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div className="bg-white rounded-lg shadow-sm border mb-6">
           <div className="p-6">
-            <div className="space-y-3 mb-4">
-              <div className="flex justify-between items-center justify-center gap-4 mb-4 md:flex-auto">
-                <div className="flex flex-col md:flex-row items-center gap-2 text-lg text-muted-foreground mb-2">
-                  <Badge variant="outline" className="bg-slate-100">
-                    Tema {julgado.tema.toString()}
-                  </Badge>
+            <div className="space-y-3 mb-4"><div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-4">
+              <div className="flex flex-col md:flex-row items-center gap-2 text-lg text-muted-foreground">
+                <Badge variant="outline" className="bg-slate-100">
+                  Tema {julgado.tema.toString()}
+                </Badge>
 
-                  <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">
-                    {julgado.situacaoTema}
-                  </Badge>
-                </div>
+                <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">
+                  {julgado.situacaoTema}
+                </Badge>
+              </div>
+
+              <div className="flex flex-row items-center justify-center gap-2">
                 <Button
                   variant={lido ? "outline" : "secondary"}
                   size="sm"
-                  className="h-9 gap-2 items-center mb-2"
+                  className="h-9 gap-2 items-center"
                   onClick={toggleLido}
                 >
                   {lido ? (
                     <>
-                      <BookIcon size={16} />
+                      <BookIcon size={16} fill="oklch(90.1% 0.058 230.902)" />
                       <span>Lido</span>
                     </>
                   ) : (
@@ -276,7 +316,28 @@ export default function JulgadoDetailPage() {
                     </>
                   )}
                 </Button>
+
+                <Button
+                  variant={destacado ? "outline" : "secondary"}
+                  size="sm"
+                  className="h-9 gap-2 items-center"
+                  onClick={() => toggleDestacado()}
+                >
+                  {destacado ? (
+                    <>
+                      <Star size={16} fill="oklch(82.8% 0.189 84.429)" />
+                      <span>Destaque</span>
+                    </>
+                  ) : (
+                    <>
+                      <StarOff size={16} />
+                      <span>Destacar tema</span>
+                    </>
+                  )}
+                </Button>
               </div>
+            </div>
+
                 <h1 className="text-xl md:text-2xl font-bold text-slate-900 leading-tight mb-6 text-justify">{julgado.titulo}</h1>
                 {julgado.tese ? (<Card>
                   <CardHeader className="pb-2">
@@ -327,14 +388,14 @@ export default function JulgadoDetailPage() {
               <TabsList className="flex flex-col gap-2 mb-6">
                 <TabsTrigger className="w-full" value="informacoes">Informações</TabsTrigger>
                 <TabsTrigger className="w-full" value="comentarios">Comentários e Análises</TabsTrigger>
-                <TabsTrigger className="w-full" value="anotacoes">Anotações</TabsTrigger>
+                <TabsTrigger className="w-full" value="anotacoes">Anotações Pessoais</TabsTrigger>
               </TabsList>
               </div>
               <div className="hidden md:block">
               <TabsList className="grid grid-cols-3 mb-6">
                 <TabsTrigger value="informacoes">Informações</TabsTrigger>
                 <TabsTrigger value="comentarios">Comentários e Análises</TabsTrigger>
-                <TabsTrigger value="anotacoes">Anotações</TabsTrigger>
+                <TabsTrigger value="anotacoes">Anotações Pessoais</TabsTrigger>
               </TabsList>
               </div>
 
@@ -435,7 +496,7 @@ export default function JulgadoDetailPage() {
                   <CardHeader>
                     <CardTitle className="text-lg flex items-center">
                       <MessageSquare className="h-5 w-5 mr-2 text-slate-500" />
-                      Comentários
+                      Comentários e Análises
                     </CardTitle>
                   </CardHeader>
                   <CardContent>

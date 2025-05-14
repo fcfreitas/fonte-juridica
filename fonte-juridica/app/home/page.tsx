@@ -24,7 +24,7 @@ export default function Home() {
                   <p className="text-base text-slate-700 mt-1">Temas de Repercussão Geral</p>
                 </Link>
                 <Link
-                  href={"/stf-repetitivos/"}
+                  href={"/stj-repetitivos/"}
                   className="w-3/4 aspect-square bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition duration-300 flex flex-col items-center justify-center text-center"
                 >
                   <h2 className="text-2xl font-bold text-slate-800">STJ</h2>

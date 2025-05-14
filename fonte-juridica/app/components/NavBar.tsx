@@ -61,11 +61,11 @@ export default function NavBar() {
                                     </li>
                                     <li>
                                         <Link
-                                            href="/stf-jurisprudencias"
+                                            href="/stj-repetitivos"
                                             className="block px-4 py-2 hover:bg-gray-100 transition"
                                             onClick={() => setIsDropdownOpen(false)} // Fecha o dropdown ao clicar
                                         >
-                                            STF - Jurisprudências
+                                            STJ - Repetitivos
                                         </Link>
                                     </li>
                                 </ul>
