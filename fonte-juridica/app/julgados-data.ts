@@ -17,6 +17,42 @@ export interface Julgado {
     assunto: string;
     assunto_array: string[];
   }
+
+  export interface Processo {
+  // Exemplo de estrutura. Adapte com os campos reais dos processos
+  processo: string;
+  numeroRegistro?: IntegerType;
+  tribunalOrigem: string;
+  rrc: string;
+  relatorAfetouProc: string;
+  relatorAtual: string;
+  dataAfetacao: string;
+  vistaMPF: string;
+  julgadoEm: string;
+  acordaoPublicadoEm: string;
+}
+
+export interface Repetitivo {
+  _id: string;
+  tema: IntegerType;
+  anotacoesNUGEPNAC: string;
+  assunto: string;
+  assunto_array: string[];
+  delimitacaoJulgado: string;
+  entendimentoAnterior?: string;
+  informacoesComplementares?: string;
+  orgaoJulgador: string;
+  processoSTF?: string;
+  processos: Processo[];
+  questaoSubmetidaJulgamento: string;
+  ramoDireito: string;
+  referenciaLegs?: string;
+  referenciaSumular?: string;
+  repercussaoGeral: string;
+  situacaoTema: string;
+  sumulaOrigTema?: string;
+  teseFirmada: string;
+}
   
 //   export const julgados: Julgado[] = [{
 //     id: '123',
