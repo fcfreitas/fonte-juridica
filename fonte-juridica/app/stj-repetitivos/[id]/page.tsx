@@ -135,7 +135,7 @@ export default function RepetitivoDetailPage() {
 
     async function fetchLidoStatus() {
       try {
-        const response = await fetch(`/api/temas-lidos?userId=${session?.user.id}&tema=${repetitivo?.tema}`);
+        const response = await fetch(`/api/repetitivos-lidos?userId=${session?.user.id}&tema=${repetitivo?.tema}`);
         console.log('Parametros de busca dos comentarios', repetitivo?.tema, session?.user.id)
         const data = await response.json();
         setLido(data?.lido ?? false);
@@ -151,7 +151,7 @@ export default function RepetitivoDetailPage() {
     if (!session || !repetitivo?.tema) return;
     async function fetchDestaqueStatus() {
       try {
-        const response = await fetch(`/api/tema-destaque?userId=${session?.user.id}&tema=${repetitivo?.tema}`);
+        const response = await fetch(`/api/repetitivos-destaque?userId=${session?.user.id}&tema=${repetitivo?.tema}`);
         console.log('Parametros de busca dos comentarios', repetitivo?.tema, session?.user.id)
         const data = await response.json();
         setDestacado(data?.destacado ?? false);
@@ -364,9 +364,18 @@ export default function RepetitivoDetailPage() {
 
                 )}
                 <div className="flex items-center justify-start gap-4 mb-4">
-                  <Badge variant="outline" className="bg-slate-100">
-                    {repetitivo.processos[0]?.processo}
-                  </Badge>
+                  {repetitivo.processos &&
+                    repetitivo.processos.length > 0 &&
+                    repetitivo.processos.map((processo: any, index: number) => (
+                      <Badge
+                        key={index}
+                        variant="outline"
+                        className="text-xs bg-gray-100 p-1 rounded-xl mr-2"
+                      >
+                        <span>{processo.processo}</span>
+                      </Badge>
+                    ))
+                  }
                 {/* {repetitivo.linkProcesso && (
                   <div className="flex justify-start">
                     <Button variant="outline" size="sm">
@@ -413,8 +422,8 @@ export default function RepetitivoDetailPage() {
                         <div className="text-sm font-medium text-slate-500">Assuntos:</div>
                         <div className="flex flex-wrap gap-2 text-sm font-medium text-slate-600">              
                           {repetitivo.assunto_array && repetitivo.assunto_array.length > 0 && (
-                            repetitivo.assunto_array.slice(1).map((assunto, index) => (
-                              <Badge key={Number(index)} variant="secondary" className="text-sm p-1 rounded-lg">
+                            repetitivo.assunto_array.map((assunto, index) => (
+                              <Badge key={Number(index)} variant="secondary" className="text-md p-1 rounded-lg">
                                 <span>{assunto}</span>
                               </Badge>
                             ))
@@ -432,7 +441,18 @@ export default function RepetitivoDetailPage() {
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-slate-700">{repetitivo.delimitacaoJulgado}</div>
+                    {repetitivo.delimitacaoJulgado &&
+                    <div className="text-slate-700 mb-2"><span className="font-semibold">Delimitação Julgado: </span>{repetitivo.delimitacaoJulgado}</div>
+                    }
+                    {repetitivo.informacoesComplementares &&
+                    <div className="text-slate-700 mb-2"><span className="font-semibold">Informações Complementares: </span>{repetitivo.informacoesComplementares}</div>
+                    }
+                    {repetitivo.anotacoesNUGEPNAC &&
+                    <div className="text-slate-700 mb-2"><span className="font-semibold">Anotações NUGEPNAC: </span>{repetitivo.anotacoesNUGEPNAC}</div>
+                    }
+                    {repetitivo.repercussaoGeral &&
+                    <div className="text-slate-700"><span className="font-semibold">Repercussão Geral: </span>{repetitivo.repercussaoGeral}</div>
+                    }
                   </CardContent>
                 </Card>
 
@@ -456,28 +476,6 @@ export default function RepetitivoDetailPage() {
                     </CardContent>
                   </Card>
 
-                  <Card>
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-lg flex items-center">
-                        <Calendar className="h-5 w-5 mr-2 text-slate-500" />
-                        Datas
-                      </CardTitle>
-                    </CardHeader>
-                    {/* <CardContent className="space-y-2">
-                      <div>
-                        <p className="text-sm font-medium text-slate-500">Data de Repercussão Geral</p>
-                        <p className="text-slate-700">{repetitivo.dataJulgamento}</p>
-                      </div>
-                      {julgado.dataTese && (
-                        <div>
-                          <p className="text-sm font-medium text-slate-500">Data da Tese</p>
-                          <p className="text-slate-700">{julgado.dataTese}</p>
-                        </div>
-                      )}
-                    </CardContent> */}
-                  </Card>
-                </div>
-
                 <Card>
                   <CardHeader className="pb-2">
                     <CardTitle className="text-lg flex items-center">
@@ -488,6 +486,36 @@ export default function RepetitivoDetailPage() {
                   <CardContent>
                     <div className="text-slate-700">{repetitivo.orgaoJulgador}</div>
                   </CardContent>
+                </Card>
+                </div>
+
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-lg flex items-center">
+                      <User className="h-5 w-5 mr-2 text-slate-500" />
+                      Processos:
+                    </CardTitle>
+                  </CardHeader>
+                          {repetitivo.processos && repetitivo.processos.length > 0 && (
+                            repetitivo.processos.map((processo, index) => (
+                              <CardContent key={Number(index)}>
+                                <div className="text-slate-700 mb-2">
+                                  <p>Processo: {processo.processo}</p>
+                                  <p>Registro: {processo.numeroRegistro}</p>
+                                  <p>Tribunal de Origem: {processo.tribunalOrigem}</p>
+                                  <p>RRC: {processo.rrc}</p>
+                                  <p>Relator: {processo.relatorAtual}</p>
+                                  <p>Data de Afetação: {processo.dataAfetacao}</p>
+                                  <p>Vista MPF: {processo.vistaMPF}</p>
+                                  <p>Julgado em: {processo.julgadoEm}</p>
+                                  <p>Acórdão Publicado em:{processo.acordaoPublicadoEm}</p>
+                                  <p>Trânsito em Julgado: {processo.transitoJulgado}</p>
+                                  <p>Data de Desafetação: {processo.dataDesafet}</p>
+                                  <p>Observações de Desafetação: {processo.observacaoDesafet}</p>
+                                </div>
+                              </CardContent>
+                            ))
+                          )}
                 </Card>
               </TabsContent>
 
