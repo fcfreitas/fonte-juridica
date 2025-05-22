@@ -73,7 +73,7 @@ export default function RepetitivoDetailPage() {
 
     async function fetchComentariosInicial() {
       try {
-        const response = await fetch(`/api/publish-text?tema=${repetitivo?.tema}`);
+        const response = await fetch(`/api/publish-text-repet?tema=${repetitivo?.tema}`);
         if (!response.ok) throw new Error("Erro ao buscar comentários");
 
         const data = await response.json();
@@ -88,7 +88,7 @@ export default function RepetitivoDetailPage() {
 
   const fetchComentarios = async () => {
     try {
-      const response = await fetch(`/api/publish-text?tema=${repetitivo?.tema}`);
+      const response = await fetch(`/api/publish-text-repet?tema=${repetitivo?.tema}`);
       if (!response.ok) throw new Error("Erro ao buscar comentários");
 
       const data = await response.json();
@@ -104,7 +104,7 @@ export default function RepetitivoDetailPage() {
 
     async function fetchUserNotesInicial() {
       try {
-        const response = await fetch(`/api/publish-user-notes?userId=${session?.user.id}&tema=${repetitivo?.tema}`);
+        const response = await fetch(`/api/publish-user-notes-repet?userId=${session?.user.id}&tema=${repetitivo?.tema}`);
         if (!response.ok) throw new Error("Erro ao buscar anotações");
 
         const data = await response.json();
@@ -119,7 +119,7 @@ export default function RepetitivoDetailPage() {
 
   const fetchUserNotes = async () => {
     try {
-      const response = await fetch(`/api/publish-user-notes?userId=${session?.user.id}&tema=${repetitivo?.tema}`);
+      const response = await fetch(`/api/publish-user-notes-repet?userId=${session?.user.id}&tema=${repetitivo?.tema}`);
       if (!response.ok) throw new Error("Erro ao buscar anotações");
 
       const data = await response.json();
@@ -224,7 +224,7 @@ export default function RepetitivoDetailPage() {
 
   const handleSalvar = async (id: string) => {
     try {
-      const response = await fetch("/api/publish-text", {
+      const response = await fetch("/api/publish-text-repet", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id, text: novoTexto[id] }),
@@ -248,7 +248,7 @@ export default function RepetitivoDetailPage() {
 
   const handleSalvarAnotacao = async (id: string) => {
     try {
-      const response = await fetch("/api/publish-user-notes", {
+      const response = await fetch("/api/publish-user-notes-repet", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id, text: novoTexto[id] }),

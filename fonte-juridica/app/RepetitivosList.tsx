@@ -190,8 +190,8 @@ export default function RepetitivosList() {
                 <SelectContent>
                 <SelectItem value="temasRecentes">Temas recentes</SelectItem>
                 <SelectItem value="temasAntigos">Temas antigos</SelectItem>
-                <SelectItem value="tesesRecentes">Teses recentes</SelectItem>
-                <SelectItem value="tesesAntigas">Teses antigas</SelectItem>
+                {/* <SelectItem value="tesesRecentes">Teses recentes</SelectItem> */}
+                {/* <SelectItem value="tesesAntigas">Teses antigas</SelectItem> */}
                 </SelectContent>
               </Select>
             </div>
