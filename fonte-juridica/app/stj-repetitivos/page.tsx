@@ -4,9 +4,9 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import RepetitivosList from "@/app/RepetitivosList";
-import { Filters } from "@/app/components/Filters";
-import { FiltersDynamic } from "@/app/components/FilterDynamic";
-import { useFilter } from "@/app/components/FilterContext";
+// import { Filters } from "@/app/components/Filters";
+import { FiltersRepet } from "@/app/components/FiltersRepet";
+import { useFilter } from "@/app/components/FilterContextRepet";
 import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Filter } from "lucide-react";
@@ -16,7 +16,7 @@ export default function RepetitivosPage() {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
 
-  const { ramoDireito, setRamoDireito, assunto, setAssunto, situacaoRepGeral, setSituacaoRepGeral, situacaoTema, setSituacaoTema, searchText, setSearchText, searchTema, setSearchTema } = useFilter();
+  const { ramoDireito, setRamoDireito, assunto, setAssunto, situacaoTema, setSituacaoTema, searchText, setSearchText, searchTema, setSearchTema } = useFilter();
 
 
   useEffect(() => {
@@ -35,12 +35,11 @@ export default function RepetitivosPage() {
   }
 
   const handleApplyFilters = () => {
-    console.log("📌 Aplicando filtros:", { ramoDireito, assunto, situacaoRepGeral, situacaoTema, searchText });
+    console.log("📌 Aplicando filtros:", { ramoDireito, assunto, situacaoTema, searchText });
 
     const query = new URLSearchParams();
     if (assunto) query.append("assunto", assunto);
     if (ramoDireito) query.append("ramoDireito", ramoDireito);
-    if (situacaoRepGeral) query.append("situacaoRepGeral", situacaoRepGeral);
     if (situacaoTema) query.append("situacaoTema", situacaoTema);
     if(searchText) query.append("searchText", searchText);
     if(searchTema) query.append("searchTema", searchTema);
@@ -52,7 +51,6 @@ export default function RepetitivosPage() {
   const clearFilters = () => {
     setRamoDireito("")
     setAssunto("")
-    setSituacaoRepGeral("")
     setSituacaoTema("")
     setSearchText("")
     setSearchTema("")
@@ -83,15 +81,13 @@ export default function RepetitivosPage() {
           </DialogTrigger>
           <DialogContent className="w-full max-w-md md:max-w-lg h-auto max-h-[90vh] overflow-y-auto rounded-lg">
             <DialogTitle className="text-lg font-semibold">Filtros</DialogTitle>
-            <Filters onFilter={() => {}} />
-            <FiltersDynamic
+            <FiltersRepet
               onFilterSelect={(field, value) => {
                 if (field === "assunto") setAssunto(value);
                 else if (field === "ramoDireito") setRamoDireito(value);
-                else if (field === "situacaoRepGeral") setSituacaoRepGeral(value);
                 else if (field === "situacaoTema") setSituacaoTema(value);
               }}
-              ramoDireito={ramoDireito}
+              onFilter={() => {}}
             />
             <Button className="mt-4 w-full" onClick={handleApplyFilters}>
               Aplicar Filtros
@@ -107,15 +103,13 @@ export default function RepetitivosPage() {
             <Filter size={16} />
             Filtros
           </h3>
-            <Filters onFilter={() => {}} />
-            <FiltersDynamic
+            <FiltersRepet
               onFilterSelect={(field, value) => {
                 if (field === "assunto") setAssunto(value);
                 else if (field === "ramoDireito") setRamoDireito(value);
-                else if (field === "situacaoRepGeral") setSituacaoRepGeral(value);
                 else if (field === "situacaoTema") setSituacaoTema(value);
               }}
-              ramoDireito={ramoDireito}
+              onFilter={() => {}}
             />
         </div>
 

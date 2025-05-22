@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 // import Link from "next/link";
-import { useFilter } from "./components/FilterContext";
+import { useFilter } from "./components/FilterContextRepet";
 import { Processo, Repetitivo } from "./julgados-data";
 import { useSession } from "next-auth/react";
 // import { IntegerType } from "mongodb";
@@ -22,7 +22,7 @@ const formatDate = (date: string | null | undefined): string => {
 
 export default function RepetitivosList() {
   const { data: session } = useSession();
-  const { ramoDireito, assunto, situacaoRepGeral, situacaoTema, searchText, searchTema } = useFilter();
+  const { ramoDireito, assunto, situacaoTema, searchText, searchTema } = useFilter();
   const [repetitivos, setRepetitivos] = useState<Repetitivo[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
@@ -43,12 +43,11 @@ export default function RepetitivosList() {
       let url = process.env.NEXT_PUBLIC_SITE_URL + "/api/repetitivos"; // Ajuste para o endpoint correto
       const params = new URLSearchParams();
 
-      console.log("🎯 Filtros do Context API:", { ramoDireito, assunto, situacaoRepGeral, situacaoTema, searchText });
+      console.log("🎯 Filtros do Context API:", { ramoDireito, assunto, situacaoTema, searchText });
 
       // Adiciona os parâmetros de filtro
       if (ramoDireito) params.append("ramoDireito", ramoDireito);
       if (assunto) params.append("assunto", assunto.trim());
-      if (situacaoRepGeral) params.append("situacaoRepGeral", situacaoRepGeral.trim());
       if (situacaoTema) params.append("situacaoTema", situacaoTema.trim());
       if (searchText) params.append("searchText", searchText.trim());
       if (searchTema) params.append("searchTema", searchTema.trim());
@@ -114,7 +113,7 @@ export default function RepetitivosList() {
     fetchRepetitivos();
     if (session) fetchRepetitivosLidos();
     if (session) fetchRepetitivosDestacados();
-  }, [ramoDireito, assunto, situacaoRepGeral, situacaoTema, searchText || "", searchTema || "", session, sortOption]); // Atualiza sempre que os filtros mudarem
+  }, [ramoDireito, assunto, situacaoTema, searchText || "", searchTema || "", session, sortOption]); // Atualiza sempre que os filtros mudarem
 
   const toggleLido = async (tema: number) => {
     if (!session) return alert("Você precisa estar logado para marcar como lido.");

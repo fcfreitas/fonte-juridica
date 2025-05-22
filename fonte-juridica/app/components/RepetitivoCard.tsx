@@ -46,10 +46,23 @@ export function RepetitivoCard({ j, repetitivosLidos, toggleLido, repetitivosDes
           </Link>
         </div>
         <div className="flex items-center justify-between mt-1">
-              <p className="text-slate-600 font-normal text-sm">
-                Processo STF:{" "}
-                <span className="font-normal">{j.processoSTF}</span>
-              </p>
+              <div className="text-slate-600 font-normal text-sm">
+                Processos:{" "}
+                {/* <span className="font-normal">           */}
+                  {j.processos &&
+                    j.processos.length > 0 &&
+                    j.processos.map((processo: any, index: number) => (
+                      <Badge
+                        key={index}
+                        variant="outline"
+                        className="text-xs bg-gray-100 p-1 rounded-xl mr-2"
+                      >
+                        <span>{processo.processo}</span>
+                      </Badge>
+                    ))
+                  }
+                {/* </span> */}
+              </div>
               <div className="flex justify-end items-center">
                 <Button
                   variant={lido ? "outline" : "outline"}
@@ -123,7 +136,7 @@ export function RepetitivoCard({ j, repetitivosLidos, toggleLido, repetitivosDes
           <p className="text-sm text-slate-700 mr-2 font-medium">Assuntos:</p>
           {j.assunto_array &&
             j.assunto_array.length > 0 &&
-            j.assunto_array.slice(1).map((assunto: string, index: number) => (
+            j.assunto_array.map((assunto: string, index: number) => (
               <Badge
                 key={index}
                 variant="outline"
@@ -132,20 +145,15 @@ export function RepetitivoCard({ j, repetitivosLidos, toggleLido, repetitivosDes
                 <span>{assunto}</span>
               </Badge>
             ))}
+        </div>
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-6 mt-1">
+          <div className="flex items-center gap-2">
+            <span className="text-slate-600 font-medium text-sm">
+              Tema:{" "}
+            </span>
+              <Badge variant="secondary" className="bg-sky-100 text-sky-700 text-xs">{j.situacaoTema}</Badge>
           </div>
-          <div className="flex flex-col sm:flex-row gap-2 sm:gap-6 mt-1">
-            <div className="flex items-center gap-2">
-              <span className="text-slate-600 font-medium text-sm">
-                Repercussão Geral:{" "}</span>
-                <Badge variant="secondary" className="bg-sky-100 text-sky-700 text-xs">{j.situacaoRepGeral}</Badge>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-slate-600 font-medium text-sm">
-                Tema:{" "}
-              </span>
-                <Badge variant="secondary" className="bg-sky-100 text-sky-700 text-xs">{j.situacaoTema}</Badge>
-            </div>
-          </div>      
+        </div>      
       </CardFooter>
     </Card>
   );

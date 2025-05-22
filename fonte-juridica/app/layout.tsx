@@ -6,6 +6,7 @@ import "./globals.css";
 import NavBar from "./components/NavBar";
 import HeaderBar from "./components/Header";
 import { FilterProvider } from "./components/FilterContext";
+import { FilterProviderRepet } from "./components/FilterContextRepet";
 // import { AuthProvider } from "../context/AuthContext";
 import { ReactNode } from "react";
 import { getServerSession } from "next-auth";
@@ -30,6 +31,7 @@ export default async function RootLayout({
       <body className="bg-slate-50 text-gray-700 overflow-x-hidden">
         <AuthProvider>
             <FilterProvider>  
+            <FilterProviderRepet> 
               <div className="fixed top-0 left-0 w-full bg-slate-50 z-40 shadow-md flex flex-col">
                 <HeaderBar />
                 <NavBar />
@@ -38,6 +40,7 @@ export default async function RootLayout({
                 {children}
               </div>
               <Footer />  
+            </FilterProviderRepet>
             </FilterProvider>
         </AuthProvider>
       </body>

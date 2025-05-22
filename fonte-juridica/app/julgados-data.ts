@@ -21,7 +21,7 @@ export interface Julgado {
   export interface Processo {
   // Exemplo de estrutura. Adapte com os campos reais dos processos
   processo: string;
-  numeroRegistro?: IntegerType;
+  numeroRegistro?: number;
   tribunalOrigem: string;
   rrc: string;
   relatorAfetouProc: string;
@@ -30,6 +30,9 @@ export interface Julgado {
   vistaMPF: string;
   julgadoEm: string;
   acordaoPublicadoEm: string;
+  transitoJulgado: string;
+  dataDesafet: string;
+  observacaoDesafet: string;
 }
 
 export interface Repetitivo {

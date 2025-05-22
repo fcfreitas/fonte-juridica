@@ -45,10 +45,17 @@ export function JulgadoCard({ j, temasLidos, toggleLido, temasDestacados, toggle
           </Link>
         </div>
         <div className="flex items-center justify-between mt-1">
-              <p className="text-slate-600 font-normal text-sm">
-                Recurso Paradigma:{" "}
-                <span className="font-normal">{j.leadingCase}</span>
+          <div className="flex items-center justify-between">
+              <p className="text-slate-600 font-normal text-sm mr-2">
+                Recurso Paradigma: {" "}
               </p>
+                <Badge
+                  variant="outline"
+                  className="text-xs bg-gray-100 p-1 rounded-xl mr-2"
+                >
+                  <span>{j.leadingCase}</span>
+                </Badge>     
+              </div>         
               <div className="flex justify-end items-center">
                 <Button
                   variant={lido ? "outline" : "outline"}

@@ -73,9 +73,9 @@ export function Filters({ onFilter }: FreeTextFilterProps) {
       <div className="relative">
         <input
           type="text"
-          placeholder="Buscar por termo..."
-          value={searchText}
-          onChange={handleChange}
+          placeholder="Número do tema..."
+          value={searchTema}
+          onChange={handleChangeTema}
           className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-400"
         />
         <Search size={16} className="absolute right-3 top-2.5 text-slate-400" />
@@ -83,9 +83,9 @@ export function Filters({ onFilter }: FreeTextFilterProps) {
       <div className="relative mb-3">
         <input
           type="text"
-          placeholder="Número do tema..."
-          value={searchTema}
-          onChange={handleChangeTema}
+          placeholder="Buscar por termo..."
+          value={searchText}
+          onChange={handleChange}
           className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-400"
         />
         <Search size={16} className="absolute right-3 top-2.5 text-slate-400" />

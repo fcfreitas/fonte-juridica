@@ -5,10 +5,8 @@ export async function GET(request: Request) {
   try {
     // Acessa os parâmetros da URL da requisição
     const url = new URL(request.url);
-    const court = url.searchParams.get("court");
     const ramoDireito = url.searchParams.get("ramoDireito");
     const assunto = url.searchParams.get("assunto");
-    const situacaoRepGeral = url.searchParams.get("situacaoRepGeral");
     const situacaoTema = url.searchParams.get("situacaoTema");
     const campoTexto = url.searchParams.get("searchText");
     const campoTema = url.searchParams.get("searchTema");
@@ -16,16 +14,13 @@ export async function GET(request: Request) {
     const sortOrder = url.searchParams.get("sortOrder") === "asc" ? 1 : -1; // asc ou desc
 
 
-    console.log("🔍 Parâmetros recebidos:", { court, ramoDireito, assunto, situacaoRepGeral, situacaoTema, campoTexto, campoTema });
+    console.log("🔍 Parâmetros recebidos:", { ramoDireito, assunto, situacaoTema, campoTexto, campoTema });
 
     // Conectar ao banco de dados
     const { db } = await connectToDb();
 
     // Criar a query com base nos filtros
     const query: any = {};
-
-    // Filtro por tribunal (court)
-    if (court) query.mainCourt = court;
 
     // Filtro por ramoDireito
     if (ramoDireito && ramoDireito.trim() !== "") {
@@ -36,11 +31,6 @@ export async function GET(request: Request) {
     if (assunto) {
       console.log("📌 Aplicando filtro de Assunto:", assunto);
       query.assunto_array = { $regex: assunto.trim() };
-    }
-
-    // Filtro por situacaoRepGeral
-    if (situacaoRepGeral && situacaoRepGeral.trim() !== "") {
-      query.situacaoRepGeral = { $regex: situacaoRepGeral.trim(), $options: "i" }; // Case insensitive
     }
 
     // Filtro por situacaoTema
