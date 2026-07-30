@@ -20,8 +20,6 @@ export const authOptions: NextAuthOptions = {
 
         if (!user) throw new Error("Email ou senha incorretos");
 
-        console.log("User from DB:", user);
-
         // Verifica se a senha está correta
         const passwordMatch = await bcrypt.compare(credentials!.password, user.password);
         if (!passwordMatch) throw new Error("Email ou senha incorretos");
@@ -45,7 +43,6 @@ export const authOptions: NextAuthOptions = {
         token.id = String(user.id); // Garante que será uma string
         token.role = user.role || "user";
         token.pagante = user?.pagante ?? token.pagante;
-        console.log("JWT Token:", token); 
       }
       return token;
     },
