@@ -37,36 +37,36 @@ export default function Assinatura() {
 
   return (
     <div className="max-w-xl mx-auto py-12 px-4 min-h-[70vh]">
-      <h1 className="text-3xl font-bold text-center text-slate-800 mb-8">
-        Assinatura 
+      <h1 className="text-3xl font-serif font-semibold text-center text-ink-900 mb-8">
+        Assinatura
       </h1>
 
-      <div className="rounded-2xl border border-slate-200 shadow-xl p-8 bg-white text-center">
-        <h2 className="text-2xl font-semibold text-slate-800 mb-2"> Mensal</h2>
-        <p className="text-lg text-slate-600 mb-4">R$ 29,90 / mês</p>
+      <div className="rounded-2xl border border-border shadow-xl p-8 bg-card text-center">
+        <h2 className="text-2xl font-semibold text-ink-900 mb-2"> Mensal</h2>
+        <p className="text-lg text-muted-foreground mb-4">R$ 29,90 / mês</p>
 
-        <ul className="text-sm text-slate-600 text-left space-y-2 mb-6">
+        <ul className="text-sm text-ink-700 text-left space-y-2 mb-6">
           <li className="flex items-center gap-2">
-            <CheckCircle className="w-4 h-4 text-sky-500" /> Acesso completo aos temas
+            <CheckCircle className="w-4 h-4 text-brass-500" /> Acesso completo aos temas
           </li>
           <li className="flex items-center gap-2">
-            <CheckCircle className="w-4 h-4 text-sky-500" /> Comentários e análises <p className='font-semibold'> Em breve! </p>
+            <CheckCircle className="w-4 h-4 text-brass-500" /> Comentários e análises de especialistas <span className="text-xs font-semibold uppercase tracking-wide text-brass-700">em construção</span>
           </li>
           <li className="flex items-center gap-2">
-            <CheckCircle className="w-4 h-4 text-sky-500" /> Atualizações semanais do STF e STJ
+            <CheckCircle className="w-4 h-4 text-brass-500" /> Atualização automatizada direto da base do STF
           </li>
           <li className="flex items-center gap-2">
-            <CheckCircle className="w-4 h-4 text-sky-500" /> Organização de temas lidos
+            <CheckCircle className="w-4 h-4 text-brass-500" /> Organização de temas lidos
           </li>
           <li className="flex items-center gap-2">
-            <CheckCircle className="w-4 h-4 text-sky-500" /> Anotações próprias separadas por temas
+            <CheckCircle className="w-4 h-4 text-brass-500" /> Anotações próprias separadas por temas
           </li>
         </ul>
 
         <button
           onClick={handleAssinar}
           disabled={carregando}
-          className="w-full bg-gradient-to-r from-sky-300 to-sky-600 hover:from-sky-400 hover:to-sky-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition-all duration-200 transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full bg-ink-900 hover:bg-ink-800 text-brass-400 font-bold py-3 px-6 rounded-xl shadow-lg transition-all duration-200 transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {carregando ? (
             <span className="flex justify-center items-center gap-2">
