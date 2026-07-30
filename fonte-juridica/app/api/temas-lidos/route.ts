@@ -25,7 +25,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ success: true, lido: updatedRecord?.value?.lido });
     } else {
       // Insere um novo registro como lido (true)
-      const newRecord = await collection.insertOne({ userId, tema, lido: true });
+      await collection.insertOne({ userId, tema, lido: true });
       return NextResponse.json({ success: true, lido: true });
     }
   } catch (error) {

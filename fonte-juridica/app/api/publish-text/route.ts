@@ -1,23 +1,27 @@
 import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
 import { connectToDb } from "@/app/api/db";
+import { authOptions } from "@/lib/auth";
+import { sanitizeEditorHtml } from "@/lib/sanitize";
 import { ObjectId } from "mongodb";
 
 // Função para o método POST - Publicar o texto
 export async function POST(request: Request) {
   try {
-    const { db }  = await connectToDb();
-    const { text, userId, role, tema } = await request.json();
+    const session = await getServerSession(authOptions);
+    if (!session || session.user.role !== "admin") {
+      return NextResponse.json({ message: "Acesso negado!" }, { status: 403 });
+    }
 
-    // Verificar se o usuário é admin
-    // if (role !== "admin") {
-    //   return NextResponse.json({ message: "Acesso negado!" }, { status: 403 });
-    // }
+    const { text, tema } = await request.json();
+
+    const { db } = await connectToDb();
 
     // Salvar o texto no banco de dados
     await db.collection("posts").insertOne({
-      text,
+      text: sanitizeEditorHtml(text),
       tema,
-      userId,
+      userId: session.user.id,
       createdAt: new Date(),
     });
 
@@ -52,12 +56,17 @@ export async function GET(req: Request) {
 
 export async function PUT(req: Request) {
   try {
+    const session = await getServerSession(authOptions);
+    if (!session || session.user.role !== "admin") {
+      return NextResponse.json({ message: "Acesso negado!" }, { status: 403 });
+    }
+
     const { id, text } = await req.json();
     const { db } = await connectToDb();
 
     await db.collection("posts").updateOne(
       { _id: new ObjectId(id) },
-      { $set: { text } }
+      { $set: { text: sanitizeEditorHtml(text) } }
     );
 
     return NextResponse.json({ message: "Comentário atualizado com sucesso" });

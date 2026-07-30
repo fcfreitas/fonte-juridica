@@ -18,9 +18,10 @@ export async function POST(req: Request) {
 
   try {
     event = stripe.webhooks.constructEvent(body, sig, endpointSecret);
-  } catch (err: any) {
-    console.error("Erro ao verificar assinatura do webhook:", err.message);
-    return NextResponse.json({ error: err.message }, { status: 400 });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Assinatura inválida";
+    console.error("Erro ao verificar assinatura do webhook:", message);
+    return NextResponse.json({ error: message }, { status: 400 });
   }
 
   console.log("Evento recebido:", event.type);

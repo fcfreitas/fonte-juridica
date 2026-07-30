@@ -31,7 +31,7 @@ export async function GET(request: Request) {
       .toArray();
 
     // 3) Assuntos (2º elemento do array), opcional por ramoDireito
-    const matchAssuntos: any = {
+    const matchAssuntos: Record<string, unknown> = {
       "assunto_array.1": { $exists: true, $ne: null },
     };
     if (ramoDireito) {
@@ -64,10 +64,10 @@ export async function GET(request: Request) {
       situacaoTema: situacaoTema.map((s) => s._id ?? ""),
       assuntos: assuntos.map((a) => a._id ?? ""),
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error("❌ Erro ao buscar valores únicos:", error);
     return NextResponse.json(
-      { error: error.message },
+      { error: error instanceof Error ? error.message : "Erro desconhecido" },
       { status: 500 }
     );
   }

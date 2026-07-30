@@ -16,7 +16,7 @@ export async function GET(request: Request) {
         }
 
         // Cria o filtro para o assunto_array[1] não ser nulo
-        const match: any = { "assunto_array.1": { $exists: true, $ne: null } };
+        const match: Record<string, unknown> = { "assunto_array.1": { $exists: true, $ne: null } };
 
         // Se ramoDireito for fornecido, filtra também pelo ramoDireito
         if (ramoDireito) {

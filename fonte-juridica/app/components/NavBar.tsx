@@ -4,12 +4,12 @@ import { useSession, signIn, signOut } from "next-auth/react";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { BookOpen, BookOpenIcon as BookClosed, Search, LogOut, LogIn, Filter } from "lucide-react"
+import { LogOut, LogIn } from "lucide-react"
 
 export default function NavBar() {
     const { data: session } = useSession();
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const dropdownRef = useRef<HTMLDivElement | null>(null);
+    const dropdownRef = useRef<HTMLLIElement | null>(null);
 
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {

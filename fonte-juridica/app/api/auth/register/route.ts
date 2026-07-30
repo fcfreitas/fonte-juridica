@@ -1,5 +1,4 @@
 import { connectToDb } from "@/app/api/db";
-import User from "@/models/User";
 import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
 
@@ -32,7 +31,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ message: "Usuário cadastrado com sucesso" }, { status: 201 });
 
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Erro no servidor" }, { status: 500 });
   }
 }

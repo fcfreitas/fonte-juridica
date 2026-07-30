@@ -7,10 +7,6 @@ import NavBar from "./components/NavBar";
 import HeaderBar from "./components/Header";
 import { FilterProvider } from "./components/FilterContext";
 import { FilterProviderRepet } from "./components/FilterContextRepet";
-// import { AuthProvider } from "../context/AuthContext";
-import { ReactNode } from "react";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
 import AuthProvider from "./components/SessionProvider";
 import Footer from "./components/Footer";
 

@@ -25,7 +25,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ success: true, destacado: updatedRecord?.value?.destacado });
     } else {
       // Insere um novo registro como destacado (true)
-      const newRecord = await collection.insertOne({ userId, tema, destacado: true });
+      await collection.insertOne({ userId, tema, destacado: true });
       return NextResponse.json({ success: true, destacado: true });
     }
   } catch (error) {

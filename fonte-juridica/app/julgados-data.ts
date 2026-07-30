@@ -55,6 +55,7 @@ export interface Repetitivo {
   situacaoTema: string;
   sumulaOrigTema?: string;
   teseFirmada: string;
+  transitoJulgado?: string;
 }
   
 //   export const julgados: Julgado[] = [{

@@ -7,7 +7,7 @@ import { signOut, useSession } from "next-auth/react";
 export const dynamic = "force-dynamic";
 
 export default function LogoutPage() {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const router = useRouter();
 
   useEffect(() => {

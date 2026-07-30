@@ -11,16 +11,12 @@ import AdminTextEditor from "@/app/components/textEditor";
 import UserTextEditor from "@/app/components/UserTextEditor";
 import "@/styles/quill-styles.css";
 import { Badge } from "@/components/ui/badge";
-import { Bookmark, BookOpen, BookIcon, FileText, Info, Calendar, User, Flag, MessageSquare, ExternalLink, FileCheck, NotebookPen, Star, StarOff } from "lucide-react";
+import { BookOpen, BookIcon, FileText, Info, Calendar, User, Flag, MessageSquare, ExternalLink, FileCheck, NotebookPen, Star, StarOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const dynamic = "force-dynamic";
-
-const formatDate = (date: string | null | undefined): string => {
-  return date ? date.substring(0, 10) : "";
-};
 
 export default function JulgadoDetailPage() {
   const { data: session, status } = useSession();
@@ -33,7 +29,6 @@ export default function JulgadoDetailPage() {
   const [loading, setLoading] = useState(true);
   const [editando, setEditando] = useState<{ [key: string]: boolean }>({});
   const [novoTexto, setNovoTexto] = useState<{ [key: string]: string }>({});
-  const [temasLidos, setTemasLidos] = useState<Record<number, boolean>>({}); // Armazena quais temas foram marcados como lidos
   const [destacado, setDestacado] = useState<boolean | null>(null); // Armazena quais temas foram destacados
 
   // Redirecionar para login se não estiver autenticado
@@ -213,13 +208,11 @@ export default function JulgadoDetailPage() {
   const handleEditar = (id: string, textoAtual: string) => {
     setEditando((prev) => ({ ...prev, [id]: true }));
     setNovoTexto((prev) => ({ ...prev, [id]: textoAtual }));
-    fetchComentarios;
   };
 
   const handleEditarAnotacao = (id: string, textoAtual: string) => {
     setEditando((prev) => ({ ...prev, [id]: true }));
     setNovoTexto((prev) => ({ ...prev, [id]: textoAtual }));
-    fetchUserNotes;
   };
 
   const handleSalvar = async (id: string) => {
@@ -240,7 +233,7 @@ export default function JulgadoDetailPage() {
         )
       );
       setEditando((prev) => ({ ...prev, [id]: false }));
-      fetchComentarios;
+      fetchComentarios();
     } catch (error) {
       console.error("Erro ao atualizar comentário:", error);
     }
@@ -264,7 +257,7 @@ export default function JulgadoDetailPage() {
         )
       );
       setEditando((prev) => ({ ...prev, [id]: false }));
-      fetchUserNotes;
+      fetchUserNotes();
     } catch (error) {
       console.error("Erro ao atualizar comentário:", error);
     }

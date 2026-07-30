@@ -2,10 +2,10 @@ import { connectToDb } from "@/app/api/db";
 import { NextRequest } from "next/server";
 import { ObjectId } from "mongodb";
 
-export async function GET(request: NextRequest, context: { params: { id: string } }) {
+export async function GET(request: NextRequest, context: { params: Promise<{ id: string }> }) {
   try {
     // Aguarde a resolução dos parâmetros
-    const { params } = await context;
+    const params = await context.params;
 
     if (!params?.id) {
       return new Response(JSON.stringify({ error: "ID não fornecido" }), {

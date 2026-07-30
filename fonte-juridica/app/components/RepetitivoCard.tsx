@@ -10,9 +10,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Repetitivo, Processo } from "../julgados-data";
 
 interface RepetitivoCardProps {
-  j: any;
+  j: Repetitivo;
   repetitivosLidos: Record<number, boolean>;
   toggleLido: (repetitivo: number) => void;
   repetitivosDestacados: Record<number, boolean>;
@@ -51,7 +52,7 @@ export function RepetitivoCard({ j, repetitivosLidos, toggleLido, repetitivosDes
                 {/* <span className="font-normal">           */}
                   {j.processos &&
                     j.processos.length > 0 &&
-                    j.processos.map((processo: any, index: number) => (
+                    j.processos.map((processo: Processo, index: number) => (
                       <Badge
                         key={index}
                         variant="outline"

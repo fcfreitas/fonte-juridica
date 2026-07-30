@@ -1,23 +1,27 @@
 import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
 import { connectToDb } from "@/app/api/db";
+import { authOptions } from "@/lib/auth";
+import { sanitizeEditorHtml } from "@/lib/sanitize";
 import { ObjectId } from "mongodb";
 
 // Função para o método POST - Publicar o texto
 export async function POST(request: Request) {
   try {
-    const { db }  = await connectToDb();
-    const { text, userId, role, tema } = await request.json();
+    const session = await getServerSession(authOptions);
+    if (!session) {
+      return NextResponse.json({ message: "Acesso negado!" }, { status: 401 });
+    }
 
-    // Verificar se o usuário é admin
-    // if (role !== "admin") {
-    //   return NextResponse.json({ message: "Acesso negado!" }, { status: 403 });
-    // }
+    const { text, tema } = await request.json();
 
-    // Salvar o texto no banco de dados
+    const { db } = await connectToDb();
+
+    // Salvar o texto no banco de dados (userId sempre vem da sessão, nunca do cliente)
     await db.collection("userPrivateNotes").insertOne({
-      text,
+      text: sanitizeEditorHtml(text),
       tema,
-      userId,
+      userId: session.user.id,
       createdAt: new Date(),
     });
 
@@ -28,18 +32,23 @@ export async function POST(request: Request) {
   }
 }
 
-// Função para o método GET - Obter todos os textos publicados
+// Função para o método GET - Obter as anotações do usuário autenticado
 export async function GET(req: Request) {
   try {
-    const {db} = await connectToDb();
+    const session = await getServerSession(authOptions);
+    if (!session) {
+      return NextResponse.json({ message: "Acesso negado!" }, { status: 401 });
+    }
+
+    const { db } = await connectToDb();
 
     const { searchParams } = new URL(req.url);
     const temaParam = searchParams.get("tema")?.trim(); // Agora é opcional
-    const userParam = searchParams.get("userId")?.trim(); // Agora é opcional
 
     const tema = temaParam ? Number(temaParam) : null;
-    const userId = userParam
-    const query = { tema, userId }
+    // userId sempre vem da sessão, nunca do parâmetro da URL, para evitar
+    // que um usuário leia as anotações privadas de outro.
+    const query = { tema, userId: session.user.id }
 
     const posts = await db.collection("userPrivateNotes").find(query).toArray();
 
@@ -54,12 +63,22 @@ export async function GET(req: Request) {
 
 export async function PUT(req: Request) {
   try {
+    const session = await getServerSession(authOptions);
+    if (!session) {
+      return NextResponse.json({ message: "Acesso negado!" }, { status: 401 });
+    }
+
     const { id, text } = await req.json();
     const { db } = await connectToDb();
 
+    const existing = await db.collection("userPrivateNotes").findOne({ _id: new ObjectId(id) });
+    if (!existing || existing.userId !== session.user.id) {
+      return NextResponse.json({ message: "Acesso negado!" }, { status: 403 });
+    }
+
     await db.collection("userPrivateNotes").updateOne(
       { _id: new ObjectId(id) },
-      { $set: { text } }
+      { $set: { text: sanitizeEditorHtml(text) } }
     );
 
     return NextResponse.json({ message: "Comentário atualizado com sucesso" });
