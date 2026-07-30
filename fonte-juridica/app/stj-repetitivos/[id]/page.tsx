@@ -6,21 +6,16 @@ import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";
 import NotFoundPage from "@/app/not-found";
 import { Processo, Repetitivo } from "@/app/julgados-data";
-import Link from "next/link";
 import AdminTextEditor from "@/app/components/textEditor";
 import UserTextEditor from "@/app/components/UserTextEditor";
 import "@/styles/quill-styles.css";
 import { Badge } from "@/components/ui/badge";
-import { Bookmark, BookOpen, BookIcon, FileText, Info, Calendar, User, Flag, MessageSquare, ExternalLink, FileCheck, NotebookPen, Star, StarOff } from "lucide-react";
+import { BookOpen, BookIcon, FileText, Info, User, Flag, MessageSquare, FileCheck, NotebookPen, Star, StarOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const dynamic = "force-dynamic";
-
-const formatDate = (date: string | null | undefined): string => {
-  return date ? date.substring(0, 10) : "";
-};
 
 export default function RepetitivoDetailPage() {
   const { data: session, status } = useSession();
@@ -33,7 +28,6 @@ export default function RepetitivoDetailPage() {
   const [loading, setLoading] = useState(true);
   const [editando, setEditando] = useState<{ [key: string]: boolean }>({});
   const [novoTexto, setNovoTexto] = useState<{ [key: string]: string }>({});
-  const [temasLidos, setTemasLidos] = useState<Record<number, boolean>>({}); // Armazena quais temas foram marcados como lidos
   const [destacado, setDestacado] = useState<boolean | null>(null); // Armazena quais temas foram destacados
 
   // Redirecionar para login se não estiver autenticado
@@ -213,13 +207,11 @@ export default function RepetitivoDetailPage() {
   const handleEditar = (id: string, textoAtual: string) => {
     setEditando((prev) => ({ ...prev, [id]: true }));
     setNovoTexto((prev) => ({ ...prev, [id]: textoAtual }));
-    fetchComentarios;
   };
 
   const handleEditarAnotacao = (id: string, textoAtual: string) => {
     setEditando((prev) => ({ ...prev, [id]: true }));
     setNovoTexto((prev) => ({ ...prev, [id]: textoAtual }));
-    fetchUserNotes;
   };
 
   const handleSalvar = async (id: string) => {
@@ -240,7 +232,7 @@ export default function RepetitivoDetailPage() {
         )
       );
       setEditando((prev) => ({ ...prev, [id]: false }));
-      fetchComentarios;
+      fetchComentarios();
     } catch (error) {
       console.error("Erro ao atualizar comentário:", error);
     }
@@ -264,7 +256,7 @@ export default function RepetitivoDetailPage() {
         )
       );
       setEditando((prev) => ({ ...prev, [id]: false }));
-      fetchUserNotes;
+      fetchUserNotes();
     } catch (error) {
       console.error("Erro ao atualizar comentário:", error);
     }
@@ -366,7 +358,7 @@ export default function RepetitivoDetailPage() {
                 <div className="flex items-center justify-start gap-4 mb-4">
                   {repetitivo.processos &&
                     repetitivo.processos.length > 0 &&
-                    repetitivo.processos.map((processo: any, index: number) => (
+                    repetitivo.processos.map((processo: Processo, index: number) => (
                       <Badge
                         key={index}
                         variant="outline"

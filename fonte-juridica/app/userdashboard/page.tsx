@@ -1,10 +1,11 @@
 "use client";
 
 import { useSession, signOut } from "next-auth/react";
+import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
-export default function dashboard() {
+export default function UserDashboard() {
   const { data: session } = useSession();
 
   return (
@@ -22,9 +23,9 @@ export default function dashboard() {
           </button>
         </div>
       ) : (
-        <a href="/api/auth/signin" className="text-white">
+        <Link href="/api/auth/signin" className="text-white">
           Entrar
-        </a>
+        </Link>
       )}
     </nav>
   );

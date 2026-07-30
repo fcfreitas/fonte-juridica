@@ -63,7 +63,7 @@ export default function HomePage() {
       <section className="bg-slate-100 py-12 px-4">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-2xl font-bold mb-8">O que dizem os usuários</h2>
-          <blockquote className="italic text-slate-600 mb-4">"O Fonte Jurídica revolucionou meus estudos para concursos. Tudo organizado e fácil de acessar."</blockquote>
+          <blockquote className="italic text-slate-600 mb-4">&ldquo;O Fonte Jurídica revolucionou meus estudos para concursos. Tudo organizado e fácil de acessar.&rdquo;</blockquote>
           <p className="font-semibold">— Laura, Procuradora do Estado de SP</p>
         </div>
       </section>

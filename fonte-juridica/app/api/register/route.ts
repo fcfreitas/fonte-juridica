@@ -28,7 +28,7 @@ export async function POST(req: Request) {
     await db.collection("user").insertOne(newUser);
 
     return NextResponse.json({ message: "Usuário cadastrado com sucesso!" }, { status: 201 });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Erro ao cadastrar usuário" }, { status: 500 });
   }
 }

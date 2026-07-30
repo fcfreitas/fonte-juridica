@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function HeaderBar() {
     return (
         <div className="z-40">
@@ -7,9 +9,9 @@ export default function HeaderBar() {
             <header className='bg-sky-700 text-white p-3 md:p-6'>
                     <div className='container mx-auto px-4'>
                         <h1 className='text-2xl md:text-3xl font-bold'>
-                            <a href="/">Fonte Jurídica</a></h1>
+                            <Link href="/">Fonte Jurídica</Link></h1>
                     </div>
-            </header>           
+            </header>
         </div>
     )
 }

@@ -10,9 +10,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Julgado } from "../julgados-data";
 
 interface JulgadoCardProps {
-  j: any;
+  j: Julgado;
   temasLidos: Record<number, boolean>;
   toggleLido: (tema: number) => void;
   temasDestacados: Record<number, boolean>;

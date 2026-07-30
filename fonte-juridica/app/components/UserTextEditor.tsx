@@ -2,7 +2,6 @@ import { useState } from 'react';
 import dynamic from 'next/dynamic';
 import 'react-quill-new/dist/quill.snow.css'; // Importa o tema padrão do Quill
 import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
 import { IntegerType } from 'mongodb';
 
 const ReactQuill = dynamic(() => import('react-quill-new'), { ssr: true });
