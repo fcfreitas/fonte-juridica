@@ -7,7 +7,7 @@ export default function Cancelado() {
       <p className="text-lg text-center mb-6">Parece que houve um problema ou você cancelou o processo.</p>
       <a
         href="/assinatura"
-        className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-xl transition"
+        className="bg-ink-900 hover:bg-ink-800 text-brass-400 font-semibold py-2 px-6 rounded-xl transition"
       >
         Tentar Novamente
       </a>

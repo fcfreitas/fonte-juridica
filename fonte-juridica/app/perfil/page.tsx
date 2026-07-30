@@ -27,7 +27,7 @@ export default function Perfil() {
         {!pagante && (
           <Link
             href="/assinatura"
-            className="mt-4 inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-xl transition"
+            className="mt-4 inline-block bg-ink-900 hover:bg-ink-800 text-brass-400 font-semibold py-2 px-6 rounded-xl transition"
           >
             Assinar agora
           </Link>

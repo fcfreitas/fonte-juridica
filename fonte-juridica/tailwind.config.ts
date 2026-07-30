@@ -19,7 +19,39 @@ const config = {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ["var(--font-sans)", "ui-sans-serif", "system-ui", "sans-serif"],
+        serif: ["var(--font-serif)", "ui-serif", "Georgia", "serif"],
+      },
       colors: {
+        // Paleta de marca Jusdex: grafite ("ink") + dourado envelhecido ("brass")
+        // no lugar do azul corporativo genérico usado anteriormente.
+        ink: {
+          50: "#F5F5F6",
+          100: "#E7E8EA",
+          200: "#C7CAD1",
+          300: "#A3A8B3",
+          400: "#767C8A",
+          500: "#565C6B",
+          600: "#3D4250",
+          700: "#2B2F3A",
+          800: "#1D2027",
+          900: "#14161C",
+          950: "#0C0D11",
+        },
+        brass: {
+          50: "#FBF6EC",
+          100: "#F5E9CE",
+          200: "#EAD2A0",
+          300: "#DDB973",
+          400: "#CCA25E",
+          500: "#B8925A",
+          600: "#9C7847",
+          700: "#7C5F39",
+          800: "#5E482B",
+          900: "#42331F",
+        },
+        paper: "#FAF8F4",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

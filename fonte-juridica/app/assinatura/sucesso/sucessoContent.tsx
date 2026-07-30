@@ -15,12 +15,12 @@ export default function SucessoContent() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[70vh] p-6">
-      <h1 className="text-3xl font-bold text-green-600 mb-4">Assinatura Confirmada!</h1>
-      <p className="text-lg text-center font-semibold w-3/4">Obrigado por assinar o Fonte Jurídica. </p>
+      <h1 className="text-3xl font-serif font-semibold text-emerald-700 mb-4">Assinatura Confirmada!</h1>
+      <p className="text-lg text-center font-semibold w-3/4">Obrigado por assinar o Jusdex. </p>
       <p className="text-lg text-center mb-6 w-3/4">Agora você tem acesso direto aos julgados mais relevantes do STF, organizados e comentados para facilitar seus estudos.</p>
       <a
         href="/home"
-        className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-xl transition"
+        className="bg-ink-900 hover:bg-ink-800 text-brass-400 font-semibold py-2 px-6 rounded-xl transition"
       >
         Ampliar meus conhecimentos jurídicos
       </a>

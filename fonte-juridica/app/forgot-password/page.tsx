@@ -30,24 +30,26 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="flex flex-col items-center p-16 h-screen">
-      <h1 className="text-2xl font-bold mb-4">Recuperar Senha</h1>
+    <div className="flex flex-col items-center justify-center min-h-[70vh] px-4 py-16">
+      <div className="w-full max-w-sm rounded-2xl border border-border bg-card p-8 shadow-sm">
+        <h1 className="text-2xl font-serif font-semibold text-ink-900 mb-6 text-center">Recuperar senha</h1>
 
-      {message && <p className="text-green-500">{message}</p>}
-      {error && <p className="text-red-500">{error}</p>}
+        {message && <p className="text-emerald-700 text-sm mb-3">{message}</p>}
+        {error && <p className="text-red-600 text-sm mb-3">{error}</p>}
 
-      <form onSubmit={handleSubmit} className="flex flex-col items-center w-80">
-        <input
-          type="email"
-          placeholder="Digite seu e-mail"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="border p-2 mb-2 w-full"
-        />
-        <button type="submit" className="bg-blue-500 text-white p-2 w-full">
-          Enviar e-mail de recuperação
-        </button>
-      </form>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+          <input
+            type="email"
+            placeholder="Digite seu e-mail"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+          />
+          <button type="submit" className="rounded-md bg-ink-900 hover:bg-ink-800 text-brass-400 font-semibold py-2 transition-colors">
+            Enviar e-mail de recuperação
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

@@ -3,13 +3,13 @@ import Link from "next/link";
 export default function HeaderBar() {
     return (
         <div className="z-40">
-            {/* <div className='bg-amber-50 p-3 text-center text-sm font-medium text-amber-900 py-2'>
-                <p className=''>A sua fonte de decisões jurídicas. <span className="underline font-bold">Assine agora!</span></p>
-            </div> */}
-            <header className='bg-sky-700 text-white p-3 md:p-6'>
+            <header className='bg-ink-900 text-paper p-3 md:p-6 border-b border-brass-900/40'>
                     <div className='container mx-auto px-4'>
-                        <h1 className='text-2xl md:text-3xl font-bold'>
-                            <Link href="/">Fonte Jurídica</Link></h1>
+                        <h1 className='text-2xl md:text-3xl font-serif font-semibold tracking-tight'>
+                            <Link href="/">
+                                Jus<span className="text-brass-400">dex</span>
+                            </Link>
+                        </h1>
                     </div>
             </header>
         </div>
