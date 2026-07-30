@@ -119,8 +119,15 @@ export async function queryJulgados(params: JulgadosSearchParams): Promise<Julga
     .maxTimeMS(10000)
     .toArray();
 
-  const items = (result?.items ?? []) as Record<string, unknown>[];
+  const rawItems = (result?.items ?? []) as Record<string, unknown>[];
   const total = result?.totalCount?.[0]?.count ?? 0;
+
+  // Server Components só podem passar objetos simples e serializáveis para
+  // Client Components. Os documentos vindos do driver do MongoDB trazem
+  // instâncias de classe (ObjectId, Long, Date, etc.) que quebram esse
+  // contrato ao serem passados como props (ex.: JulgadosPageClient),
+  // então convertemos para JSON simples aqui, na fonte compartilhada.
+  const items = JSON.parse(JSON.stringify(rawItems)) as Record<string, unknown>[];
 
   return { items, total, page, limit, totalPages: Math.max(1, Math.ceil(total / limit)) };
 }
